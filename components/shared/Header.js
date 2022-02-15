@@ -11,9 +11,9 @@ function Header(props) {
         <SafeAreaView style={styles.navbarRoot}>
             <Text style={{
                  
-                paddingTop:25,
+                paddingTop:35,
                 fontFamily:"sans-serif",
-                fontSize:40
+                fontSize:30
             }}> Oregano🎂 </Text>
             <TouchableOpacity onPress={()=>{
                 popupSidebar()
@@ -40,10 +40,10 @@ const styles=StyleSheet.create({
         backgroundColor:"white"
     },
     profilePicture:{
-        width:60,
-        height:60,
+        width:50,
+        height:50,
         borderRadius:40,
-        marginTop:20,
+        marginTop:30,
         marginRight:10
     }
 })

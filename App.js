@@ -9,26 +9,19 @@ import {
 	DrawerItemList,
 	DrawerItem,
 } from '@react-navigation/drawer';
+import DrawerRoot from './components/DrawerRoot';
 
 const Drawer = createDrawerNavigator();
 
 
 
-function DrawerRoot() {
-	return (
-	  <Drawer.Navigator
-	   screenOptions ={{
-		 header: (prop)=><Header {...prop} />
-	   }}>
-		<Drawer.Screen name="Home" component={Home} />
-	  </Drawer.Navigator>
-	);
-  }
+
 
 export default function App() {
-  return ( <NavigationContainer>
-				<DrawerRoot />
-			</NavigationContainer>
+	return ( 
+  		<NavigationContainer>
+			  <DrawerRoot />
+		</NavigationContainer>
 	);
 }
 
