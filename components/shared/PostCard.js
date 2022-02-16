@@ -36,7 +36,9 @@ function PostCard({post}) {
                 </View> }
                 
             </View>
-            <View style={[styles.tags, styles.marginVertical]}>
+            <View style={[styles.tags, styles.marginVertical,{
+                padding:5
+            }]}>
                    <Text style={styles.tagIcon}>🏷️</Text> 
                     
                    { post.tags.map((tag,index)=>(

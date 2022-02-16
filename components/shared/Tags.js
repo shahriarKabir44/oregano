@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         borderWidth: 2,
         paddingVertical: 10,
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        margin:2
     }
 })
 export default Tags;

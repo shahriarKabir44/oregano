@@ -1,7 +1,7 @@
 import React from 'react';
 import { View ,Text} from 'react-native';
 
-function Profile(props) {
+function UserProfile(props) {
     return (
         <View>
             <Text>Profile</Text>
@@ -9,4 +9,4 @@ function Profile(props) {
     );
 }
 
-export default Profile;
+export default UserProfile;
