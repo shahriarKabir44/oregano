@@ -4,7 +4,7 @@ import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { Text, View, StyleSheet, Image, SafeAreaView,TouchableOpacity } from 'react-native';
 const profilePictureURL="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4QfHXtZSr7Y9IoJWng-WknDoAHZxbxPC6QQ&usqp=CAU"
 function Header(props) {
-    function popupSidebar(){
+     function popupSidebar(){
          props.navigation.dispatch(DrawerActions.toggleDrawer())
     }
     return (

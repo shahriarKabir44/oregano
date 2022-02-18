@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 15,
         overflow: "hidden",
-        height: 405
+        height: 425
     },
     itemName: {
         fontFamily: "sans-serif",
@@ -76,7 +76,11 @@ const styles = StyleSheet.create({
     otherInfo: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-around"
+        justifyContent: "space-between",
+        position:"absolute",
+        bottom:5,
+        alignItems:"center",
+    
     },
     cardImg: {
         backgroundColor: "green",
