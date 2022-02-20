@@ -13,6 +13,9 @@ import Header from './shared/Header';
 import UserProfile from './menus/UserProfile'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View,Image,StyleSheet,Text } from 'react-native';
+import CreatePost from './menus/CreatePost';
+import Favourites from './menus/Favourites'
+import PreviousOrders from './menus/PreviousOrders';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot(props) {
 	return (
@@ -27,6 +30,9 @@ export default function DrawerRoot(props) {
 		>
 			<Drawer.Screen name="Home" component={Home} />
 			<Drawer.Screen name="Profile" component={UserProfile} />
+			<Drawer.Screen name="Create a post" component={CreatePost} />
+			<Drawer.Screen name='Favourites' component={Favourites} />
+			<Drawer.Screen name='Order hsistoy' component={PreviousOrders} />
 		</Drawer.Navigator>
 			 
 	);

@@ -30,29 +30,7 @@ function Home(props) {
                 </View>
             </ScrollView>
            
-            <View style={{
-                position:"absolute",
-                borderRadius:50,
-                height:60,
-                aspectRatio:1,
-                backgroundColor:"green",
-                bottom:20,
-                right:20,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                
-            }} >
-                 <TouchableOpacity onPress={()=>{
-                     console.log('first')
-                 }}>
-                    <Text style={{
-                        color:"white",
-                        fontSize:30,
-                    }}
-                    >+</Text>
-                </TouchableOpacity>
-            </View>
+            
             
         </SafeAreaView>
     );
