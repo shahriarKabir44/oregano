@@ -16,22 +16,38 @@ import { View,Image,StyleSheet,Text } from 'react-native';
 import CreatePost from './menus/CreatePost';
 import Favourites from './menus/Favourites'
 import PreviousOrders from './menus/PreviousOrders';
+import CustomHeader from './shared/CustomHeader';
 const Drawer = createDrawerNavigator();
-export default function DrawerRoot(props) {
+export default function DrawerRoot({navigation}) {
+	const stackNavigator=navigation
 	return (
 		<Drawer.Navigator
 			initialRouteName='Home'
-		screenOptions ={{
-			header: (prop)=><Header {...prop} />
-		}}
+		 
 			drawerContent={(props)=>{
 				return <DrawerContentRoot {...props} />
 			}}
 		>
-			<Drawer.Screen name="Home" component={Home} />
-			<Drawer.Screen name="Profile" component={UserProfile} />
-			<Drawer.Screen name="Create a post" component={CreatePost} />
-			<Drawer.Screen name='Favourites' component={Favourites} />
+			<Drawer.Screen options={{
+				header:(prop)=>{
+					return <Header {...prop} />
+				}
+			}} name="Home" component={Home} />
+			<Drawer.Screen options={{
+				header:(prop)=>{
+					return <CustomHeader name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				}
+			}} name="Profile" component={UserProfile} />
+			<Drawer.Screen options={{
+				header:(prop)=>{
+					return <CustomHeader name={"Create post"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				}
+			}} name="Create a post" component={CreatePost} />
+			<Drawer.Screen options={{
+				header:(prop)=>{
+					return <CustomHeader name={"Favourites"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				}
+			}} name='Favourites' component={Favourites} />
 			<Drawer.Screen name='Order hsistoy' component={PreviousOrders} />
 		</Drawer.Navigator>
 			 
