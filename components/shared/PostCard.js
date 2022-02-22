@@ -4,13 +4,13 @@ import { FlatList } from 'react-native';
 import Tags from './Tags';
 
 function PostCard({post}) {
-      post=post.item
+    post=post.item
     return (
         <View style={styles.container}>
             <View>
                 <Image style={styles.cardImg} source={{
 
-                    uri: post.cardImg,
+                    uri: post.images[0],
                     height: "100%"
                 }} />
             </View>
@@ -22,11 +22,11 @@ function PostCard({post}) {
                     <View>
                         <Image style={styles.cookImg} source={{
                             height: "100%",
-                            uri: post.cook.cookImage
+                            uri: post.owner.facebookToken.profileImageURL
                         }} />
                     </View>
                     <View style={styles.cookName}> 
-                        <Text> {post.cook.name} </Text> 
+                        <Text> {post.owner.facebookToken.name} </Text> 
                     </View>
                 </View>
                 {post.isPopular==1 && <View style={styles.popular}> 
@@ -42,7 +42,7 @@ function PostCard({post}) {
                    <Text style={styles.tagIcon}>🏷️</Text> 
                     
                    { post.tags.map((tag,index)=>(
-                       <Tags key={index} name={tag.name} />
+                       <Tags key={index} name={tag } />
                    )) }
             </View>
             <View style={[styles.otherInfo, styles.marginVertical]}>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-around"
+        justifyContent: "space-between"
     },
     popular: {
 

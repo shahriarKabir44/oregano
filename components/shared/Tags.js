@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
 function Tags({ name }) {
+    console.log(name)
     return (
         <View style={styles.container} >
              <Text  > {name} </Text> 

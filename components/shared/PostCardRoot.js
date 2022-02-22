@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { FlatList } from 'react-native';
 import PostCard from './PostCard';
@@ -34,17 +34,54 @@ const posts = [
     }
 ]
 export default function PostCardRoot() {
+    const [postList,setPostList]=useState([])
+    useEffect(()=>{
+        fetch('https://oregano-api.herokuapp.com/graphql',{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                query:`query{
+                    getPosts {
+                        itemName
+                        images
+                        owner{
+                          facebookToken
+                          id
+                        }
+                        id
+                        amountProduced
+                        unitPrice
+                        isPopular
+                        tags
+                      } 
+                }`
+            })
+        }).then(res=>res.json())
+        .then(data=>{
+            let actualData=data.data.getPosts
+           for(let n =0;n<actualData.length;n++){
+                actualData[n].tags = (JSON.parse (actualData[n].tags) )
+                actualData[n].images=(JSON.parse (actualData[n].images) )
+                actualData[n].owner.facebookToken=(JSON.parse (actualData[n].owner.facebookToken) )
+           }
+           console.log(actualData)
+             setPostList(actualData)
+        })
+    },[])
     function renderCard(post){
         return <PostCard post={post } />
     }
     return (
         <View>
-           <FlatList 
+            <FlatList 
                 horizontal={true}
-                data={posts} 
-                keyExtractor={post=>post.Id}
+                data={postList} 
+                keyExtractor={post=>post.id}
                 renderItem={ renderCard}
-            />
+            />  
+             
         </View>
     );
 }
