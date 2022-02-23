@@ -1,16 +1,20 @@
 import React from 'react';
-import { View ,Text, StyleSheet,Image,FlatList} from 'react-native';
+import { View ,Text, StyleSheet,Image,FlatList, ScrollView} from 'react-native';
  import navigationObjects from './Globals';
  import { EvilIcons } from '@expo/vector-icons';
  import Tags from './shared/Tags';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 function PostDetails(props) {
     const  post =props.route.params.post
-      console.log(post)
     return (
         <View style={{
-            padding:20
+           
+			flex:1
         }}>
-            <View style={{
+            <ScrollView style={{
+				 padding:20,
+			}}>
+			<View style={{
                 display:"flex",
                 flexDirection:"row",
                 justifyContent:"space-around"
@@ -97,6 +101,14 @@ function PostDetails(props) {
                         <Tags key={index} name={tag } />
                     )) }
                 </View>
+			</ScrollView>
+			<TouchableOpacity>
+				<View style={styles.footer}>
+					<Text style={{
+						fontSize:20
+					}}> Add to cart </Text>
+				</View>
+			</TouchableOpacity>
         </View>
     );
 }
@@ -137,5 +149,11 @@ const styles=StyleSheet.create({
         marginTop: 15,
 		width:100
     },
+	footer:{
+		backgroundColor:"#FFA500",
+		height:60,
+		justifyContent:"center",
+		alignItems:"center"
+	}
 })
 export default PostDetails;

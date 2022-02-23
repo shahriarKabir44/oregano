@@ -7,9 +7,11 @@ function Home(props) {
     navigationObjects.drawer=props.drawerNav
     navigationObjects.stack=props.stackNav
       return (
-        <SafeAreaView>
+        <SafeAreaView style={{
+            flex:1
+        }}>
             <ScrollView style={{
-            
+                 
             }}>
                 <View style={{
                     overflow: "visible"
@@ -32,7 +34,7 @@ function Home(props) {
                 </View>
             </ScrollView>
            
-            
+              
             
         </SafeAreaView>
     );
