@@ -1,56 +1,64 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { FlatList } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Tags from './Tags';
 
-function PostCard({post}) {
+function PostCard({post, drawerNav,stackNav }) {
     post=post.item
     return (
-        <View style={styles.container}>
-            <View>
-                <Image style={styles.cardImg} source={{
-
-                    uri: post.images[0],
-                    height: "100%"
-                }} />
-            </View>
-            <View style={[styles.itemName, styles.marginVertical]}> 
-                <Text>{post.itemName}</Text> 
-            </View>
-             <View style={[styles.additionalInfo, styles.marginVertical]}>
-                <View style={[styles.cookInfo, styles.marginVertical]}>
-                    <View>
-                        <Image style={styles.cookImg} source={{
-                            height: "100%",
-                            uri: post.owner.facebookToken.profileImageURL
-                        }} />
-                    </View>
-                    <View style={styles.cookName}> 
-                        <Text> {post.owner.facebookToken.name} </Text> 
-                    </View>
-                </View>
-                {post.isPopular==1 && <View style={styles.popular}> 
-                    <Text style={{
-                        marginTop: 2
-                    }} >🔥Popular</Text> 
-                </View> }
+        <TouchableOpacity onPress={()=>{
+            stackNav.push('Post details',{
+                post:post,
                 
-            </View>
-            <View style={[styles.tags, styles.marginVertical,{
-                padding:5
-            }]}>
-                   <Text style={styles.tagIcon}>🏷️</Text> 
+            })
+        }}>
+            <View style={styles.container}>
+                <View>
+                    <Image style={styles.cardImg} source={{
+
+                        uri: post.images[0],
+                        height: "100%"
+                    }} />
+                </View>
+                <View style={[styles.itemName, styles.marginVertical]}> 
+                    <Text>{post.itemName}</Text> 
+                </View>
+                <View style={[styles.additionalInfo, styles.marginVertical]}>
+                    <View style={[styles.cookInfo, styles.marginVertical]}>
+                        <View>
+                            <Image style={styles.cookImg} source={{
+                                height: "100%",
+                                uri: post.owner.facebookToken.profileImageURL
+                            }} />
+                        </View>
+                        <View style={styles.cookName}> 
+                            <Text> {post.owner.facebookToken.name} </Text> 
+                        </View>
+                    </View>
+                    {post.isPopular==1 && <View style={styles.popular}> 
+                        <Text style={{
+                            marginTop: 2
+                        }} >🔥Popular</Text> 
+                    </View> }
                     
-                   { post.tags.map((tag,index)=>(
-                       <Tags key={index} name={tag } />
-                   )) }
+                </View>
+                <View style={[styles.tags, styles.marginVertical,{
+                    padding:5
+                }]}>
+                    <Text style={styles.tagIcon}>🏷️</Text> 
+                        
+                    { post.tags.map((tag,index)=>(
+                        <Tags key={index} name={tag } />
+                    )) }
+                </View>
+                <View style={[styles.otherInfo, styles.marginVertical]}>
+                    <Text> Tk 500 </Text>
+                    <Text> 5kms </Text>
+                    <Text> 4pc(s) available </Text>
+                </View>{/* */}
             </View>
-            <View style={[styles.otherInfo, styles.marginVertical]}>
-                <Text> Tk 500 </Text>
-                <Text> 5kms </Text>
-                <Text> 4pc(s) available </Text>
-            </View>{/* */}
-        </View>
+        </TouchableOpacity>
     );
 }
 const styles = StyleSheet.create({

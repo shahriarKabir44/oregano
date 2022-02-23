@@ -3,30 +3,41 @@ import React from 'react';
 import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import { Text, View, StyleSheet, Image, SafeAreaView,TouchableOpacity } from 'react-native';
-const profilePictureURL="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4QfHXtZSr7Y9IoJWng-WknDoAHZxbxPC6QQ&usqp=CAU"
-function CustomHeader({name,drawerNavigation,stackNavigation}) {
+import navigationObjects from '../Globals';
+import { EvilIcons } from '@expo/vector-icons';
+function CustomHeader({name,drawerNavigation,stackNavigation }) {
     function popupSidebar(){
-        drawerNavigation.dispatch(DrawerActions.toggleDrawer())
+        navigationObjects.drawer.dispatch(DrawerActions.toggleDrawer())
     }
     return (
         <SafeAreaView style={styles.navbarRoot}>
+            <View style={{
+                flex:1,
+                alignItems:"center",
+                justifyContent:"space-between",
+                flexDirection:'row',
+            }}>
             <Text onPress={()=>{
                 stackNavigation.goBack()
             }} style={{
                  
-                paddingTop:30,
+                
                 fontFamily:"sans-serif",
                 fontSize:30
             }}><AntDesign name="arrowleft" size={24} color="black" /> {name} </Text>
             <TouchableOpacity onPress={()=>{
-                popupSidebar()
+                  popupSidebar()
             }}>
-                <Image style={styles.profilePicture} 
-                    source={{
-                        uri:profilePictureURL
-                    }}
-                />
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    
+                }}>
+                   <EvilIcons onPress={()=>{}} name="bell" size={40} color="black" />
+                   <EvilIcons onPress={()=>{}} name="cart" size={40} color="black" />
+                </View>
             </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 }
