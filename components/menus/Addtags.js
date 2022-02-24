@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {TextInput} from 'react-native-paper'
 import { Entypo } from '@expo/vector-icons';
 
@@ -13,8 +13,11 @@ import RemovableTag from '../shared/RemovableTag';
 const availableTags=["chicken", "spicy","cake","pastry","pasta","indian","mexican"]
 function Addtags(props) {
     const [searchText,setSeatchText]=useState("")
-    const [selected,setSelected]=useState(SelectedTags.tagNames)
+    const [selected,setSelected]=useState([])
     const [tags,setAvailableTags]=useState([...availableTags])
+    useEffect(()=>{
+        setSelected(SelectedTags.tagNames)
+    },[])
     function addTag(tag){
         if(selected.length<3) {
             setSelected([...selected,tag])

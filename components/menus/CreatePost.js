@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View ,Text, ScrollView, FlatList,Image, Button,Picker,TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -12,12 +12,15 @@ import { Dimensions } from 'react-native';
 function CreatePost(props) {
 	const [item,setItemProperty]=useState({
 		itemName:"",
-		tags:SelectedTags.tagNames,
+		tags:[],
 		images:[],
 		unitPrice:"",
 		amountProduced:"",
 		amountType:"Units"
 	})
+	useEffect(()=>{
+		setItemProperty({...item, tags:SelectedTags.tagNames})
+	},[])
 	const [images,setImagesList]=useState([{index:4,body:null}])
 	const [lastImageId,setLastImageId]=useState(0)
 	async function handleUpload(){
