@@ -5,29 +5,15 @@ import { Entypo } from '@expo/vector-icons';
 import { View,Text,StyleSheet, Button, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import SelectedTags from './SelectedTags';
+import RemovableTag from '../shared/RemovableTag';
 
-function RenderTag({children}){
-    return (
-        <View style={tagStyles.container} >
-              {children}   
-        </View>
-    );
-}
 
-const tagStyles = StyleSheet.create({
-    container: {
-        borderColor: "#000000",
-        borderRadius: 50,
-        borderWidth: 2,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        margin:2
-    }
-})
+
+
 const availableTags=["chicken", "spicy","cake","pastry","pasta","indian","mexican"]
 function Addtags(props) {
     const [searchText,setSeatchText]=useState("")
-    const [selected,setSelected]=useState([])
+    const [selected,setSelected]=useState(SelectedTags.tagNames)
     const [tags,setAvailableTags]=useState([...availableTags])
     function addTag(tag){
         if(selected.length<3) {
@@ -79,18 +65,9 @@ function Addtags(props) {
                         
                         }} >
 
-                        {selected.map((name,index)=> <RenderTag key={index} children={ 
-                            <View style={{
-                                display:"flex",
-                                flexDirection:'row',
-                                
-                            }}>
-                                <Text> {name} </Text>
-                                <Entypo   name="circle-with-cross" size={25} onPress={()=>{ 
-                                    removeTag(name)
-                                }}  />
-                                </View>
-                            } /> )}
+                        {selected.map((name,index)=> <RemovableTag key={index} name={name} removeTag={()=>{
+                            removeTag(name)
+                        }} />)}
                         </View>
                     </View> }
                 <Text style={{

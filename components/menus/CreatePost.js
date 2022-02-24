@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { View ,Text, ScrollView, FlatList,Image, Button} from 'react-native';
+import { View ,Text, ScrollView, FlatList,Image, Button,Picker,TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Entypo } from '@expo/vector-icons';
+import SelectedTags from './SelectedTags';
+import RemovableTag from '../shared/RemovableTag';
+import { Dimensions } from 'react-native';
+
+
 function CreatePost(props) {
 	const [item,setItemProperty]=useState({
 		itemName:"",
-		tags:[],
+		tags:SelectedTags.tagNames,
 		images:[],
 		unitPrice:"",
-		amountProduced:""
+		amountProduced:"",
+		amountType:"Units"
 	})
 	const [images,setImagesList]=useState([{index:4,body:null}])
 	const [lastImageId,setLastImageId]=useState(0)
@@ -45,7 +51,9 @@ function CreatePost(props) {
         }}>
              <ScrollView style={{
 				 padding:15,
-				 backgroundColor:"white"
+				 backgroundColor:"white",
+				 margin:10,
+				 borderRadius:10
 			 }}>
                 <TextInput
                     label="Item Name"
@@ -88,9 +96,64 @@ function CreatePost(props) {
 				 }}
 			 />
 			<Button title='+ Add tags' onPress={()=>{
+				SelectedTags.tagNames=item.tags
 				props.navigation.push('Add tags')
 			}} />
+			{item.tags.length>0 && <View style={{
+				margin:10
+			}}>
+				<Text>Added tags</Text>
+				<View style={{
+					display:"flex",
+					flexDirection:"row"
+				}}>
+				{ item.tags.map((tag,index)=> <RemovableTag key={index} name={tag} removeTag={()=>{
+					setItemProperty({...item,tags:item.tags.filter(name=>name!=tag)})
+				}} /> ) }
+				</View>
+			</View>}
+
+			<View style={{
+				marginVertical:20,
+				 
+			}}>
+				<TextInput 
+                    label="Amount Produced"
+                    value={item.amountProduced}
+                    onChangeText={text =>  setItemProperty({...item,amountProduced:text})}
+                />
+				 <Picker
+					selectedValue={item.amountType}
+					 
+					onValueChange={(itemValue, itemIndex) => setItemProperty({...item,amountType:itemValue})}
+				>
+					<Picker.Item label="Units" value="Units" />
+					<Picker.Item label="Kgs" value="Kgs" />
+				</Picker>
+			</View>
+			<View>
+				<TextInput 
+                    label="Price"
+                    value={item.unitPrice}
+                    onChangeText={text =>  setItemProperty({...item,unitPrice:text})}
+                />
+			</View>
             </ScrollView>
+
+			<TouchableOpacity onPress={()=>{
+                
+            }}>
+				<View style={{
+                    backgroundColor:"#FFA500",
+                    height:60,
+                    justifyContent:"center",
+                    alignItems:"center"
+                }}>
+					<Text style={{
+						fontSize:20
+					}}> Post! </Text>
+				</View>
+			</TouchableOpacity>
         </View>
     );
 }
