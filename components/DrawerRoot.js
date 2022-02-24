@@ -32,7 +32,7 @@ export default function DrawerRoot({navigation}) {
 				header:(prop)=>{
 					return <Header {...prop} />
 				},
-				icon:"abcd"
+				 
 			}} name="Home">
 				{props=>(<Home drawerNav={props.navigation} stackNav={stackNavigator} /> )}
 			</Drawer.Screen>
@@ -41,11 +41,7 @@ export default function DrawerRoot({navigation}) {
 					return <CustomHeader name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				}
 			}} name="Profile" component={UserProfile} />
-			<Drawer.Screen options={{
-				header:(prop)=>{
-					return <CustomHeader name={"Create post"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
-				}
-			}} name="Create a post" component={CreatePost} />
+			
 			<Drawer.Screen options={{
 				header:(prop)=>{
 					return <CustomHeader name={"Favourites"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />

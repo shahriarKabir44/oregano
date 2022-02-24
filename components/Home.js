@@ -34,7 +34,29 @@ function Home(props) {
                 </View>
             </ScrollView>
            
-              
+            <View style={{
+                position:"absolute",
+                borderRadius:50,
+                height:60,
+                aspectRatio:1,
+                backgroundColor:"#02DBC6",
+                bottom:20,
+                right:20,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                
+            }} >
+                 <TouchableOpacity onPress={()=>{
+                     props.stackNav.push("Create post")
+                 }}>
+                    <Text style={{
+                        color:"white",
+                        fontSize:30,
+                    }}
+                    >+</Text>
+                </TouchableOpacity>
+                </View>    
             
         </SafeAreaView>
     );

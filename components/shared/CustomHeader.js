@@ -16,6 +16,7 @@ function CustomHeader({name,drawerNavigation,stackNavigation }) {
                 alignItems:"center",
                 justifyContent:"space-between",
                 flexDirection:'row',
+                paddingTop:10
             }}>
             <Text onPress={()=>{
                 stackNavigation.goBack()
