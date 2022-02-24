@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View ,Text, ScrollView, FlatList,Image, Button,Picker,TouchableOpacity} from 'react-native';
+import { View ,Text, ScrollView, FlatList,Image, Button,TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Entypo } from '@expo/vector-icons';
 import SelectedTags from './SelectedTags';
 import RemovableTag from '../shared/RemovableTag';
-import { Dimensions } from 'react-native';
-
-
+import {Picker} from '@react-native-picker/picker';
+ 
 function CreatePost(props) {
 	const [item,setItemProperty]=useState({
 		itemName:"",

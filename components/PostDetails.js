@@ -1,11 +1,18 @@
-import React from 'react';
-import { View ,Text, StyleSheet,Image,FlatList, ScrollView} from 'react-native';
+import React, { useState } from 'react';
+import { View ,Text, StyleSheet,Image,FlatList, ScrollView, Dimensions} from 'react-native';
  import navigationObjects from './Globals';
  import { EvilIcons } from '@expo/vector-icons';
  import Tags from './shared/Tags';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BottomSheet } from 'react-native-btr';
+import AddTocart from './shared/AddTocart';
 function PostDetails(props) {
     const  post =props.route.params.post
+    const [canShowModal, toggleModal]=useState(false)
+    const toggleBottomNavigationView = () => {
+        //Toggling the visibility state of the bottom sheet
+        toggleModal(!canShowModal);
+      }
     return (
         <View style={{
            
@@ -13,6 +20,9 @@ function PostDetails(props) {
         }}>
             <ScrollView style={{
 				 padding:20,
+                 margin:10,
+                 backgroundColor:"white",
+                 borderRadius:10
 			}}>
 			<View style={{
                 display:"flex",
@@ -102,19 +112,39 @@ function PostDetails(props) {
                     )) }
                 </View>
 			</ScrollView>
-			<TouchableOpacity>
+			<TouchableOpacity onPress={toggleBottomNavigationView}>
 				<View style={styles.footer}>
 					<Text style={{
 						fontSize:20
 					}}> Add to cart </Text>
 				</View>
 			</TouchableOpacity>
+            <BottomSheet
+                visible={canShowModal}
+                //setting the visibility state of the bottom shee
+                onBackButtonPress={toggleBottomNavigationView}
+                //Toggling the visibility state on the click of the back botton
+                onBackdropPress={toggleBottomNavigationView}
+                //Toggling the visibility state on the clicking out side of the sheet
+                >
+                {/*Bottom Sheet inner View*/}
+                <View style={styles.bottomNavigationView}>
+                    <AddTocart post={post} />
+                </View>
+            </BottomSheet>
         </View>
     );
 }
 const styles=StyleSheet.create({
     container:{},
     heading:{},
+    
+  bottomNavigationView: {
+    backgroundColor: '#fff',
+    width: '100%',
+    height: Dimensions.get('window').height*0.65,
+    borderRadius:10
+  },
 	horizontalAlign:{
 		display:"flex",
 		flexDirection:"row",

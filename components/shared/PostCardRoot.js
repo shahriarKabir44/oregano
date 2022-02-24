@@ -20,7 +20,8 @@ let postList=[
             "id":"6214162873f6ff9efc53efd8",
             "amountProduced":1,
             "unitPrice":100,
-            "tags":["cake","pastry"]
+            "tags":["cake","pastry"],
+            "unitType":"Units"
         },{
             "itemName":"cake",
             "images": [
@@ -37,9 +38,11 @@ let postList=[
                 "id":"621413a308220b000e005185"
             },
             "id":"6214162873f6ff9efc53efd7",
-            "amountProduced":1,
+            "amountProduced":5,
             "unitPrice":100,
-            "tags":["cake","pastry"]
+            "tags":["cake","pastry"],
+            "unitType":"Kgs"
+
     }]
 export default function PostCardRoot(props) {
     // const [postList,setPostList]=useState([])
