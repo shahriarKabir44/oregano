@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View ,Text, ScrollView, FlatList,Image} from 'react-native';
+import { View ,Text, ScrollView, FlatList,Image, Button} from 'react-native';
 import {TextInput} from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -76,7 +76,7 @@ function CreatePost(props) {
 								top:-10,
 								right:-10,
 								zIndex:100,
-							}} size={30} onPress={()=>{removeImage(image.item.index)}} color="black" />
+							}} size={25} onPress={()=>{removeImage(image.item.index)}} color="black" />
 							<Image style={{
 								width:160,
 								aspectRatio:4/3
@@ -87,7 +87,9 @@ function CreatePost(props) {
 					</View>
 				 }}
 			 />
-
+			<Button title='+ Add tags' onPress={()=>{
+				props.navigation.push('Add tags')
+			}} />
             </ScrollView>
         </View>
     );

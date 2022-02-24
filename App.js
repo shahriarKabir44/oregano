@@ -15,6 +15,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import DrawerRoot from './components/DrawerRoot';
 import CustomHeader from './components/shared/CustomHeader';
 import CreatePost from './components/menus/CreatePost';
+import Addtags from './components/menus/Addtags';
 
 const Drawer = createDrawerNavigator();
 
@@ -34,8 +35,9 @@ function StackRoot(props){
 			}
 		}} component={PostDetails}   />
 		<Stack.Screen name='Create post' options={{
-		header:props=> <CustomHeader stackNavigation={props.navigation} name={"Create Post"}  />
+			header:props=> <CustomHeader stackNavigation={props.navigation} name={"Create Post"}  />
 		}} component={CreatePost} />
+		<Stack.Screen name='Add tags' component={Addtags} />
 	</Stack.Navigator>
 }
 
