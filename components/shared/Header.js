@@ -16,8 +16,8 @@ function Header(props) {
                 fontFamily:"sans-serif",
                 fontSize:30
             }}> Oregano🎂 </Text>
-            <View style={styles.horizontal_vert_Align} >
-                <View style={{
+            <View style={styles.horizontal_vert_Align } >
+                {/* <View style={{
                     display:"flex",
                     flexDirection:"row",
                     justifyContent:"center",
@@ -25,9 +25,10 @@ function Header(props) {
                     flex:1,
                     paddingTop:30
                 }}>
-                    <EvilIcons onPress={()=>{}} name="bell" size={40} color="black" />
-                    <EvilIcons onPress={()=>{}} name="cart" size={40} color="black" />
-                </View>
+                </View> */}
+                <EvilIcons onPress={()=>{}} name="bell" size={40} color="black" />
+                <EvilIcons onPress={()=>{}} name="cart" size={40} color="black" />
+
                 <TouchableOpacity onPress={()=>{
                     popupSidebar()
                 }}>
@@ -45,7 +46,7 @@ function Header(props) {
 const styles=StyleSheet.create({
     navbarRoot:{
         height:90,
-         
+        padding:10,
         display:"flex",
         flexDirection:"row",
         justifyContent:"space-between",
@@ -57,15 +58,16 @@ const styles=StyleSheet.create({
         width:50,
         height:50,
         borderRadius:40,
-        marginTop:30,
-        marginRight:10
+        
     },
     horizontal_vert_Align:{
 		flex:1,
 		alignItems:"center",
-		justifyContent:"center",
 		flexDirection:'row',
-		 
+		justifyContent:"flex-end",
+        alignContent:"center",
+        marginTop:30,
+         
 	}
 })
 

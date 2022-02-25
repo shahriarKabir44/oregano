@@ -3,6 +3,7 @@ import PostCardRoot from './shared/PostCardRoot';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import navigationObjects from './Globals'
+import TagsSelectionService from '../services/TagsSelectionService';
 function Home(props) {
     navigationObjects.drawer=props.drawerNav
     navigationObjects.stack=props.stackNav
@@ -48,6 +49,7 @@ function Home(props) {
                 
             }} >
                  <TouchableOpacity onPress={()=>{
+                     TagsSelectionService.setTagList([])
                      props.stackNav.push("Create post")
                  }}>
                     <Text style={{

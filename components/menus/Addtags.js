@@ -4,8 +4,9 @@ import { Entypo } from '@expo/vector-icons';
 
 import { View,Text,StyleSheet, Button, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import SelectedTags from './SelectedTags';
+
 import RemovableTag from '../shared/RemovableTag';
+import TagsSelectionService from '../../services/TagsSelectionService';
 
 
 
@@ -16,7 +17,8 @@ function Addtags(props) {
     const [selected,setSelected]=useState([])
     const [tags,setAvailableTags]=useState([...availableTags])
     useEffect(()=>{
-        setSelected(SelectedTags.tagNames)
+        setSelected(props.route.params.selectedNames)
+             
     },[])
     function addTag(tag){
         if(selected.length<3) {
@@ -88,7 +90,8 @@ function Addtags(props) {
                 })}
             </ScrollView>
             <TouchableOpacity onPress={()=>{
-                SelectedTags.tagNames=selected
+                TagsSelectionService.setTagList(selected) 
+
                 props.navigation.goBack()
             }}>
 				<View style={{

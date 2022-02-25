@@ -4,11 +4,10 @@ import {TextInput} from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Entypo } from '@expo/vector-icons';
-import SelectedTags from './SelectedTags';
 import RemovableTag from '../shared/RemovableTag';
 import {Picker} from '@react-native-picker/picker';
- 
-function CreatePost(props) {
+import TagsSelectionService from '../../services/TagsSelectionService';
+ function CreatePost(props) {
 	const [item,setItemProperty]=useState({
 		itemName:"",
 		tags:[],
@@ -18,7 +17,10 @@ function CreatePost(props) {
 		amountType:"Units"
 	})
 	useEffect(()=>{
-		setItemProperty({...item, tags:SelectedTags.tagNames})
+		TagsSelectionService.getTagList().subscribe(tags=>{
+			setItemProperty({...item, tags:tags})
+		})
+		
 	},[])
 	const [images,setImagesList]=useState([{index:4,body:null}])
 	const [lastImageId,setLastImageId]=useState(0)
@@ -98,8 +100,10 @@ function CreatePost(props) {
 				 }}
 			 />
 			<Button title='+ Add tags' onPress={()=>{
-				SelectedTags.tagNames=item.tags
-				props.navigation.push('Add tags')
+				TagsSelectionService.setTagList(item.tags)
+				props.navigation.push('Add tags',{
+					selectedNames:item.tags
+				})
 			}} />
 			{item.tags.length>0 && <View style={{
 				margin:10
