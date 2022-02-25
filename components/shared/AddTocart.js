@@ -1,87 +1,104 @@
-import React, { useState } from 'react';
-import { View,Text,StyleSheet, TouchableOpacity } from 'react-native';
-import { Dimensions } from 'react-native';
-
-function AddTocart({post}) {
+import React, { useEffect, useState } from 'react';
+import { View,Text,StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import CartServices from '../../services/CartServices'
+function AddTocart({post,togglePopup,setCartStatus}) {
+    const [cartList,setCartList]=useState([])
+    useEffect(()=>{
+        CartServices.getCartList().subscribe(carts=>setCartList(carts))
+    },[])
     const [itemChosen,setItemChosen]=useState(1)
     function updateAmount(type){
         setItemChosen(Math.min(Math.max(1,itemChosen+type),post.amountProduced))
     }
     return (
         <View style={{
-            padding:10
+            
+            flex:1
         }}>
-            <View style={{
-                 
-                display:"flex",
-                flexDirection:"row",
-                justifyContent:"space-between"
-                
-            } }>
-                <Text style={{
-                    fontSize:30
-                }}>Amount</Text>
-                <View  style={styles.alighnHorizontal}>
-                    <TouchableOpacity onPress={()=>updateAmount(1)}>
+            <ScrollView>
+                <View style={{
+                    padding:10,
+                    display:"flex",
+                    flexDirection:"row",
+                    justifyContent:"space-between"
+                    
+                } }>
+                    <Text style={{
+                        fontSize:30
+                    }}>Amount</Text>
+                    <View  style={styles.alighnHorizontal}>
+                        <TouchableOpacity onPress={()=>updateAmount(1)}>
+                            <View style={{
+                                backgroundColor:"#C4C4C4",
+                                height:50,
+                                aspectRatio:1,
+                                borderRadius:50,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            
+                            }}> 
+                                <Text style={{
+                                fontSize:20
+                            }}>+</Text> 
+                                </View>
+                        </TouchableOpacity>
                         <View style={{
-                            backgroundColor:"#C4C4C4",
-                            height:50,
-                            aspectRatio:1,
-                            borderRadius:50,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        
-                        }}> 
-                            <Text style={{
-                            fontSize:20
-                        }}>+</Text> 
+                                backgroundColor:"#FA01FF",
+                                height:50,
+                                aspectRatio:1,
+                                borderRadius:10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            
+                            }}> 
+                                <Text style={{
+                                fontSize:20
+                            }}>{itemChosen}</Text> 
+                                </View>
+                        <TouchableOpacity onPress={()=>updateAmount(-1)}>
+                            <View style={{
+                                backgroundColor:"#C4C4C4",
+                                height:50,
+                                aspectRatio:1,
+                                borderRadius:50,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            
+                            }}> 
+                                <Text style={{
+                                    fontSize:40
+                                }}>-</Text> 
                             </View>
-                    </TouchableOpacity>
-                    <View style={{
-                            backgroundColor:"#FA01FF",
-                            height:50,
-                            aspectRatio:1,
-                            borderRadius:10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        
-                        }}> 
-                            <Text style={{
-                            fontSize:20
-                        }}>{itemChosen}</Text> 
-                            </View>
-                    <TouchableOpacity onPress={()=>updateAmount(-1)}>
-                        <View style={{
-                            backgroundColor:"#C4C4C4",
-                            height:50,
-                            aspectRatio:1,
-                            borderRadius:50,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        
-                        }}> 
-                            <Text style={{
-                                fontSize:40
-                            }}>-</Text> 
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-            <View style={{
-                display:"flex",
-                flexDirection:"row",
-                justifyContent:"space-between",
-                marginVertical:10
-            }} >
-                <Text  style={{
-                    fontSize:25,
-                    fontWeight:"bold"
-                }}>Total Charge</Text>
-                <Text  style={{
-                    fontSize:25,
-                    fontWeight:"bold"
-                }}> Tk {itemChosen*post.unitPrice} </Text>
-            </View>
+                <View style={{
+                    display:"flex",
+                    flexDirection:"row",
+                    justifyContent:"space-between",
+                    marginVertical:10
+                }} >
+                    <Text  style={{
+                        fontSize:25,
+                        fontWeight:"bold"
+                    }}>Total Charge</Text>
+                    <Text  style={{
+                        fontSize:25,
+                        fontWeight:"bold"
+                    }}> Tk {itemChosen*post.unitPrice} </Text>
+                </View>
+            </ScrollView>
+            <TouchableOpacity onPress={()=>{
+                CartServices.setCartList([...cartList,post])
+                setCartStatus(true)
+                togglePopup(false)
+            }}>
+				<View style={styles.footer}>
+					<Text style={{
+						fontSize:20
+					}}> Done </Text>
+				</View>
+			</TouchableOpacity>
         </View>
     );
 }
@@ -91,7 +108,13 @@ const styles=StyleSheet.create({
         display:"flex",
         flexDirection:"row",
 
-    }
+    },
+	footer:{
+		backgroundColor:"#FFA500",
+		height:60,
+		justifyContent:"center",
+		alignItems:"center"
+	}
 })
 
 export default AddTocart;

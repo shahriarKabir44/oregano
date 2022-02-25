@@ -9,6 +9,7 @@ import AddTocart from '../shared/AddTocart';
 function PostDetails(props) {
     const  post =props.route.params.post
     const [canShowModal, toggleModal]=useState(false)
+    const [isAddedToCart,setCartStatus]=useState(false)
     const toggleBottomNavigationView = () => {
         //Toggling the visibility state of the bottom sheet
         toggleModal(!canShowModal);
@@ -112,24 +113,25 @@ function PostDetails(props) {
                     )) }
                 </View>
 			</ScrollView>
-			<TouchableOpacity onPress={toggleBottomNavigationView}>
+			<TouchableOpacity onPress={()=>{
+                if(!isAddedToCart)toggleBottomNavigationView()
+            }}>
 				<View style={styles.footer}>
-					<Text style={{
+					{!isAddedToCart && <Text style={{
 						fontSize:20
-					}}> Add to cart </Text>
+					}}> Add to cart </Text>}
+                    {isAddedToCart && <Text style={{
+						fontSize:20
+					}}> Remove from cart </Text>}
 				</View>
 			</TouchableOpacity>
             <BottomSheet
                 visible={canShowModal}
-                //setting the visibility state of the bottom shee
                 onBackButtonPress={toggleBottomNavigationView}
-                //Toggling the visibility state on the click of the back botton
                 onBackdropPress={toggleBottomNavigationView}
-                //Toggling the visibility state on the clicking out side of the sheet
                 >
-                {/*Bottom Sheet inner View*/}
                 <View style={styles.bottomNavigationView}>
-                    <AddTocart post={post} />
+                    <AddTocart togglePopup={toggleBottomNavigationView} setCartStatus={setCartStatus} post={post} />
                 </View>
             </BottomSheet>
         </View>
