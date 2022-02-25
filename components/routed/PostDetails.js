@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View ,Text, StyleSheet,Image,FlatList, ScrollView, Dimensions} from 'react-native';
- import navigationObjects from './Globals';
+ import navigationObjects from '../Globals';
  import { EvilIcons } from '@expo/vector-icons';
- import Tags from './shared/Tags';
+ import Tags from '../shared/Tags';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-btr';
-import AddTocart from './shared/AddTocart';
+import AddTocart from '../shared/AddTocart';
 function PostDetails(props) {
     const  post =props.route.params.post
     const [canShowModal, toggleModal]=useState(false)

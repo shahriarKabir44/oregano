@@ -7,16 +7,16 @@ import {
 } from '@react-navigation/drawer';
 
 import React from 'react';
-import Home from './Home';
-import Header from './shared/Header';
+import Home from '../Home';
+import Header from '../shared/Header';
 
-import UserProfile from './menus/UserProfile'
+import UserProfile from '../menus/UserProfile'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View,Image,StyleSheet,Text } from 'react-native';
-import CreatePost from './menus/CreatePost';
-import Favourites from './menus/Favourites'
-import PreviousOrders from './menus/PreviousOrders';
-import CustomHeader from './shared/CustomHeader';
+import CreatePost from '../menus/CreatePost';
+import Favourites from '../menus/Favourites'
+import PreviousOrders from '../menus/PreviousOrders';
+import CustomHeader from '../shared/CustomHeader';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({navigation}) {
 	const stackNavigator=navigation
