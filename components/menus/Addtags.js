@@ -39,7 +39,7 @@ function Addtags(props) {
     function search(query){
         setSeatchText(query)
         let temp=availableTags
-        for(let tag in selected){
+        for(let tag of selected){
             temp=temp.filter(name=>name!=tag)
         }
         temp=temp.filter(name=>name.startsWith(query))

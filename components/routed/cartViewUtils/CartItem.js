@@ -3,7 +3,7 @@ import { View,StyleSheet, Image,TouchableOpacity,Text } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import CartServices from '../../../services/CartServices';
 
-function CartItem({item,deleteItem,setChanged}) {
+function CartItem({item,setChanged}) {
     
     return (
         <View style={[styles.container,styles.alighnHorizontal ]}>
@@ -23,8 +23,8 @@ function CartItem({item,deleteItem,setChanged}) {
                     <Text>{item.itemName} </Text>
                     <TouchableOpacity onPress={()=>{
                             CartServices.removeItem(item['id'])
-                             setChanged(1)
-                            deleteItem(item['groupNumber'],item['groupIndex'])
+                            
+                            setChanged(1)
                         }}>
                         <View>
                             <Entypo name="circle-with-cross" size={25}   color="black" />
@@ -38,7 +38,7 @@ function CartItem({item,deleteItem,setChanged}) {
                     <Text>Amount</Text>
                     <View style={styles.alighnHorizontal}>
                         <TouchableOpacity onPress={()=>{
-                            console.log(4)
+                            
                         }} >
                             <View style={styles.updateAmountBtn}> 
                                 <Text style={{

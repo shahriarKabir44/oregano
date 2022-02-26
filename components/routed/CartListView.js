@@ -4,16 +4,7 @@ import CartServices from '../../services/CartServices'
 import CartGroup from './cartViewUtils/CartGroup';
 function CartListView(props) {
     const [groupedCartList,setCartList]=useState([])
-    function deleteItem(groupNumber,groupIndex){
-        
-        let cartList=groupedCartList
-        let items=[]
-        for(let item of cartList[groupNumber]){
-            if(item['groupIndex']!=groupIndex)items.push(item)
-        }
-        cartList[groupNumber]=items
-        setCartList(cartList)
-    }
+     
     function updateCartList(){
         CartServices.getCartList().then(carts=>{
             
@@ -48,7 +39,7 @@ function CartListView(props) {
                 
                     margin:5
                 }}>
-                    {groupedCartList.map((group,index)=> <CartGroup deleteItem={deleteItem} setChanged={setChanged} key={index} group={group} /> )}
+                    {groupedCartList.map((group,index)=> <CartGroup   setChanged={setChanged} key={index} group={group} /> )}
                 </View>
             </ScrollView>
             <TouchableOpacity>

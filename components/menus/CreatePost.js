@@ -54,7 +54,7 @@ import TagsSelectionService from '../../services/TagsSelectionService';
 			backgroundColor:"#DFDFDF"
         }}>
              <ScrollView style={{
-				 padding:15,
+				 padding:25,
 				 backgroundColor:"white",
 				 margin:10,
 				 borderRadius:10
