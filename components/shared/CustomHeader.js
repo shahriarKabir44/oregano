@@ -33,10 +33,10 @@ function CustomHeader({name,drawerNavigation,stackNavigation }) {
                     
                 }}>
                    <EvilIcons onPress={()=>{}} name="bell" size={40} color="black" />
-                   <TouchableOpacity onPressIn={()=>{
+                   <TouchableOpacity onPress ={()=>{
 							stackNavigation.push('Cart')
 						}} >
-						<EvilIcons onPress={()=>{}} name="cart"size={40} color="black" />
+						<EvilIcons  name="cart"size={40} color="black" />
                    </TouchableOpacity>
                 </View>
            

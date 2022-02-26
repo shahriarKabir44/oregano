@@ -27,11 +27,11 @@ function Header(props) {
                 }}>
                 </View> */}
                 <EvilIcons onPress={()=>{}} name="bell" size={40} color="black" />
-                <TouchableOpacity onPressIn={()=>{
-						props.navigation.push('Cart')
-					}} >
-					<EvilIcons onPress={()=>{}} name="cart"size={40} color="black" />
-                </TouchableOpacity>
+                <TouchableOpacity onPress ={()=>{
+							props.navigation.push('Cart')
+						}} >
+						<EvilIcons  name="cart"size={40} color="black" />
+                   </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{
                     popupSidebar()
                 }}>

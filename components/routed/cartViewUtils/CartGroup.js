@@ -4,7 +4,11 @@ import CartItem from './CartItem';
 
 function CartGroup({group}) {
     return (
-        <View>
+        <View style={{
+            marginVertical:5,
+            backgroundColor:"#C4C4C4",
+            borderRadius:5
+        }}>
             {group.map((item,index)=> <CartItem item={item} key={index} /> )}
         </View>
     );
