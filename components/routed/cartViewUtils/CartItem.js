@@ -1,8 +1,9 @@
 import React from 'react';
 import { View,StyleSheet, Image,TouchableOpacity,Text } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import CartServices from '../../../services/CartServices';
 
-function CartItem({item}) {
+function CartItem({item,deleteItem,setChanged}) {
     
     return (
         <View style={[styles.container,styles.alighnHorizontal ]}>
@@ -19,15 +20,26 @@ function CartItem({item}) {
                 <View style={[styles.alighnHorizontal ,{
                     paddingVertical:5
                 }]}>
-                    <Text> {item.itemName} </Text>
-                    <Entypo name="circle-with-cross"  size={25} onPress={()=>{}} color="black" />
+                    <Text>{item.itemName} </Text>
+                    <TouchableOpacity onPress={()=>{
+                            CartServices.removeItem(item['id'])
+                             setChanged(1)
+                            deleteItem(item['groupNumber'],item['groupIndex'])
+                        }}>
+                        <View>
+                            <Entypo name="circle-with-cross" size={25}   color="black" />
+
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={[styles.alighnHorizontal ,{
                     paddingVertical:5
                 } ]}>
                     <Text>Amount</Text>
                     <View style={styles.alighnHorizontal}>
-                        <TouchableOpacity  >
+                        <TouchableOpacity onPress={()=>{
+                            console.log(4)
+                        }} >
                             <View style={styles.updateAmountBtn}> 
                                 <Text style={{
                                     fontSize:15
@@ -54,7 +66,7 @@ function CartItem({item}) {
                 <View style={[styles.alighnHorizontal ,{
                     paddingVertical:5
                 }]}>
-                        <Text> Tk {item.unitPrice*item.amount} </Text>
+                        <Text>Tk {item.unitPrice*item.amount} </Text>
                         <Text>Delivery: Tk:30</Text>
                     </View>
             </View>

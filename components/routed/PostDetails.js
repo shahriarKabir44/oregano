@@ -17,7 +17,6 @@ function PostDetails(props) {
     }
      
     useEffect(()=>{
-        console.log(post.id )
         CartServices.getCartList().then(carts=>{
             try {
                 for(let n=0;n<carts.length;n++){
@@ -137,8 +136,11 @@ function PostDetails(props) {
                 </View>
 			</ScrollView>
 			<TouchableOpacity onPress={()=>{
-                console.log(isAddedToCart)
                 if(!isAddedToCart)toggleBottomNavigationView()
+                else{
+                    CartServices.removeItem(post.id)
+                    setCartStatus(false)
+                }
             }}>
 				<View style={styles.footer}>
 					{!isAddedToCart && <Text style={{

@@ -7,6 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {  View } from 'react-native';
 import CartListView from '../routed/CartListView'
 import PostDetails from '../routed/PostDetails'
+import CartServices from '../../services/CartServices';
 const Stack= createStackNavigator()
 function StackNavigatorRoot(props){
 	return <Stack.Navigator>
@@ -25,11 +26,16 @@ function StackNavigatorRoot(props){
 			header:props=> <CustomHeader stackNavigation={props.navigation} name={"Create Post"}  />
 		}} component={CreatePost} />
 		<Stack.Screen name='Add tags' component={Addtags} />
-        <Stack.Screen name='Cart' component={CartListView} 
+        <Stack.Screen name='Cart'   
              options={{
                 header:props=> <CustomHeader stackNavigation={props.navigation} name={"Cart"}  />
             }}
-        />
+        >
+			{  (props)=>{
+				 
+				return <CartListView {...props} />
+			} }
+			</Stack.Screen>
 	</Stack.Navigator>
 }
 
