@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View ,Text, StyleSheet,Image,FlatList, ScrollView, Dimensions} from 'react-native';
  import navigationObjects from '../Globals';
  import { EvilIcons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import { View ,Text, StyleSheet,Image,FlatList, ScrollView, Dimensions} from 're
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-btr';
 import AddTocart from '../shared/AddTocart';
+import CartServices from '../../services/CartServices';
 function PostDetails(props) {
     const  post =props.route.params.post
     const [canShowModal, toggleModal]=useState(false)
@@ -13,7 +14,26 @@ function PostDetails(props) {
     const toggleBottomNavigationView = () => {
         //Toggling the visibility state of the bottom sheet
         toggleModal(!canShowModal);
-      }
+    }
+     
+    useEffect(()=>{
+        console.log(post.id )
+        CartServices.getCartList().then(carts=>{
+            try {
+                for(let n=0;n<carts.length;n++){
+                     
+                    if(carts[n]['id'] ==post.id ){
+                        setCartStatus(true)
+                        break
+                    }
+                }
+            } catch (error) {
+                
+            }
+              
+            
+        })
+    },[])
     return (
         <View style={{
            
@@ -41,7 +61,8 @@ function PostDetails(props) {
                     <Text style={{
                         fontSize:30,
                         fontWeight:"bold"
-                    }}> {post.itemName} </Text>
+                        }}> {post.itemName} 
+                    </Text>
                     <Text style={{
                         fontSize:20
                     }}> Prepared By: </Text>
@@ -53,7 +74,9 @@ function PostDetails(props) {
                         }} source={{
                             uri:post.owner.facebookToken.profileImageURL
                         }} />
-                        <Text style={{
+                        <Text onPress={()=>{
+                            CartServices.clearAll()
+                        }} style={{
                             fontSize:20,
                             fontWeight:"bold"
                         }}> {post.owner.facebookToken.name} </Text>
@@ -114,6 +137,7 @@ function PostDetails(props) {
                 </View>
 			</ScrollView>
 			<TouchableOpacity onPress={()=>{
+                console.log(isAddedToCart)
                 if(!isAddedToCart)toggleBottomNavigationView()
             }}>
 				<View style={styles.footer}>

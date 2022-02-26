@@ -4,7 +4,9 @@ import CartServices from '../../services/CartServices'
 function AddTocart({post,togglePopup,setCartStatus}) {
     const [cartList,setCartList]=useState([])
     useEffect(()=>{
-        CartServices.getCartList().subscribe(carts=>setCartList(carts))
+        CartServices.getCartList().then(carts=>{
+            setCartList(carts)
+        })
     },[])
     const [itemChosen,setItemChosen]=useState(1)
     function updateAmount(type){
@@ -89,7 +91,14 @@ function AddTocart({post,togglePopup,setCartStatus}) {
                 </View>
             </ScrollView>
             <TouchableOpacity onPress={()=>{
-                CartServices.setCartList([...cartList,post])
+                try {
+                    
+                    CartServices.setCartList([...cartList,{...post, amount: itemChosen}])
+                }
+                catch{
+                    CartServices.setCartList([{...post, amount: itemChosen}])
+                }
+                //console.log([...cartList,{...post, amount: itemChosen}])
                 setCartStatus(true)
                 togglePopup(false)
             }}>

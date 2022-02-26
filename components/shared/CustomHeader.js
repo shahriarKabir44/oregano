@@ -16,7 +16,8 @@ function CustomHeader({name,drawerNavigation,stackNavigation }) {
                 alignItems:"center",
                 justifyContent:"space-between",
                 flexDirection:'row',
-                paddingTop:10
+                paddingTop:10,
+                paddingHorizontal:10
             }}>
             <Text onPress={()=>{
                 stackNavigation.goBack()
@@ -26,18 +27,19 @@ function CustomHeader({name,drawerNavigation,stackNavigation }) {
                 fontFamily:"sans-serif",
                 fontSize:30
             }}><AntDesign name="arrowleft" size={24} color="black" /> {name} </Text>
-            <TouchableOpacity onPress={()=>{
-                  popupSidebar()
-            }}>
                 <View style={{
                     display:"flex",
                     flexDirection:"row",
                     
                 }}>
                    <EvilIcons onPress={()=>{}} name="bell" size={40} color="black" />
-                   <EvilIcons onPress={()=>{}} name="cart" size={40} color="black" />
+                   <TouchableOpacity onPressIn={()=>{
+							stackNavigation.push('Cart')
+						}} >
+						<EvilIcons onPress={()=>{}} name="cart"size={40} color="black" />
+                   </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
+           
             </View>
         </SafeAreaView>
     );
