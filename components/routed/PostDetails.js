@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View ,Text, StyleSheet,Image,FlatList, ScrollView, Dimensions} from 'react-native';
  import navigationObjects from '../Globals';
+ import { useIsFocused } from '@react-navigation/native';
  import { EvilIcons } from '@expo/vector-icons';
  import Tags from '../shared/Tags';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,11 +16,11 @@ function PostDetails(props) {
         //Toggling the visibility state of the bottom sheet
         toggleModal(!canShowModal);
     }
-     
+    const isFocused = useIsFocused(); 
     useEffect(()=>{
-        console.log('loaded')
         CartServices.getCartList().then(carts=>{
             try {
+                if(!carts.length)setCartStatus(false)
                 for(let n=0;n<carts.length;n++){
                      
                     if(carts[n]['id'] ==post.id ){
@@ -28,17 +29,18 @@ function PostDetails(props) {
                     }
                 }
             } catch (error) {
-                
+                setCartStatus(false)
             }
               
             
         })
-    },[])
+    },[isFocused])
     return (
         <View style={{
            
 			flex:1
         }}>
+           
             <ScrollView style={{
 				 padding:20,
                  margin:10,
@@ -63,6 +65,9 @@ function PostDetails(props) {
                         fontWeight:"bold"
                         }}> {post.itemName} 
                     </Text>
+                    { isFocused && <View> 
+                        <Text> </Text> 
+                    </View>}
                     <Text style={{
                         fontSize:20
                     }}> Prepared By: </Text>
