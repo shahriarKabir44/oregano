@@ -7,7 +7,6 @@ import {createStackNavigator} from '@react-navigation/stack'
 import {  View } from 'react-native';
 import CartListView from '../routed/CartListView'
 import PostDetails from '../routed/PostDetails'
-import CartServices from '../../services/CartServices';
 const Stack= createStackNavigator()
 function StackNavigatorRoot(props){
 	return <Stack.Navigator>

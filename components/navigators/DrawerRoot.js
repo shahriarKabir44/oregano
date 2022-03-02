@@ -1,4 +1,3 @@
-import { NavigationContainer,DrawerActions } from '@react-navigation/native';
 import {
 	createDrawerNavigator,
 	DrawerContentScrollView,
@@ -10,7 +9,7 @@ import React from 'react';
 import Home from '../Home';
 import Header from '../shared/Header';
 
-import UserProfile from '../menus/UserProfile'
+import UserProfile from '../menus/UserProfile/UserProfile'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View,Image,StyleSheet,Text } from 'react-native';
 import CreatePost from '../menus/CreatePost';

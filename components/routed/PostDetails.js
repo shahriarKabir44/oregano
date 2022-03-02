@@ -17,6 +17,7 @@ function PostDetails(props) {
     }
      
     useEffect(()=>{
+        console.log('loaded')
         CartServices.getCartList().then(carts=>{
             try {
                 for(let n=0;n<carts.length;n++){
