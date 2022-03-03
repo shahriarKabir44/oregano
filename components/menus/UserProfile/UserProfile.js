@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View ,Text,Image,Dimensions,ScrollView, StyleSheet} from 'react-native';
+import Globals from '../../Globals';
 import postList from '../../postList';
 import PostCardRoot from '../../shared/PostCardRoot';
 import PostCardProfile from './PostCardProfile';
 import PostCardRootProfile from './PostCardRootProfile';
 function UserProfile(props) {
-    
+    const [userPosts,setPostList]=useState([])
+    useEffect(()=>{
+        Globals.getPostOfAUser()
+            .then(posts=>{
+                setPostList(posts)
+            })
+    },[])
     const UserProfileInfo={
         "facebookToken":{
             "name":"Fatima Khan",
@@ -87,7 +94,7 @@ function UserProfile(props) {
                 <View style={{
                     padding:10
                 }}>
-                    <PostCardRootProfile {...props} postList={postList} />
+                    <PostCardRootProfile {...props} postList={userPosts} />
                 </View>
             </ScrollView>
         </View>
