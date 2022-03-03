@@ -58,7 +58,7 @@ const  postList=[
         "id":"6214162873f6ff9efefd7",
         "amountProduced":5,
         "unitPrice":100,
-        "tags":["cake","pastry" ],
+        "tags":["cake","pastry","sweet"],
         "unitType":"Kgs"
 
 }]

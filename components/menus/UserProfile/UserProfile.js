@@ -2,7 +2,10 @@ import React from 'react';
 import { View ,Text,Image,Dimensions,ScrollView, StyleSheet} from 'react-native';
 import postList from '../../postList';
 import PostCardRoot from '../../shared/PostCardRoot';
+import PostCardProfile from './PostCardProfile';
+import PostCardRootProfile from './PostCardRootProfile';
 function UserProfile(props) {
+    
     const UserProfileInfo={
         "facebookToken":{
             "name":"Fatima Khan",
@@ -84,7 +87,7 @@ function UserProfile(props) {
                 <View style={{
                     padding:10
                 }}>
-                    <PostCardRoot {...props} postList={postList} />
+                    <PostCardRootProfile {...props} postList={postList} />
                 </View>
             </ScrollView>
         </View>
