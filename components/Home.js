@@ -4,6 +4,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import navigationObjects from './Globals'
 import TagsSelectionService from '../services/TagsSelectionService';
+import postList from './postList';
 function Home(props) {
     navigationObjects.drawer=props.drawerNav
     navigationObjects.stack=props.stackNav
@@ -23,7 +24,7 @@ function Home(props) {
                             paddingLeft: 5
                         }}
                     >From Your Favourites</Text>
-                    <PostCardRoot {...props} />
+                    <PostCardRoot {...props} postList={postList} />
                     <Text
                         style={{
                             fontSize: 20,
@@ -31,7 +32,7 @@ function Home(props) {
                             paddingLeft: 5
                         }}
                     >From your recent searches</Text>
-                    <PostCardRoot {...props}/>
+                    <PostCardRoot {...props} postList={postList} />
                 </View>
             </ScrollView>
            

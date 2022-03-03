@@ -1,6 +1,7 @@
 import React from 'react';
-import { View ,Text,Image,Dimensions,ScrollView} from 'react-native';
-  
+import { View ,Text,Image,Dimensions,ScrollView, StyleSheet} from 'react-native';
+import postList from '../../postList';
+import PostCardRoot from '../../shared/PostCardRoot';
 function UserProfile(props) {
     const UserProfileInfo={
         "facebookToken":{
@@ -15,7 +16,7 @@ function UserProfile(props) {
         followers:5,
         rating:3.4,
         totalItemsDelivered:10,
-        
+        followers:10
     }
     return (
         <View style={{
@@ -62,9 +63,38 @@ function UserProfile(props) {
                         </Text>
                     </View>
                 </View>
+
+                <View style={{
+                    padding:10
+                }}>
+                    <Text style={{
+                        fontSize:20
+                    }}> Your stats </Text>
+                    <View style={[styles.horizontalAlign,{
+                        marginTop:10
+                    }]}>
+                        <Text>Ratings</Text>
+                        <Text>{UserProfileInfo.rating}⭐</Text>
+                    </View>
+                    <View style={styles.horizontalAlign}>
+                        <Text>Followers:</Text>
+                        <Text>{UserProfileInfo.followers}</Text>
+                    </View>
+                </View>
+                <View style={{
+                    padding:10
+                }}>
+                    <PostCardRoot {...props} postList={postList} />
+                </View>
             </ScrollView>
         </View>
     );
 }
-
+const styles=StyleSheet.create({
+    horizontalAlign:{
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:"space-between"
+    }
+})
 export default UserProfile;

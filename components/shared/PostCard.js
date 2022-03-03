@@ -22,10 +22,13 @@ function PostCard({post, drawerNav,stackNav }) {
                     }} />
                 </View>
                 <View style={[styles.itemName, styles.marginVertical]}> 
-                    <Text>{post.itemName}</Text> 
+                    <Text style={{
+                        fontWeight:"bold",
+                        fontSize:20
+                    }}>{post.itemName}</Text> 
                 </View>
-                <View style={[styles.additionalInfo, styles.marginVertical]}>
-                    <View style={[styles.cookInfo, styles.marginVertical]}>
+                <View style={[ styles.marginVertical]}>
+                    <View style={[styles.cookInfo,styles.additionalInfo, styles.marginVertical]}>
                         <View>
                             <Image style={styles.cookImg} source={{
                                 height: "100%",
@@ -36,15 +39,12 @@ function PostCard({post, drawerNav,stackNav }) {
                             <Text> {post.owner.facebookToken.name} </Text> 
                         </View>
                     </View>
-                    {post.isPopular==1 && <View style={styles.popular}> 
-                        <Text style={{
-                            marginTop: 2
-                        }} >🔥Popular</Text> 
-                    </View> }
+                     
                     
                 </View>
                 <View style={[styles.tags, styles.marginVertical,{
-                    padding:5
+                    padding:5,
+                    flex:1
                 }]}>
                     <Text style={styles.tagIcon}>🏷️</Text> 
                         
@@ -84,11 +84,9 @@ const styles = StyleSheet.create({
     otherInfo: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
-        position:"absolute",
-        bottom:5,
+        justifyContent: 'space-around',
         alignItems:"center",
-    
+        paddingTop:2
     },
     cardImg: {
         backgroundColor: "green",
@@ -131,7 +129,8 @@ const styles = StyleSheet.create({
     additionalInfo: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-evenly"
+        justifyContent: "space-between",
+        paddingHorizontal:10
     }
 });
 
