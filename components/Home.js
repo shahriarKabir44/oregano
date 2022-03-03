@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PostCardRoot from './shared/PostCardRoot';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import navigationObjects from './Globals'
 import TagsSelectionService from '../services/TagsSelectionService';
-import postList from './postList';
+import Globals from './Globals';
 function Home(props) {
-    navigationObjects.drawer=props.drawerNav
-    navigationObjects.stack=props.stackNav
+    const [postList,setPostList]=useState([])
+    useEffect(()=>{
+        Globals.getAllPosts().then(posts=>setPostList(posts))
+    },[])
       return (
         <SafeAreaView style={{
             flex:1

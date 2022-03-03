@@ -9,7 +9,7 @@ function PostCardProfile({post, drawerNav,stackNav }) {
     return (
         <TouchableOpacity onPress={()=>{
             stackNav.push('Post details',{
-                post:post,
+                postId:post.id,
                 
             })
         }}>
