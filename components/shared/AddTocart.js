@@ -19,7 +19,7 @@ function AddTocart({post,togglePopup,addToCart}) {
         }}>
             <ScrollView>
                 <View style={{
-                    padding:10,
+                    padding:15,
                     display:"flex",
                     flexDirection:"row",
                     justifyContent:"space-between"
@@ -78,7 +78,8 @@ function AddTocart({post,togglePopup,addToCart}) {
                     display:"flex",
                     flexDirection:"row",
                     justifyContent:"space-between",
-                    marginVertical:10
+                    marginVertical:10,
+                    padding:5
                 }} >
                     <Text  style={{
                         fontSize:25,

@@ -1,5 +1,5 @@
 const  postList=[
-    {"itemName":"cake",
+    {"itemName":"Pastry cake",
             "images": [
                 "https://images-gmi-pmc.edge-generalmills.com/99d8ae9a-737f-491c-a7f7-34b014e5682c.jpg",
                 "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max",
@@ -19,7 +19,7 @@ const  postList=[
             "tags":["cake","pastry"],
             "unitType":"Units"
         },{
-            "itemName":"cake",
+            "itemName":"Birthday cake",
             "images": [
                 "https://images-gmi-pmc.edge-generalmills.com/99d8ae9a-737f-491c-a7f7-34b014e5682c.jpg",
                 "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max",
@@ -41,7 +41,7 @@ const  postList=[
 
     },
     {
-        "itemName":"cake",
+        "itemName":"chocolate cake",
         "images": [
             "https://images-gmi-pmc.edge-generalmills.com/99d8ae9a-737f-491c-a7f7-34b014e5682c.jpg",
             "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max",

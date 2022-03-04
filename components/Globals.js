@@ -6,7 +6,7 @@ class Globals{
     static async getAllPosts( ) {
         return postList
     }
-    static async getPostOfAUser(){
+    static async getPostOfAUser(id){
         return postList
     }
     static async getPostInfo(id){

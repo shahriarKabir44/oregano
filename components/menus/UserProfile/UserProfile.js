@@ -1,33 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { View ,Text,Image,Dimensions,ScrollView, StyleSheet} from 'react-native';
 import Globals from '../../Globals';
-import postList from '../../postList';
-import PostCardRoot from '../../shared/PostCardRoot';
-import PostCardProfile from './PostCardProfile';
+ import { RootContext } from '../../contexts/GlobalContext';
+
 import PostCardRootProfile from './PostCardRootProfile';
+import UserService from '../../../services/UserService';
 function UserProfile(props) {
+    const rootContext=React.useContext(RootContext)
+    const [UserProfileInfo,setUserInfo]=useState({
+        "facebookToken":{
+            "name":"",
+            "profileImageURL":"",
+            coverPhotoURL:"",
+            email:"",
+            phone:"",
+            address:""
+        },
+        "id":"",
+        followers:0,
+        rating:0,
+        totalItemsDelivered:0,
+        
+    })
     const [userPosts,setPostList]=useState([])
     useEffect(()=>{
-        Globals.getPostOfAUser()
+        if(!props.stackNav.route?.params?.id){
+            console.log('first')
+            setUserInfo(rootContext.contextObject.currentUser)
+            rootContext.updateContext({...rootContext.contextObject, headerString:'Your profile'})
+        }
+        else if(rootContext.contextObject.currentUser.id!=props.stackNav.route?.params?.id){
+            UserService.findUser(props.stackNav.route?.params?.id)
+                .then(data=>{
+                    setUserInfo(data)
+                    rootContext.updateContext({...rootContext.contextObject, headerString:data.facebookToken.name})
+
+                })
+        }
+        Globals.getPostOfAUser(UserProfileInfo.id)
             .then(posts=>{
                 setPostList(posts)
             })
     },[])
-    const UserProfileInfo={
-        "facebookToken":{
-            "name":"Fatima Khan",
-            "profileImageURL":"https://www.camc.org/sites/default/files/styles/800x600/public/2020-09/employee%20wellness%20center_hero.jpg?itok=9qCcPtUE",
-            coverPhotoURL:"https://checkpoint.cvcheck.com/wp-content/uploads/Improve-employee-engagement-with-digital-apps.jpg",
-            email:"firoza@gmail.com",
-            phone:"12345",
-            address:"Nirala, Khulna"
-        },
-        "id":"621413a308220b000e005185",
-        followers:5,
-        rating:3.4,
-        totalItemsDelivered:10,
-        followers:10
-    }
+     
     return (
         <View style={{
             flex:1

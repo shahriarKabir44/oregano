@@ -19,7 +19,10 @@ import {RootContext} from '../contexts/GlobalContext'
     const  postId =props.route.params.postId
     const [post,setCurrentPost]=useState(null)
     const [canShowModal, toggleModal]=useState(false)
-    const [cartInfo,setCartInfo]=useState(null)
+    const [cartInfo,setCartInfo]=useState({
+        info:null,
+        itemIndex:0
+    })
     const [isAddedToCart,setCartStatus]=useState(false)
     const toggleBottomNavigationView = () => {
         //Toggling the visibility state of the bottom sheet
@@ -35,15 +38,14 @@ import {RootContext} from '../contexts/GlobalContext'
     }
     function updateCartInfo(){
         CartServices.getCartList().then(carts=>{
-            console.log(carts,props.route.params.postId)
             try {
                 if(!carts.length)setCartStatus(false)
                 for(let n=0;n<carts.length;n++){
                      
                     if(carts[n]['id'] ==props.route.params.postId ){
                         setCartStatus(true)
-                        console.log(carts[n])
-                        setCartInfo(carts[n])
+                         
+                        setCartInfo({info:carts[n], itemIndex:n})
                         break
                     }
                 }
@@ -53,6 +55,9 @@ import {RootContext} from '../contexts/GlobalContext'
               
             
         })
+    }
+    function updatecartAmount(inc){
+        setCartInfo({...cartInfo,info:{ ...cartInfo.info, amount:Math.max(1,Math.min(cartInfo.info.amount+inc,post.amountProduced) ) }})
     }
     useEffect(()=>{
         rootContext.updateContext({...rootContext.contextObject, headerString:props.route.params.headerString})
@@ -71,20 +76,25 @@ import {RootContext} from '../contexts/GlobalContext'
                 flex:1
             }}>
            <ScrollView style={{
-                padding:20,
+                
                 margin:10,
                 backgroundColor:"white",
                 borderRadius:10
            }}>
            <View style={{
+               padding:20,flex:1
+           }}>
+           <View style={{
                display:"flex",
                flexDirection:"row",
-               justifyContent:"space-around"
+               justifyContent:"space-around",
+               alignItems:"center",
+               alignContent:"center"
            }}>
                <Image style={{
-                   width:130,
+                   width:100,
                    aspectRatio:1,
-                   borderRadius:80
+                   borderRadius:100
                }} source={{
                    uri:post.images[0]
                }} />
@@ -95,10 +105,22 @@ import {RootContext} from '../contexts/GlobalContext'
                        }}> {post.itemName} 
                    </Text>
                     
-                   <Text style={{
-                       fontSize:20
+                   
+               </View>
+           </View>
+            <View style={{
+                marginHorizontal :5,
+                marginVertical:20
+            }}>
+            <Text style={{
+                       fontSize:20,
+                       paddingVertical:10
                    }}> Prepared By: </Text>
-                   <View style={styles.horizontal_vert_Align}>
+                   <View style={[styles.horizontal_vert_Align,{
+                       backgroundColor:"#a1ef781f",
+                       padding:10,
+                       borderRadius:10
+                   }]}>
                        <Image style={{
                            width:50,
                            aspectRatio:1,
@@ -113,13 +135,12 @@ import {RootContext} from '../contexts/GlobalContext'
                            fontWeight:"bold"
                        }}> {post.owner.facebookToken.name} </Text>
                    </View>
-               </View>
-           </View>
-                <Text style={{
+                
+            </View>
+               
+            <Text style={{
                    fontSize:20
                }}>Details: </Text>
-               
-            
             <FlatList 
                horizontal={true}
                data={post.images} 
@@ -163,6 +184,7 @@ import {RootContext} from '../contexts/GlobalContext'
                        <Tags key={index} name={tag } />
                    )) }
                </View>
+           </View>
            </ScrollView>
            
                 {!isAddedToCart && <View style={styles.footer}>
@@ -190,7 +212,7 @@ import {RootContext} from '../contexts/GlobalContext'
                         </View>
                         <View style={styles.alighnHorizontal}>
                                 <TouchableOpacity onPress={()=>{
-                                    console.log(4)
+                                    updatecartAmount(1)
                                 }} >
                                     <View style={styles.updateAmountBtn}> 
                                         <Text style={{
@@ -203,9 +225,11 @@ import {RootContext} from '../contexts/GlobalContext'
                                 }]}> 
                                     <Text style={{
                                         fontSize:20
-                                    }}>{cartInfo?.amount}</Text> 
+                                    }}>{cartInfo?.info?.amount}</Text> 
                                 </View>
-                                <TouchableOpacity >
+                                <TouchableOpacity  onPress={()=>{
+                                    updatecartAmount(-1)
+                                }}>
                                     <View style={styles.updateAmountBtn}> 
                                         <Text style={{
                                             fontSize:20
