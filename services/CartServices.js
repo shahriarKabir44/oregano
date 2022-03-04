@@ -9,7 +9,9 @@ const  CartServices={
         else return {}
         
     },
-    clearAll: function(){ AsyncStorage.clear()},
+    clearAll: async function(){ 
+       await AsyncStorage.removeItem('cartList')
+    },
     removeItem:async function(itemId){
         let items= await this.getCartList()
         items=items.filter(item=> item.id!=itemId)

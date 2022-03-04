@@ -1,14 +1,17 @@
  
-import React from 'react';
-import { NavigationContainer, DrawerActions } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { Text, View, StyleSheet, Image, SafeAreaView,TouchableOpacity } from 'react-native';
-import navigationObjects from '../Globals';
 import { EvilIcons } from '@expo/vector-icons';
+import HeaderService from '../../services/HeaderService';
 function CustomHeader({name,drawerNavigation,stackNavigation }) {
-    function popupSidebar(){
-        navigationObjects.drawer.dispatch(DrawerActions.toggleDrawer())
-    }
+    const [headerString,setHeaderString]=useState("")
+     
+    useEffect(()=>{
+        HeaderService.getHeaderString().subscribe(name=>{
+            setHeaderString(name)
+        })
+    },[])
     return (
         <SafeAreaView style={styles.navbarRoot}>
             <View style={{
@@ -26,7 +29,7 @@ function CustomHeader({name,drawerNavigation,stackNavigation }) {
                 
                 fontFamily:"sans-serif",
                 fontSize:30
-            }}><AntDesign name="arrowleft" size={24} color="black" /> {name} </Text>
+            }}><AntDesign name="arrowleft" size={24} color="black" /> {headerString} </Text>
                 <View style={{
                     display:"flex",
                     flexDirection:"row",

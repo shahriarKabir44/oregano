@@ -8,9 +8,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-btr';
 import AddTocart from '../shared/AddTocart';
 import CartServices from '../../services/CartServices';
+import HeaderService from '../../services/HeaderService';
  function PostDetails(props) {
     const  postId =props.route.params.postId
-     const [post,setCurrentPost]=useState(null)
+    const [post,setCurrentPost]=useState(null)
     const [canShowModal, toggleModal]=useState(false)
     const [isAddedToCart,setCartStatus]=useState(false)
     const toggleBottomNavigationView = () => {
@@ -19,6 +20,7 @@ import CartServices from '../../services/CartServices';
     }
     const isFocused = useIsFocused(); 
     useEffect(()=>{
+        HeaderService.setHeaderString(props.route.params.headerString)
         Globals.getPostInfo(postId)
             .then(postInfo=>{
                  setCurrentPost(postInfo)

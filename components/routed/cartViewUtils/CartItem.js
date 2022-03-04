@@ -7,6 +7,10 @@ function CartItem(props) {
         <TouchableOpacity onPress={()=>{
             let headerString=`${props.item.owner.facebookToken.name}'s post`
             let postId=props.item.id
+            props.navigation.navigate('Post details',{
+                postId:postId,
+                headerString:headerString
+            })
          }}>
             <View style={[styles.container,styles.alighnHorizontal ]}>
                 <View style={styles.img}>

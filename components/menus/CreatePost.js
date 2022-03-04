@@ -7,7 +7,10 @@ import { Entypo } from '@expo/vector-icons';
 import RemovableTag from '../shared/RemovableTag';
 import {Picker} from '@react-native-picker/picker';
 import TagsSelectionService from '../../services/TagsSelectionService';
- function CreatePost(props) {
+import { useIsFocused } from '@react-navigation/native';
+function CreatePost(props) {
+	const isFocused=useIsFocused()
+
 	const [item,setItemProperty]=useState({
 		itemName:"",
 		tags:[],
@@ -17,8 +20,13 @@ import TagsSelectionService from '../../services/TagsSelectionService';
 		amountType:"Units"
 	})
 	useEffect(()=>{
-		TagsSelectionService.getTagList().subscribe(tags=>{
-			setItemProperty({...item, tags:tags})
+		TagsSelectionService.getTagList().then(tags=>{
+			if(tags){
+				setItemProperty({...item, tags:tags})
+				
+			}
+		}).then(()=>{
+			TagsSelectionService.clearAll()
 		})
 		
 	},[])
@@ -59,6 +67,9 @@ import TagsSelectionService from '../../services/TagsSelectionService';
 				 margin:10,
 				 borderRadius:10
 			 }}>
+				 {isFocused && <View>
+					 <Text></Text>
+				 </View> }
                 <TextInput
                     label="Item Name"
                     value={item.itemName}

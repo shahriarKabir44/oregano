@@ -10,7 +10,7 @@ function PostCard({post, drawerNav,stackNav }) {
         <TouchableOpacity onPress={()=>{
             stackNav.push('Post details',{
                 postId:post.id,
-                
+                headerString:`${post.owner.facebookToken.name}'s post`
             })
         }}>
             <View style={styles.container}>
