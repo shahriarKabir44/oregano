@@ -116,25 +116,31 @@ import {RootContext} from '../contexts/GlobalContext'
                        fontSize:20,
                        paddingVertical:10
                    }}> Prepared By: </Text>
-                   <View style={[styles.horizontal_vert_Align,{
-                       backgroundColor:"#a1ef781f",
-                       padding:10,
-                       borderRadius:10
-                   }]}>
-                       <Image style={{
-                           width:50,
-                           aspectRatio:1,
-                           borderRadius:50
-                       }} source={{
-                           uri:post.owner.facebookToken.profileImageURL
-                       }} />
-                       <Text onPress={()=>{
-                           CartServices.clearAll()
-                       }} style={{
-                           fontSize:20,
-                           fontWeight:"bold"
-                       }}> {post.owner.facebookToken.name} </Text>
-                   </View>
+                    <TouchableOpacity onPress={()=>{
+                        props.navigation.push('profile',{
+                            id: post.owner.id
+                        })
+                    }}>
+                        <View style={[styles.horizontal_vert_Align,{
+                            backgroundColor:"#a1ef781f",
+                            padding:10,
+                            borderRadius:10
+                        }]}>
+                            <Image style={{
+                                width:50,
+                                aspectRatio:1,
+                                borderRadius:50
+                            }} source={{
+                                uri:post.owner.facebookToken.profileImageURL
+                            }} />
+                            <Text onPress={()=>{
+                                CartServices.clearAll()
+                            }} style={{
+                                fontSize:20,
+                                fontWeight:"bold"
+                            }}> {post.owner.facebookToken.name} </Text>
+                        </View>
+                   </TouchableOpacity>
                 
             </View>
                

@@ -10,8 +10,8 @@ function UserProfile(props) {
     const [UserProfileInfo,setUserInfo]=useState({
         "facebookToken":{
             "name":"",
-            "profileImageURL":"",
-            coverPhotoURL:"",
+            "profileImageURL":"https://www.camc.org/sites/default/files/styles/800x600/public/2020-09/employee%20wellness%20center_hero.jpg?itok=9qCcPtUE",
+            coverPhotoURL:"https://www.camc.org/sites/default/files/styles/800x600/public/2020-09/employee%20wellness%20center_hero.jpg?itok=9qCcPtUE",
             email:"",
             phone:"",
             address:""
@@ -24,17 +24,18 @@ function UserProfile(props) {
     })
     const [userPosts,setPostList]=useState([])
     useEffect(()=>{
-        if(!props.stackNav.route?.params?.id){
-            console.log('first')
+        if(!props.route?.params?.id){
+             
             setUserInfo(rootContext.contextObject.currentUser)
             rootContext.updateContext({...rootContext.contextObject, headerString:'Your profile'})
         }
-        else if(rootContext.contextObject.currentUser.id!=props.stackNav.route?.params?.id){
-            UserService.findUser(props.stackNav.route?.params?.id)
+        else if(rootContext.contextObject.currentUser.id!=props. route?.params?.id){
+            console.log(props.stackNav.route?.params?.id)
+            UserService.findUser(props. route?.params?.id)
                 .then(data=>{
                     setUserInfo(data)
                     rootContext.updateContext({...rootContext.contextObject, headerString:data.facebookToken.name})
-
+                    
                 })
         }
         Globals.getPostOfAUser(UserProfileInfo.id)
