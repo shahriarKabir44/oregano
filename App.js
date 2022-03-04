@@ -4,14 +4,17 @@ import { NavigationContainer  } from '@react-navigation/native';
 
 
 import StackNavigatorRoot from './components/navigators/StackNavigatorRoot';
+import GlobalContext from './components/contexts/GlobalContext';
 
 
 
 export default function App() {
 	return ( 
-  		<NavigationContainer>
-			  <StackNavigatorRoot />
-		</NavigationContainer>
+  		<GlobalContext>
+			<NavigationContainer>
+				<StackNavigatorRoot />
+			</NavigationContainer>
+		</GlobalContext>
 	);
 }
 

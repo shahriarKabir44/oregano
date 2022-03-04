@@ -3,15 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { Text, View, StyleSheet, Image, SafeAreaView,TouchableOpacity } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
-import HeaderService from '../../services/HeaderService';
+import  {RootContext} from '../contexts/GlobalContext'
+
 function CustomHeader({name,drawerNavigation,stackNavigation }) {
-    const [headerString,setHeaderString]=useState("")
+
+    const {contextObject}=React.useContext(RootContext)
      
-    useEffect(()=>{
-        HeaderService.getHeaderString().subscribe(name=>{
-            setHeaderString(name)
-        })
-    },[])
     return (
         <SafeAreaView style={styles.navbarRoot}>
             <View style={{
@@ -28,8 +25,8 @@ function CustomHeader({name,drawerNavigation,stackNavigation }) {
                  
                 
                 fontFamily:"sans-serif",
-                fontSize:30
-            }}><AntDesign name="arrowleft" size={24} color="black" /> {headerString} </Text>
+                fontSize:20
+            }}><AntDesign name="arrowleft" size={24} color="black" /> {contextObject.headerString} </Text>
                 <View style={{
                     display:"flex",
                     flexDirection:"row",

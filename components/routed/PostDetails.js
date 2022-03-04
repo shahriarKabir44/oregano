@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import { View ,Text, StyleSheet,Image,FlatList, ScrollView, Dimensions} from 'react-native';
  import Globals from '../Globals';
  import { useIsFocused } from '@react-navigation/native';
@@ -8,8 +8,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-btr';
 import AddTocart from '../shared/AddTocart';
 import CartServices from '../../services/CartServices';
-import HeaderService from '../../services/HeaderService';
- function PostDetails(props) {
+
+import {RootContext} from '../contexts/GlobalContext'
+
+
+  function PostDetails(props) {
+    const rootContext=useContext(RootContext)
     const  postId =props.route.params.postId
     const [post,setCurrentPost]=useState(null)
     const [canShowModal, toggleModal]=useState(false)
@@ -18,9 +22,9 @@ import HeaderService from '../../services/HeaderService';
         //Toggling the visibility state of the bottom sheet
         toggleModal(!canShowModal);
     }
-    const isFocused = useIsFocused(); 
     useEffect(()=>{
-        HeaderService.setHeaderString(props.route.params.headerString)
+        console.log(rootContext.contextObject)
+        rootContext. contextSetter({...RootContext.contextObject, headerString:props.route.params.headerString})
         Globals.getPostInfo(postId)
             .then(postInfo=>{
                  setCurrentPost(postInfo)
