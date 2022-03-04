@@ -4,7 +4,14 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TagsSelectionService from '../services/TagsSelectionService';
 import Globals from './Globals';
+
+import {RootContext} from './contexts/GlobalContext'
+
+
+
 function Home(props) {
+    const rootContext=React.useContext(RootContext)
+
     const [postList,setPostList]=useState([])
     useEffect(()=>{
         Globals.getAllPosts().then(posts=>setPostList(posts))
@@ -51,8 +58,8 @@ function Home(props) {
                 
             }} >
                  <TouchableOpacity onPress={()=>{
-                     TagsSelectionService.setTagList([])
-                     props.stackNav.push("Create post")
+                    rootContext.updateContext({...rootContext.contextObject, headerString:'Create a post!'})
+                    props.stackNav.push("Create post")
                  }}>
                     <Text style={{
                         color:"white",

@@ -6,9 +6,6 @@ import { View,Text,StyleSheet, Button, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import RemovableTag from '../shared/RemovableTag';
-import TagsSelectionService from '../../services/TagsSelectionService';
-
-
 
 
 const availableTags=["chicken", "spicy","cake","pastry","pasta","indian","mexican"]
@@ -90,9 +87,9 @@ function Addtags(props) {
                 })}
             </ScrollView>
             <TouchableOpacity onPress={()=>{
-                TagsSelectionService.setTagList(selected) 
-
-                props.navigation.goBack()
+                props.navigation.navigate('Create post',{
+                    tags:selected
+                })
             }}>
 				<View style={{
                     backgroundColor:"#FFA500",

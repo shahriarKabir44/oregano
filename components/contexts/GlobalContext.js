@@ -8,7 +8,7 @@ export const RootContext=React.createContext()
     return (
         <RootContext.Provider value={{
             contextObject:globalObject,
-            contextSetter:setGlobalObject
+            updateContext:setGlobalObject
         }}>
                 {children}
          </RootContext.Provider>

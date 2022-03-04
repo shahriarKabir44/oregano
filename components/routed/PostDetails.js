@@ -24,7 +24,7 @@ import {RootContext} from '../contexts/GlobalContext'
     }
     useEffect(()=>{
         console.log(rootContext.contextObject)
-        rootContext. contextSetter({...RootContext.contextObject, headerString:props.route.params.headerString})
+        rootContext. updateContext({...rootContext.contextObject, headerString:props.route.params.headerString})
         Globals.getPostInfo(postId)
             .then(postInfo=>{
                  setCurrentPost(postInfo)
