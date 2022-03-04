@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View,Text,StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import CartServices from '../../services/CartServices'
-function AddTocart({post,togglePopup,setCartStatus}) {
+function AddTocart({post,togglePopup,addToCart}) {
     const [cartList,setCartList]=useState([])
     useEffect(()=>{
         CartServices.getCartList().then(carts=>{
@@ -99,7 +99,7 @@ function AddTocart({post,togglePopup,setCartStatus}) {
                     CartServices.setCartList([{...post, amount: itemChosen}])
                 }
                 //console.log([...cartList,{...post, amount: itemChosen}])
-                setCartStatus(true)
+                addToCart( )
                 togglePopup(false)
             }}>
 				<View style={styles.footer}>
