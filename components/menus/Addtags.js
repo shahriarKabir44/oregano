@@ -15,7 +15,11 @@ function Addtags(props) {
     const [tags,setAvailableTags]=useState([...availableTags])
     useEffect(()=>{
         setSelected(props.route.params.selectedNames)
-             
+        let tempAvailable=availableTags
+        for(let tag of props.route.params.selectedNames){
+            tempAvailable=tempAvailable.filter(tagName=>tagName!=tag)
+        }
+        setAvailableTags(tempAvailable)
     },[])
     function addTag(tag){
         if(selected.length<3) {

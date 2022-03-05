@@ -6,6 +6,7 @@ import Globals from '../../Globals';
 import PostCardRootProfile from './PostCardRootProfile';
 import UserService from '../../../services/UserService';
 function UserProfile(props) {
+    const [isCurrentUser,setCurrentUserFlag]=useState(false)
     const rootContext=React.useContext(RootContext)
     const [UserProfileInfo,setUserInfo]=useState({
         "facebookToken":{
@@ -27,7 +28,7 @@ function UserProfile(props) {
     const [isLoaded,setLoadedStatus]=useState(false)
     useEffect(()=>{
         if(!props.route?.params?.id){
-             
+            setCurrentUserFlag(true)
             setUserInfo(rootContext.contextObject.currentUser)
             rootContext.updateContext({...rootContext.contextObject, headerString:'Your profile'})
             Globals.getPostOfAUser(UserProfileInfo.id)
@@ -37,7 +38,8 @@ function UserProfile(props) {
                 })
         }
         else if(rootContext.contextObject.currentUser.id!=props. route?.params?.id){
-             
+            setCurrentUserFlag(false)
+
             UserService.findUser(props. route?.params?.id)
                 .then(data=>{
                     setUserInfo(data)
@@ -104,7 +106,7 @@ function UserProfile(props) {
                 }}>
                     <Text style={{
                         fontSize:20
-                    }}> Your stats </Text>
+                    }}> {isCurrentUser? 'Your' : `${UserProfileInfo.facebookToken.name}'s` } stats </Text>
                     <View style={[styles.horizontalAlign,{
                         marginTop:10
                     }]}>
@@ -116,6 +118,10 @@ function UserProfile(props) {
                         <Text>{UserProfileInfo.followers}</Text>
                     </View>
                 </View>
+                <Text style={{
+                        fontSize:20,
+                        padding:10
+                    }}> {isCurrentUser? 'Your' : `${UserProfileInfo.facebookToken.name}'s` } Posts </Text>
                 <View style={{
                     padding:10
                 }}>
