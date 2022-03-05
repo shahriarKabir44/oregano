@@ -22,33 +22,42 @@ function UserProfile(props) {
         totalItemsDelivered:0,
         
     })
+
     const [userPosts,setPostList]=useState([])
+    const [isLoaded,setLoadedStatus]=useState(false)
     useEffect(()=>{
         if(!props.route?.params?.id){
              
             setUserInfo(rootContext.contextObject.currentUser)
             rootContext.updateContext({...rootContext.contextObject, headerString:'Your profile'})
+            Globals.getPostOfAUser(UserProfileInfo.id)
+                .then(posts=>{
+                    setPostList(posts)
+                    setLoadedStatus(true)
+                })
         }
         else if(rootContext.contextObject.currentUser.id!=props. route?.params?.id){
-            console.log(props.stackNav.route?.params?.id)
+             
             UserService.findUser(props. route?.params?.id)
                 .then(data=>{
                     setUserInfo(data)
                     rootContext.updateContext({...rootContext.contextObject, headerString:data.facebookToken.name})
-                    
+                    Globals.getPostOfAUser(UserProfileInfo.id)
+                        .then(posts=>{
+                            setPostList(posts)
+                            setLoadedStatus(true)
+                        })
                 })
         }
-        Globals.getPostOfAUser(UserProfileInfo.id)
-            .then(posts=>{
-                setPostList(posts)
-            })
+        
     },[])
      
     return (
         <View style={{
             flex:1
         }}>
-            <ScrollView>
+            {isLoaded && <View>
+                <ScrollView>
                 <View>
                     <View style={{
                         height:Dimensions.get('window').width*9/16+Dimensions.get('window').width*.2
@@ -113,6 +122,7 @@ function UserProfile(props) {
                     <PostCardRootProfile {...props} postList={userPosts} />
                 </View>
             </ScrollView>
+            </View>}
         </View>
     );
 }

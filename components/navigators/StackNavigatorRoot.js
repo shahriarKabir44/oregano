@@ -9,7 +9,10 @@ import CartListView from '../routed/CartListView'
 import PostDetails from '../routed/PostDetails'
 import UserProfile from '../menus/UserProfile/UserProfile';
 const Stack= createStackNavigator()
+import {RootContext} from '../contexts/GlobalContext'
+
 function StackNavigatorRoot(props){
+	const rootContext=React.useContext(RootContext)
 	return <Stack.Navigator>
 		<Stack.Screen name='HomeView' component={DrawerRoot } options={{
           header: (prop)=>{
@@ -43,7 +46,7 @@ function StackNavigatorRoot(props){
             }}
         >
 			{  (props)=>{
-				 
+ 
 				return <UserProfile stackNav={props.navigation}  {...props} />
 			} }
 			</Stack.Screen>

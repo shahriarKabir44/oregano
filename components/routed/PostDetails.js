@@ -117,6 +117,8 @@ import {RootContext} from '../contexts/GlobalContext'
                        paddingVertical:10
                    }}> Prepared By: </Text>
                     <TouchableOpacity onPress={()=>{
+                        rootContext.updateContext({...rootContext.contextObject, headerString:''})
+
                         props.navigation.push('profile',{
                             id: post.owner.id
                         })
