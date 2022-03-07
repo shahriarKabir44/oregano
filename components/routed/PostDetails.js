@@ -59,7 +59,6 @@ function PostDetails(props) {
     function updatecartAmount(inc) {
         setCartInfo({ ...cartInfo, info: { ...cartInfo.info, amount: Math.max(1, Math.min(cartInfo.info.amount + inc, post.amountProduced)) } })
     }
-    const [isInRoute, setIsInRoute] = useState(false)
     useEffect(() => {
 
         if (isFocused) {
@@ -142,9 +141,7 @@ function PostDetails(props) {
                                     }} source={{
                                         uri: post.owner.facebookToken.profileImageURL
                                     }} />
-                                    <Text onPress={() => {
-                                        CartServices.clearAll()
-                                    }} style={{
+                                    <Text style={{
                                         fontSize: 20,
                                         fontWeight: "bold"
                                     }}> {post.owner.facebookToken.name} </Text>
@@ -196,7 +193,16 @@ function PostDetails(props) {
                             <Text style={styles.tagIcon}>🏷️</Text>
 
                             {post.tags.map((tag, index) => (
-                                <Tags key={index} name={tag} />
+                                <TouchableOpacity key={index} onPress={() => {
+                                    rootContext.updateContext({ ...rootContext.contextObject, headerString: "" })
+
+                                    props.navigation.navigate('searchResult', {
+                                        tag: tag
+                                    })
+                                }} >
+                                    <Tags name={tag} />
+                                </TouchableOpacity>
+
                             ))}
                         </View>
                     </View>
