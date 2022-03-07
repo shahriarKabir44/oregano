@@ -10,6 +10,7 @@ function CartListView(props) {
     const [groupedCartList, setCartList] = useState([])
     function updateCartList() {
         CartServices.getCartList().then(carts => {
+            rootContext.updateContext({ ...rootContext.contextObject, headerString: "Cart" })
 
             let cookIndex = 0
             let cookIds = {}
@@ -29,12 +30,10 @@ function CartListView(props) {
         })
     }
     const isFocused = useIsFocused()
-    const [iscahnged, setChanged] = useState(0)
     useEffect(() => {
-        setChanged(0)
-        rootContext.updateContext({ ...rootContext.contextObject, headerString: "Cart" })
-        updateCartList()
-    }, [iscahnged, isFocused])
+        if (isFocused)
+            updateCartList()
+    }, [isFocused])
     return (
         <View style={{
             flex: 1

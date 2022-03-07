@@ -36,6 +36,7 @@ function CustomHeader({ name, drawerNavigation, stackNavigation }) {
                 }}>
                     <EvilIcons onPress={() => { }} name="bell" size={40} color="black" />
                     <TouchableOpacity onPress={() => {
+                        updateContext({ ...contextObject, headerString: "Cart" })
                         stackNavigation.push('Cart')
                     }} >
                         <EvilIcons name="cart" size={40} color="black" />
