@@ -15,7 +15,7 @@ function SearchResultItem(props) {
             let headerString = `${props.item.owner.facebookToken.name}'s post`
             let postId = props.item.id
             rootContext.updateContext({ ...rootContext.contextObject, headerString: headerString })
-            props.navigation.navigate('Post details', {
+            props.navigation.push('Post details', {
                 postId: postId,
                 headerString: headerString
             })
@@ -51,7 +51,15 @@ function SearchResultItem(props) {
                                 }}>{props.item.amountProduced} {props.item.unitType}</Text>
                             </View>
                         </View>
-                        <View style={styles.alighnHorizontal} >
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            borderRadius: 10,
+
+                            alignContent: "center",
+                            alignItems: "center"
+                        }} >
                             <Image style={{
                                 width: 35,
                                 borderRadius: 90,

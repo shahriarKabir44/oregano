@@ -6,19 +6,23 @@ import { TextInput } from 'react-native-paper';
 import PostService from '../../../services/PostService'
 import { ScrollView } from 'react-native';
 import SearchResultItem from './SearchResultItem';
+import { useIsFocused } from '@react-navigation/native';
 function ResultsRoot(props) {
     const rootContext = React.useContext(RootContext)
     const [currentTagName, setTagName] = useState("")
     const [searchResult, setSearchResult] = useState([])
-
+    const isFocused = useIsFocused()
     useEffect(() => {
-        rootContext.updateContext({ ...rootContext.contextObject, headerString: "Search result" })
-        setTagName(props.route.params.tag)
-        PostService.searchPost(props.route.params.tag)
-            .then(data => {
-                setSearchResult(data)
-            })
-    }, [])
+        if (isFocused) {
+            rootContext.updateContext({ ...rootContext.contextObject, headerString: "Search result" })
+            setTagName(props.route.params.tag)
+            PostService.searchPost(props.route.params.tag)
+                .then(data => {
+                    setSearchResult(data)
+                })
+        }
+
+    }, [isFocused])
     return (
         <View style={{
             flex: 1,

@@ -3,13 +3,14 @@ import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 import { RootContext } from '../../contexts/GlobalContext';
 
 function CartItem(props) {
+
     const rootContext = React.useContext(RootContext)
     return (
         <TouchableOpacity onPress={() => {
             let headerString = `${props.item.owner.facebookToken.name}'s post`
             let postId = props.item.id
             rootContext.updateContext({ ...rootContext.contextObject, headerString: headerString })
-            props.navigation.navigate('Post details', {
+            props.navigation.push('Post details', {
                 postId: postId,
                 headerString: headerString
             })
