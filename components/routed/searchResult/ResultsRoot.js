@@ -38,9 +38,11 @@ function ResultsRoot(props) {
                     fontSize: 20
                 }}>Search results for {currentTagName} </Text>
             </View>
-            <ScrollView>
+            <ScrollView style={{
+                backgroundColor: "#c4c4c4"
+            }}>
                 {searchResult.map((item, index) => {
-                    return <SearchResultItem key={index} item={item} />
+                    return <SearchResultItem navigation={props.navigation} key={index} item={item} />
                 })}
             </ScrollView>
         </View>
