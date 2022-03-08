@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, ScrollView, Dimensions, Modal } from 'react-native';
 import Globals from '../Globals';
 import { useIsFocused } from '@react-navigation/native';
 import { EvilIcons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BottomSheet } from 'react-native-btr';
 import AddTocart from '../shared/AddTocart';
 import CartServices from '../../services/CartServices';
-
+import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
 
 
@@ -23,6 +23,7 @@ function PostDetails(props) {
         info: null,
         itemIndex: 0
     })
+    const [images, setImageList] = useState([{ url: "abcd", props: "" }])
     const [isCartUpdated, setCartUpdateStatus] = useState(false)
     const [isAddedToCart, setCartStatus] = useState(false)
     const toggleBottomNavigationView = () => {
@@ -60,6 +61,7 @@ function PostDetails(props) {
     function updatecartAmount(inc) {
         setCartInfo({ ...cartInfo, info: { ...cartInfo.info, amount: Math.max(1, Math.min(cartInfo.info.amount + inc, post.amountProduced)) } })
     }
+    const [canPopUpImageModal, setImageModalVisibility] = useState(false)
     useEffect(() => {
 
         if (isFocused) {
@@ -69,7 +71,14 @@ function PostDetails(props) {
                 .then(postInfo => {
                     setCurrentPost(postInfo)
                     rootContext.updateContext({ ...rootContext.contextObject, headerString: `${postInfo.owner.facebookToken.name}' post` })
-
+                    let images = []
+                    for (let image of postInfo.images) {
+                        images.push({
+                            url: image,
+                            props: ""
+                        })
+                    }
+                    setImageList(images)
                     updateCartInfo()
                 })
         }
@@ -162,11 +171,15 @@ function PostDetails(props) {
                                 return <View style={{
                                     padding: 5
                                 }}>
-                                    <Image source={{ uri: image.item }} style={{
-                                        width: 200,
-                                        aspectRatio: 1,
+                                    <TouchableOpacity onPress={() => {
+                                        setImageModalVisibility(true)
+                                    }}>
+                                        <Image source={{ uri: image.item }} style={{
+                                            width: 200,
+                                            aspectRatio: 1,
 
-                                    }} />
+                                        }} />
+                                    </TouchableOpacity>
                                 </View>
 
                             }}
@@ -289,8 +302,14 @@ function PostDetails(props) {
                         <AddTocart togglePopup={toggleBottomNavigationView} addToCart={addToCart} post={post} />
                     </View>
                 </BottomSheet>
+                <Modal visible={canPopUpImageModal} transparent={true}>
+                    <ImageViewer onDoubleClick={() => {
+                        setImageModalVisibility(false)
+                    }} imageUrls={images} />
+                </Modal>
             </View>
             }
+
         </View>
     );
 }
