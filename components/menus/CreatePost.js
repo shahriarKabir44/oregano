@@ -23,7 +23,7 @@ function CreatePost(props) {
 	})
 	useEffect(() => {
 		if (isFocused) {
-			rootContext.updateContext({ ...contextObject, headerString: "Create a post" })
+			rootContext.updateContext({ ...rootContext.contextObject, headerString: "Create a post" })
 			setItemProperty({ ...item, tags: props.route.params ? props.route.params.tags : [] })
 		}
 	}, [isFocused])
