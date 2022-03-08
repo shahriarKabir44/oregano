@@ -10,14 +10,15 @@ import Tags from '../shared/Tags';
 function Favourites(props) {
     const rootContext = React.useContext(RootContext)
     const [followingList, setFollowingList] = useState([])
-    const useFocused = useIsFocused()
+    const isFocused = useIsFocused()
     useEffect(() => {
-        rootContext.updateContext({ ...rootContext.contextObject, headerString: "Following" })
+        if ()
+            rootContext.updateContext({ ...rootContext.contextObject, headerString: "Following" })
         UserService.findFollowingList(rootContext.contextObject.currentUser.id)
             .then(data => {
                 setFollowingList(data)
             })
-    }, [useFocused])
+    }, [isFocused])
 
     return (
         <View style={{
