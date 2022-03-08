@@ -5,6 +5,7 @@ import { RootContext } from '../../contexts/GlobalContext';
 
 import PostCardRootProfile from './PostCardRootProfile';
 import UserService from '../../../services/UserService';
+import { useIsFocused } from '@react-navigation/native';
 function UserProfile(props) {
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
     const rootContext = React.useContext(RootContext)
@@ -23,36 +24,39 @@ function UserProfile(props) {
         totalItemsDelivered: 0,
 
     })
-
+    const isFocused = useIsFocused()
     const [userPosts, setPostList] = useState([])
     const [isLoaded, setLoadedStatus] = useState(false)
     useEffect(() => {
-        if (!props.route?.params?.id) {
-            setCurrentUserFlag(true)
-            setUserInfo(rootContext.contextObject.currentUser)
-            rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
-            Globals.getPostOfAUser(UserProfileInfo.id)
-                .then(posts => {
-                    setPostList(posts)
-                    setLoadedStatus(true)
-                })
-        }
-        else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
-            setCurrentUserFlag(false)
+        if (isFocused) {
+            if (!props.route?.params?.id) {
+                setCurrentUserFlag(true)
+                setUserInfo(rootContext.contextObject.currentUser)
+                rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
+                Globals.getPostOfAUser(UserProfileInfo.id)
+                    .then(posts => {
+                        setPostList(posts)
+                        setLoadedStatus(true)
+                    })
+            }
+            else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
+                setCurrentUserFlag(false)
 
-            UserService.findUser(props.route?.params?.id)
-                .then(data => {
-                    setUserInfo(data)
-                    rootContext.updateContext({ ...rootContext.contextObject, headerString: data.facebookToken.name })
-                    Globals.getPostOfAUser(UserProfileInfo.id)
-                        .then(posts => {
-                            setPostList(posts)
-                            setLoadedStatus(true)
-                        })
-                })
+                UserService.findUser(props.route?.params?.id)
+                    .then(data => {
+                        setUserInfo(data)
+                        rootContext.updateContext({ ...rootContext.contextObject, headerString: data.facebookToken.name })
+                        Globals.getPostOfAUser(UserProfileInfo.id)
+                            .then(posts => {
+                                setPostList(posts)
+                                setLoadedStatus(true)
+                            })
+                    })
+            }
         }
 
-    }, [])
+
+    }, [isFocused])
 
     return (
         <View style={{

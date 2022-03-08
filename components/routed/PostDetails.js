@@ -23,6 +23,7 @@ function PostDetails(props) {
         info: null,
         itemIndex: 0
     })
+    const [isCartUpdated, setCartUpdateStatus] = useState(false)
     const [isAddedToCart, setCartStatus] = useState(false)
     const toggleBottomNavigationView = () => {
         //Toggling the visibility state of the bottom sheet
@@ -231,9 +232,26 @@ function PostDetails(props) {
                             setCartStatus(false)
                         }} name="trash-o" size={30} color="black" />
                     </View>
+                    {isCartUpdated && <TouchableOpacity style={{
+                        paddingVertical: 10,
+                        paddingHorizontal: 80,
+                        backgroundColor: "#77cf8e",
+                        borderRadius: 10,
+
+                    }} onPress={() => {
+
+                        CartServices.updateCartAmount(postId, cartInfo?.info?.amount)
+                            .then(() => {
+                                updateCartInfo()
+                                setCartUpdateStatus(false)
+                            })
+                    }} >
+                        <Text>Update</Text>
+                    </TouchableOpacity>}
                     <View style={styles.alighnHorizontal}>
                         <TouchableOpacity onPress={() => {
                             updatecartAmount(1)
+                            setCartUpdateStatus(true)
                         }} >
                             <View style={styles.updateAmountBtn}>
                                 <Text style={{
@@ -250,6 +268,8 @@ function PostDetails(props) {
                         </View>
                         <TouchableOpacity onPress={() => {
                             updatecartAmount(-1)
+                            setCartUpdateStatus(true)
+
                         }}>
                             <View style={styles.updateAmountBtn}>
                                 <Text style={{
