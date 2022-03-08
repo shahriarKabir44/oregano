@@ -4,13 +4,13 @@ import { FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Tags from './Tags';
 
-function PostCard({post, drawerNav,stackNav }) {
-    post=post.item
+function PostCard({ post, drawerNav, stackNav }) {
+    post = post.item
     return (
-        <TouchableOpacity onPress={()=>{
-            stackNav.push('Post details',{
-                postId:post.id,
-                headerString:`${post.owner.facebookToken.name}'s post`
+        <TouchableOpacity onPress={() => {
+            stackNav.push('Post details', {
+                postId: post.id,
+                headerString: `${post.owner.facebookToken.name}'s post`
             })
         }}>
             <View style={styles.container}>
@@ -21,41 +21,41 @@ function PostCard({post, drawerNav,stackNav }) {
                         height: "100%"
                     }} />
                 </View>
-                <View style={[styles.itemName, styles.marginVertical]}> 
+                <View style={[styles.itemName, styles.marginVertical]}>
                     <Text style={{
-                        fontWeight:"bold",
-                        fontSize:20
-                    }}>{post.itemName}</Text> 
+                        fontWeight: "bold",
+                        fontSize: 20
+                    }}>{post.itemName}</Text>
                 </View>
-                <View style={[ styles.marginVertical]}>
-                    <View style={[styles.cookInfo,styles.additionalInfo, styles.marginVertical]}>
+                <View style={[styles.marginVertical]}>
+                    <View style={[styles.cookInfo, styles.additionalInfo, styles.marginVertical]}>
                         <View>
                             <Image style={styles.cookImg} source={{
                                 height: "100%",
                                 uri: post.owner.facebookToken.profileImageURL
                             }} />
                         </View>
-                        <View style={styles.cookName}> 
-                            <Text> {post.owner.facebookToken.name} </Text> 
+                        <View style={styles.cookName}>
+                            <Text> {post.owner.facebookToken.name} </Text>
                         </View>
                     </View>
-                     
-                    
+
+
                 </View>
-                <View style={[styles.tags, styles.marginVertical,{
-                    padding:5,
-                    flex:1
+                <View style={[styles.tags, styles.marginVertical, {
+                    padding: 5,
+                    flex: 1
                 }]}>
-                    <Text style={styles.tagIcon}>🏷️</Text> 
-                        
-                    { post.tags.map((tag,index)=>(
-                        <Tags key={index} name={tag } />
-                    )) }
+                    <Text style={styles.tagIcon}>🏷️</Text>
+
+                    {post.tags.map((tag, index) => (
+                        <Tags key={index} name={tag} />
+                    ))}
                 </View>
                 <View style={[styles.otherInfo, styles.marginVertical]}>
-                    <Text> Tk 500 </Text>
+                    <Text> Tk {post.unitPrice} </Text>
                     <Text> 5kms </Text>
-                    <Text> 4pc(s) available </Text>
+                    <Text> {post.amountProduced} {post.unitType} available </Text>
                 </View>{/* */}
             </View>
         </TouchableOpacity>
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-around',
-        alignItems:"center",
-        paddingTop:2
+        alignItems: "center",
+        paddingTop: 2
     },
     cardImg: {
         backgroundColor: "green",
@@ -115,22 +115,22 @@ const styles = StyleSheet.create({
         width: 50,
         aspectRatio: 1,
         borderRadius: 50,
-        height:50
+        height: 50
     },
     tagIcon: {
         padding: 0,
-        fontSize:30
+        fontSize: 30
     },
     tags: {
         display: "flex",
         flexDirection: "row",
-        flexWrap:"wrap"
+        flexWrap: "wrap"
     },
     additionalInfo: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingHorizontal:10
+        paddingHorizontal: 10
     }
 });
 

@@ -186,7 +186,7 @@ function PostDetails(props) {
                         />
                         <View style={styles.horizontalAlign}>
                             <Text style={styles.infoText}> Tk. {post.unitPrice} </Text>
-                            <Text style={styles.infoText}> {post.amountProduced} Unit(s) available </Text>
+                            <Text style={styles.infoText}> {post.amountProduced} {post.unitType} available </Text>
                         </View>
                         <View style={styles.horizontalAlign}>
                             <View style={{
