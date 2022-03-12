@@ -13,7 +13,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import openMap, { createOpenLink } from 'react-native-open-maps';
+import openMap from 'react-native-open-maps';
 
 function PostDetails(props) {
     const [mapVisibility, setMapVisibility] = useState(false)
@@ -120,7 +120,7 @@ function PostDetails(props) {
                             latitude: postData.latitude,
                             longitude: postData.longitude
                         })
-                        console.log(location)
+
                         setPostLocationGeoCode(`${location[0].name}, ${location[0].street}, ${location[0].postalCode}, ${location[0].city}`)
 
                     })()
@@ -387,7 +387,7 @@ function PostDetails(props) {
 
                         }}>
                             <TouchableOpacity onPress={() => {
-                                console.log(location)
+
                                 openMap({
                                     start: "1981 Landings Dr, Mountain View, CA 94043, USA",
                                     end: "1000 N Rengstorff Ave, Mountain View, CA 94043, USA",
@@ -404,20 +404,20 @@ function PostDetails(props) {
                             </TouchableOpacity>
                         </View>
                         <MapView region={{
-                            latitude: location.latitude,
-                            longitude: location.longitude,
-                            latitudeDelta: 0.005,
-                            longitudeDelta: 0.005
+                            latitude: post.latitude,
+                            longitude: post.longitude,
+                            latitudeDelta: 0.05,
+                            longitudeDelta: 0.05
                         }} style={{
                             flex: 1,
                             overflow: "hidden"
                         }} >
 
                             <Marker coordinate={{
-                                latitude: location.latitude,
-                                longitude: location.longitude,
-                                atitudeDelta: 0.5,
-                                longitudeDelta: 0.5
+                                latitude: post.latitude,
+                                longitude: post.longitude,
+                                atitudeDelta: 0.05,
+                                longitudeDelta: 0.05
                             }} title='you' />
                         </MapView>
                     </View>

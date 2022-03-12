@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Dimensions, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import CartServices from '../../services/CartServices'
+import { BottomSheet } from 'react-native-btr';
+
 import CartGroup from './cartViewUtils/CartGroup';
 import { RootContext } from '../contexts/GlobalContext'
 import { useIsFocused } from '@react-navigation/native';
+import OrderConfirmation from './cartViewUtils/OrderConfirmation';
 function CartListView(props) {
     const rootContext = React.useContext(RootContext)
-
+    const [bottomSheetVisibility, setBottomSheetVisibility] = useState(false)
     const [groupedCartList, setCartList] = useState([])
+    const [totalCharge, setTotalCharge] = useState(0)
     function updateCartList() {
         CartServices.getCartList().then(carts => {
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "Cart" })
@@ -25,6 +29,7 @@ function CartListView(props) {
                 groupedList[itemIndex].push(carts[n])
                 carts[n]['groupIndex'] = groupedList[itemIndex].length - 1
                 carts[n]['groupNumber'] = itemIndex
+                setTotalCharge(parseInt(totalCharge) + parseInt(parseInt(carts[n].unitPrice) * parseInt(carts[n].amount)))
             }
             setCartList(groupedList)
         })
@@ -46,11 +51,40 @@ function CartListView(props) {
                     {groupedCartList.map((group, index) => <CartGroup navigation={props.navigation} key={index} group={group} />)}
                 </View>
             </ScrollView>
-            <TouchableOpacity>
+            <View style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 10
+            }}>
+                <Text style={{
+                    fontSize: 20
+                }}>Total Charge</Text>
+                <Text style={{
+                    fontSize: 20,
+                    fontWeight: "bold"
+                }}>Tk{totalCharge}</Text>
+            </View>
+            <TouchableOpacity onPress={() => {
+                setBottomSheetVisibility(true)
+
+            }}>
                 <View style={styles.footer}>
-                    <Text> Place your order </Text>
+                    <Text> Confirm Location </Text>
                 </View>
             </TouchableOpacity>
+            <BottomSheet visible={bottomSheetVisibility}
+                onBackButtonPress={() => {
+                    setBottomSheetVisibility(false)
+                }}
+                onBackdropPress={() => {
+                    setBottomSheetVisibility(false)
+                }}
+            >
+                <View style={styles.bottomNavigationView}>
+                    <OrderConfirmation groupedCartList={groupedCartList} />
+                </View>
+            </BottomSheet>
         </View>
 
     );
@@ -62,6 +96,12 @@ const styles = StyleSheet.create({
         height: 60,
         justifyContent: "center",
         alignItems: "center"
-    }
+    },
+    bottomNavigationView: {
+        backgroundColor: '#fff',
+        width: '100%',
+        height: Dimensions.get('window').height * 0.65,
+        borderRadius: 10
+    },
 })
 export default CartListView;
