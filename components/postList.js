@@ -19,7 +19,9 @@ const postList = [
         "unitPrice": 100,
         "tags": ["cake", "pastry"],
         "unitType": "Units",
-        postedOn: 1646500617079
+        postedOn: 1646500617079,
+        latitude: 22.8022,
+        longitude: 89.5339
     }, {
         "itemName": "Birthday cake",
         "images": [
@@ -40,8 +42,9 @@ const postList = [
         "unitPrice": 100,
         "tags": ["cake", "pastry"],
         "unitType": "Kgs",
-        postedOn: 1646500617079
-
+        postedOn: 1646500617079,
+        latitude: 21.8022,
+        longitude: 89.5339
     },
     {
         "itemName": "chocolate cake",
@@ -63,7 +66,9 @@ const postList = [
         "unitPrice": 100,
         "tags": ["cake", "pastry", "sweet"],
         "unitType": "Kgs",
-        postedOn: 1646500614079
+        postedOn: 1646500614079,
+        latitude: 41.4219983,
+        longitude: -122.0841932
 
     }]
 

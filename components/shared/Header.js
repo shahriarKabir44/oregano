@@ -20,15 +20,7 @@ function Header(props) {
                 fontSize: 30
             }}> Oregano🎂 </Text>
             <View style={styles.horizontal_vert_Align} >
-                {/* <View style={{
-                    display:"flex",
-                    flexDirection:"row",
-                    justifyContent:"center",
-                    alignContent:"center",
-                    flex:1,
-                    paddingTop:30
-                }}>
-                </View> */}
+                
                 <EvilIcons onPress={() => { }} name="bell" size={40} color="black" />
                 <TouchableOpacity onPress={() => {
                     props.navigation.push('Cart')

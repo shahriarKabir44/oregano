@@ -1,6 +1,6 @@
- import {   StyleSheet  } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React from 'react'
-import { NavigationContainer  } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
 
 import StackNavigatorRoot from './components/navigators/StackNavigatorRoot';
@@ -9,8 +9,8 @@ import GlobalContext from './components/contexts/GlobalContext';
 
 
 export default function App() {
-	return ( 
-  		<GlobalContext>
+	return (
+		<GlobalContext>
 			<NavigationContainer>
 				<StackNavigatorRoot />
 			</NavigationContainer>
@@ -18,8 +18,8 @@ export default function App() {
 	);
 }
 
- 
+
 
 const styles = StyleSheet.create({
-   
+
 });

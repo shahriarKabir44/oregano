@@ -1,19 +1,22 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, Dimensions, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, ScrollView, Button, Dimensions, Modal } from 'react-native';
 import Globals from '../Globals';
 import { useIsFocused } from '@react-navigation/native';
 import { EvilIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import Tags from '../shared/Tags';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
 import AddTocart from '../shared/AddTocart';
 import CartServices from '../../services/CartServices';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
-
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import openMap, { createOpenLink } from 'react-native-open-maps';
 
 function PostDetails(props) {
+    const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const rootContext = useContext(RootContext)
     const postId = props.route.params.postId
@@ -23,6 +26,7 @@ function PostDetails(props) {
         info: null,
         itemIndex: 0
     })
+    const [currentPosition, setCurrentPosition] = useState(null)
     const [images, setImageList] = useState([{ url: "abcd", props: "" }])
     const [isCartUpdated, setCartUpdateStatus] = useState(false)
     const [isAddedToCart, setCartStatus] = useState(false)
@@ -61,10 +65,37 @@ function PostDetails(props) {
     function updatecartAmount(inc) {
         setCartInfo({ ...cartInfo, info: { ...cartInfo.info, amount: Math.max(1, Math.min(cartInfo.info.amount + inc, post.amountProduced)) } })
     }
+
+
+
+    const [location, setLocation] = useState({
+        latitude: 0,
+        longitude: 0
+    });
+    const [currentLocationGeoCode, setCurrentLocationGeoCode] = useState("")
     const [canPopUpImageModal, setImageModalVisibility] = useState(false)
+    const [postLocationGeoCode, setPostLocationGeoCode] = useState("")
     useEffect(() => {
 
         if (isFocused) {
+            (async () => {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    return;
+                }
+
+                let location = await Location.getCurrentPositionAsync({});
+                setLocation({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude
+                });
+                let currentLocationGeoCode = await Location.reverseGeocodeAsync({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude
+                })
+                setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
+
+            })();
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "" })
 
             Globals.getPostInfo(postId)
@@ -78,8 +109,23 @@ function PostDetails(props) {
                             props: ""
                         })
                     }
+
                     setImageList(images)
                     updateCartInfo()
+                    return postInfo
+                }).then((postData) => {
+
+                    (async () => {
+                        let location = await Location.reverseGeocodeAsync({
+                            latitude: postData.latitude,
+                            longitude: postData.longitude
+                        })
+                        console.log(location)
+                        setPostLocationGeoCode(`${location[0].name}, ${location[0].street}, ${location[0].postalCode}, ${location[0].city}`)
+
+                    })()
+
+
                 })
         }
     }, [isFocused])
@@ -200,7 +246,20 @@ function PostDetails(props) {
                             <Text style={styles.infoText}> 3 Hours ago </Text>
 
                         </View>
-
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row"
+                        }}>
+                            <Button onPress={() => {
+                                setMapVisibility(true)
+                            }} style={{
+                                paddingHorizontal: 15,
+                                paddingVertical: 5,
+                                backgroundColor: "#c4c4c4",
+                                borderRadius: 5,
+                                flex: 1
+                            }} title="View location" />
+                        </View>
                         <View style={[styles.tags, styles.marginVertical, {
                             padding: 5
                         }]}>
@@ -307,6 +366,62 @@ function PostDetails(props) {
                         setImageModalVisibility(false)
                     }} imageUrls={images} />
                 </Modal>
+
+                <BottomSheet
+                    visible={mapVisibility}
+                    onBackButtonPress={() => {
+                        setMapVisibility(false)
+                    }}
+                    onBackdropPress={() => {
+                        setMapVisibility(false)
+                    }}
+                >
+
+                    <View style={styles.bottomNavigationView}>
+                        <View style={{
+                            display: "flex",
+                            position: "absolute",
+                            bottom: 0,
+                            right: 0,
+                            zIndex: 1000,
+
+                        }}>
+                            <TouchableOpacity onPress={() => {
+                                console.log(location)
+                                openMap({
+                                    start: "1981 Landings Dr, Mountain View, CA 94043, USA",
+                                    end: "1000 N Rengstorff Ave, Mountain View, CA 94043, USA",
+                                    navigate: true
+
+                                })
+                            }} style={{
+
+                                padding: 20,
+                                backgroundColor: "#c4c4c4",
+
+                            }}>
+                                <Text>Expand</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <MapView region={{
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                            latitudeDelta: 0.005,
+                            longitudeDelta: 0.005
+                        }} style={{
+                            flex: 1,
+                            overflow: "hidden"
+                        }} >
+
+                            <Marker coordinate={{
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                                atitudeDelta: 0.5,
+                                longitudeDelta: 0.5
+                            }} title='you' />
+                        </MapView>
+                    </View>
+                </BottomSheet>
             </View>
             }
 
