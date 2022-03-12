@@ -25,6 +25,7 @@ const CartServices = {
                 break
             }
         }
+        await this.setCartList(carts)
     }
 }
 export default CartServices
