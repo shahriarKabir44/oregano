@@ -12,6 +12,8 @@ const Stack = createStackNavigator()
 import { RootContext } from '../contexts/GlobalContext'
 import ResultsRoot from '../routed/searchResult/ResultsRoot';
 import NotificationsRoot from '../routed/NotificationsRoot';
+import OrderDetails from '../routed/OrderDetails';
+import DeliveryInfo from '../routed/DeliveryInfo';
 
 function StackNavigatorRoot(props) {
 	const rootContext = React.useContext(RootContext)
@@ -70,6 +72,27 @@ function StackNavigatorRoot(props) {
 			{(props) => {
 
 				return <ResultsRoot stackNav={props.navigation}  {...props} />
+			}}
+		</Stack.Screen>
+		<Stack.Screen name='order_details'
+			options={{
+				header: props => <CustomHeader stackNavigation={props.navigation} />
+			}}
+		>
+			{(props) => {
+
+				return <OrderDetails stackNav={props.navigation}  {...props} />
+			}}
+		</Stack.Screen>
+
+		<Stack.Screen name='delivery_details'
+			options={{
+				header: props => <CustomHeader stackNavigation={props.navigation} />
+			}}
+		>
+			{(props) => {
+
+				return <DeliveryInfo stackNav={props.navigation}  {...props} />
 			}}
 		</Stack.Screen>
 	</Stack.Navigator>

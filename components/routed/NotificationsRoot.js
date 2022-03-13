@@ -1,9 +1,30 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import NotificationService from '../../services/NotificationServices';
+import NotificationItem from './notificationsViewUtils/NotificationItem';
 
 function NotificationsRoot(props) {
+    const [notificationList, setNotificationList] = React.useState([])
+    React.useEffect(() => {
+        NotificationService.getNotifications(1)
+            .then(data => {
+                setNotificationList(data)
+            })
+    }, [])
     return (
-        <View></View>
+        <View style={{
+            flex: 1,
+            margin: 10,
+            padding: 10,
+            borderRadius: 5,
+            backgroundColor: "#ffffff"
+        }}>
+            <ScrollView>
+                {notificationList.map((notification, index) => {
+                    return <NotificationItem navigator={props.navigation} notificationItem={notification} key={index} />
+                })}
+            </ScrollView>
+        </View>
     );
 }
 

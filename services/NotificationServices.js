@@ -2,12 +2,18 @@ export default class NotificationService {
     static async getNotifications(currentUserid) {
         return notifications.filter(notification => notification.recipient == currentUserid)
     }
+    static async updateSeenStatus(notificationId) {
+        for (let n of notifications) {
+            if (n.id == notificationId) n.isSeen = 0
+        }
+    }
 }
 
 
 let notifications = [
     {
-        notificationType: 1,
+        id: 1,
+        type: 1,
         isSeen: 0,
         recipient: 1,
         relatedSchemaId: 1,
@@ -15,7 +21,8 @@ let notifications = [
         message: "Firoza khan has ordered some of your food items"
     },
     {
-        notificationType: 2,
+        id: 2,
+        type: 2,
         isSeen: 1,
         recipient: 1,
         relatedSchemaId: null,
@@ -24,7 +31,8 @@ let notifications = [
 
     },
     {
-        notificationType: 3,
+        id: 3,
+        type: 3,
         isSeen: 0,
         recipient: 1,
         relatedSchemaId: null,
@@ -33,7 +41,8 @@ let notifications = [
 
     },
     {
-        notificationType: 4,
+        id: 4,
+        type: 4,
         isSeen: 0,
         recipient: 1,
         relatedSchemaId: 2,

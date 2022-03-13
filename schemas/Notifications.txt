@@ -1,11 +1,12 @@
 
 {
-    notificationType:{type:Number},
+    type:{type:Number},
     isSeen:{type:Number},
     recipient:{type:mongoose.Objectid},
     relatedSchemaId:{type:mongoose.Objectid},
     time:{type:Number},
-    message:{type:String}
+    message:{type:String},
+    id:{type:mongoose.Objectid},
 }
 
 1: someone ordered my food -> orderId => sellerId=self.id && buyerId= buyer.id && status==0
