@@ -12,8 +12,11 @@ function CartListView(props) {
     const [bottomSheetVisibility, setBottomSheetVisibility] = useState(false)
     const [groupedCartList, setCartList] = useState([])
     const [totalCharge, setTotalCharge] = useState(0)
+    const [shouldRefresh, setRefreshFlag] = useState(false)
+    const [isListEmpty, setEmptinessStatus] = useState(false)
     function updateCartList() {
         CartServices.getCartList().then(carts => {
+            if (!carts || carts.length == 0) setEmptinessStatus(true)
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "Cart" })
 
             let cookIndex = 0
@@ -38,7 +41,7 @@ function CartListView(props) {
     useEffect(() => {
         if (isFocused)
             updateCartList()
-    }, [isFocused])
+    }, [isFocused, shouldRefresh])
     return (
         <View style={{
             flex: 1
@@ -66,11 +69,13 @@ function CartListView(props) {
                 }}>Tk{totalCharge}</Text>
             </View>
             <TouchableOpacity onPress={() => {
-                setBottomSheetVisibility(true)
+                if (!isListEmpty) setBottomSheetVisibility(true)
 
             }}>
-                <View style={styles.footer}>
-                    <Text> Confirm Location </Text>
+                <View style={[styles.footer, {
+                    backgroundColor: isListEmpty ? "#c4c4c4" : "#FFA500",
+                }]}>
+                    <Text>{isListEmpty ? "Please add items to cart" : "Confirm Location"}</Text>
                 </View>
             </TouchableOpacity>
             <BottomSheet visible={bottomSheetVisibility}
@@ -82,7 +87,7 @@ function CartListView(props) {
                 }}
             >
                 <View style={styles.bottomNavigationView}>
-                    <OrderConfirmation groupedCartList={groupedCartList} />
+                    <OrderConfirmation setRefreshFlag={setRefreshFlag} groupedCartList={groupedCartList} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
         </View>
@@ -92,7 +97,7 @@ function CartListView(props) {
 const styles = StyleSheet.create({
 
     footer: {
-        backgroundColor: "#FFA500",
+
         height: 60,
         justifyContent: "center",
         alignItems: "center"

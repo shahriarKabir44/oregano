@@ -10,7 +10,7 @@ const CartServices = {
 
     },
     clearAll: async function () {
-        await AsyncStorage.removeItem('cartList')
+        await AsyncStorage.setItem('cartList', JSON.stringify([]))
     },
     removeItem: async function (itemId) {
         let items = await this.getCartList()

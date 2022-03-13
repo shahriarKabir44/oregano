@@ -120,7 +120,6 @@ function PostDetails(props) {
                             latitude: postData.latitude,
                             longitude: postData.longitude
                         })
-
                         setPostLocationGeoCode(`${location[0].name}, ${location[0].street}, ${location[0].postalCode}, ${location[0].city}`)
 
                     })()
