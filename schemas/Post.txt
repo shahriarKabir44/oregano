@@ -1,5 +1,6 @@
 
 {
+    id:{type:mongoose.ObjectId},
     itemName:{type:String},
     images:{type: String},
     amountProduced:{type:Number},

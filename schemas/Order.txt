@@ -1,0 +1,20 @@
+{
+    id:{type:mongoose.Objectid},
+    postId:{type:mongoose.Objectid},
+    drop_lat:{type:Number},
+    drop_long:{type:Number},
+    dropLocationGeocode:{type:String},
+    buyerId:{type:mongoose.Objectid},
+    sellerId:{type:mongoose.Objectid},
+    riderId:{type:mongoose.Objectid},
+    status:{type:Number},
+    charge:{type:Number},
+    time:{type:Number}
+}
+
+status:
+
+0= order pending
+1= order rejected
+2= order picked up
+3= order delivered

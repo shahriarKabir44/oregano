@@ -11,6 +11,7 @@ import UserProfile from '../menus/UserProfile/UserProfile';
 const Stack = createStackNavigator()
 import { RootContext } from '../contexts/GlobalContext'
 import ResultsRoot from '../routed/searchResult/ResultsRoot';
+import NotificationsRoot from '../routed/NotificationsRoot';
 
 function StackNavigatorRoot(props) {
 	const rootContext = React.useContext(RootContext)
@@ -49,6 +50,16 @@ function StackNavigatorRoot(props) {
 			{(props) => {
 
 				return <UserProfile stackNav={props.navigation}  {...props} />
+			}}
+		</Stack.Screen>
+		<Stack.Screen name='notifications'
+			options={{
+				header: props => <CustomHeader stackNavigation={props.navigation} />
+			}}
+		>
+			{(props) => {
+
+				return <NotificationsRoot stackNav={props.navigation}  {...props} />
 			}}
 		</Stack.Screen>
 		<Stack.Screen name='searchResult'

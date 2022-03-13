@@ -1,10 +1,13 @@
 import React from 'react';
 import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { EvilIcons } from '@expo/vector-icons';
+import { RootContext } from '../contexts/GlobalContext'
 
 import { Text, View, StyleSheet, Image, SafeAreaView, TouchableOpacity } from 'react-native';
 const profilePictureURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4QfHXtZSr7Y9IoJWng-WknDoAHZxbxPC6QQ&usqp=CAU"
 function Header(props) {
+    const { contextObject, updateContext } = React.useContext(RootContext)
+
     function popupSidebar() {
         props.navigation.dispatch(DrawerActions.toggleDrawer())
     }
@@ -20,9 +23,14 @@ function Header(props) {
                 fontSize: 30
             }}> Oregano🎂 </Text>
             <View style={styles.horizontal_vert_Align} >
-                
-                <EvilIcons onPress={() => { }} name="bell" size={40} color="black" />
+
+                <EvilIcons onPress={() => {
+                    updateContext({ ...contextObject, headerString: "Notificatons" })
+                    props.navigation.push('notifications')
+                }} name="bell" size={40} color="black" />
                 <TouchableOpacity onPress={() => {
+                    updateContext({ ...contextObject, headerString: "Cart" })
+
                     props.navigation.push('Cart')
                 }} >
                     <EvilIcons name="cart" size={40} color="black" />
