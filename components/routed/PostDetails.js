@@ -14,6 +14,7 @@ import { RootContext } from '../contexts/GlobalContext'
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import openMap from 'react-native-open-maps';
+import LocationView from '../shared/LocationView';
 
 function PostDetails(props) {
     const [mapVisibility, setMapVisibility] = useState(false)
@@ -366,61 +367,8 @@ function PostDetails(props) {
                     }} imageUrls={images} />
                 </Modal>
 
-                <BottomSheet
-                    visible={mapVisibility}
-                    onBackButtonPress={() => {
-                        setMapVisibility(false)
-                    }}
-                    onBackdropPress={() => {
-                        setMapVisibility(false)
-                    }}
-                >
+                <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={post} tagnameLabel="Post location" />
 
-                    <View style={styles.bottomNavigationView}>
-                        <View style={{
-                            display: "flex",
-                            position: "absolute",
-                            bottom: 0,
-                            right: 0,
-                            zIndex: 1000,
-
-                        }}>
-                            <TouchableOpacity onPress={() => {
-
-                                openMap({
-                                    start: "1981 Landings Dr, Mountain View, CA 94043, USA",
-                                    end: "1000 N Rengstorff Ave, Mountain View, CA 94043, USA",
-                                    navigate: true
-
-                                })
-                            }} style={{
-
-                                padding: 20,
-                                backgroundColor: "#c4c4c4",
-
-                            }}>
-                                <Text>Expand</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <MapView region={{
-                            latitude: post.latitude,
-                            longitude: post.longitude,
-                            latitudeDelta: 0.05,
-                            longitudeDelta: 0.05
-                        }} style={{
-                            flex: 1,
-                            overflow: "hidden"
-                        }} >
-
-                            <Marker coordinate={{
-                                latitude: post.latitude,
-                                longitude: post.longitude,
-                                atitudeDelta: 0.05,
-                                longitudeDelta: 0.05
-                            }} title='you' />
-                        </MapView>
-                    </View>
-                </BottomSheet>
             </View>
             }
 

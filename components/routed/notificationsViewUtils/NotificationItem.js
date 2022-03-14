@@ -9,7 +9,9 @@ function NotificationItem({ notificationItem, navigator }) {
     return (
         <View style={{
             padding: 10,
-            backgroundColor: notificationItem.isSeen ? "#c4c4c4" : "#79ACD0"
+            marginVertical: 5,
+            backgroundColor: notificationItem.isSeen ? "#c4c4c4" : "#79ACD0",
+            borderRadius: 5
         }}>
             <TouchableOpacity onPress={() => {
                 NotificationService.updateSeenStatus(notificationItem.id)

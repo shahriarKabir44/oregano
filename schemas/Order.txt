@@ -1,6 +1,5 @@
 {
     id:{type:mongoose.Objectid},
-    postId:{type:mongoose.Objectid},
     drop_lat:{type:Number},
     drop_long:{type:Number},
     dropLocationGeocode:{type:String},
@@ -9,7 +8,7 @@
     riderId:{type:mongoose.Objectid},
     status:{type:Number},
     charge:{type:Number},
-    time:{type:Number}
+    time:{type:Number},
 }
 
 status:

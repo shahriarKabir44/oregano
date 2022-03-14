@@ -5,10 +5,9 @@ export default class OrderServices {
         return orders.filter(order => order.buyerId == id)
     }
     static async getOrderInfo(orderId) {
-        let order = orders.filter(order => order.Id == orderId)[0]
-        order['postDetails'] = await PostService.findPost(order.postId)
+        let order = orders.filter(order => order.id == orderId)[0]
         order['buyer'] = await UserService.findUser(order.buyerId)
-        order['seller'] = await UserService.findUser(order['postDetails'].postedBy)
+        order['seller'] = await UserService.findUser(order['sellerId'])
         return order
     }
 
@@ -19,19 +18,24 @@ export default class OrderServices {
 let orders = [
     {
         id: 1,
-        postId: 2,
         drop_lat: 23.33,
         drop_long: 120.00,
         dropLocationGeocode: "Khulna University",
         buyerId: 1,
         riderId: 3,
         status: 0,
+        sellerId: 2,
         charge: 100,
-        time: 1647188597829
+        time: 1647188597829,
+        orderItems: [
+            {
+                postId: 1,
+                amount: 2
+            }
+        ]
     },
     {
         id: 2,
-        postId: 3,
         drop_lat: 23.33,
         drop_long: 120.00,
         dropLocationGeocode: "Khulna University",
@@ -40,6 +44,12 @@ let orders = [
         riderId: 1,
         status: 0,
         charge: 100,
-        time: 1647188597829
+        time: 1647188597829,
+        orderItems: [
+            {
+                postId: 1,
+                amount: 2
+            }
+        ]
     }
 ]
