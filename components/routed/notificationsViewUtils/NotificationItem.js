@@ -25,7 +25,7 @@ function NotificationItem({ notificationItem, navigator }) {
                                             updateContext({ ...contextObject, headerString: "Order info" })
                                             navigator.push('order_details', orderInfo)
                                             break;
-                                        case 2:
+                                        case 4:
                                             updateContext({ ...contextObject, headerString: "Delivery info" })
                                             navigator.push('delivery_details', orderInfo)
                                         default:

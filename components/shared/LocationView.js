@@ -7,6 +7,38 @@ import { TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import openMap from 'react-native-open-maps';
 function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel }) {
+    const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("")
+
+    const [targetLocationGeoCode, setTargetLocationGeoCode] = React.useState("")
+    const [currentCoords, setCurrentCoords] = React.useState({
+        latitude: 0,
+        longitude: 0
+    })
+
+    React.useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setCurrentCoords({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            });
+            let currentLocationGeoCode = await Location.reverseGeocodeAsync({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            })
+            setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
+            let targetLocationGeocode = await Location.reverseGeocodeAsync({
+                latitude: target.latitude,
+                longitude: target.longitude
+            })
+            setTargetLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
+        })();
+    }, [])
     return (
         <BottomSheet
             visible={mapVisibility}

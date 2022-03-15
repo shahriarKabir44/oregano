@@ -3,17 +3,24 @@ import { View, ScrollView } from 'react-native';
 import NotificationService from '../../services/NotificationServices';
 import NotificationItem from './notificationsViewUtils/NotificationItem';
 import { RootContext } from '../contexts/GlobalContext'
+import { useIsFocused } from '@react-navigation/native';
 function NotificationsRoot(props) {
+    const isFocused = useIsFocused()
     let { updateContext, contextObject } = React.useContext(RootContext)
 
     const [notificationList, setNotificationList] = React.useState([])
+
+
     React.useEffect(() => {
-        updateContext({ ...contextObject, headerString: "Notifications" })
-        NotificationService.getNotifications(1)
-            .then(data => {
-                setNotificationList(data)
-            })
-    }, [])
+        if (isFocused) {
+            updateContext({ ...contextObject, headerString: "Notifications" })
+            NotificationService.getNotifications(1)
+                .then(data => {
+                    setNotificationList(data)
+                })
+        }
+
+    }, [isFocused])
     return (
         <View style={{
             flex: 1,
