@@ -5,23 +5,36 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import TagsSelectionService from '../services/TagsSelectionService';
 import Globals from './Globals';
 
-import {RootContext} from './contexts/GlobalContext'
+import { RootContext } from './contexts/GlobalContext'
+import PostService from '../services/PostService';
 
 
 
 function Home(props) {
-    const rootContext=React.useContext(RootContext)
+    const rootContext = React.useContext(RootContext)
 
-    const [postList,setPostList]=useState([])
-    useEffect(()=>{
-        Globals.getAllPosts().then(posts=>setPostList(posts))
-    },[])
-      return (
+    const [postList, setPostList] = useState([])
+    useEffect(() => {
+        PostService.getPosts()
+            .then((data) => {
+
+
+                for (let post of data.data.getPosts) {
+                    post.owner.facebookToken = JSON.parse(post.owner.facebookToken)
+                    post.tags = JSON.parse(post.tags)
+                    post.images = JSON.parse(post.images)
+                }
+                console.log(data.data.getPosts)
+                setPostList(data.data.getPosts)
+            })
+
+    }, [])
+    return (
         <SafeAreaView style={{
-            flex:1
+            flex: 1
         }}>
             <ScrollView style={{
-                 
+
             }}>
                 <View style={{
                     overflow: "visible"
@@ -43,32 +56,32 @@ function Home(props) {
                     <PostCardRoot {...props} postList={postList} />
                 </View>
             </ScrollView>
-           
+
             <View style={{
-                position:"absolute",
-                borderRadius:50,
-                height:60,
-                aspectRatio:1,
-                backgroundColor:"#02DBC6",
-                bottom:20,
-                right:20,
+                position: "absolute",
+                borderRadius: 50,
+                height: 60,
+                aspectRatio: 1,
+                backgroundColor: "#02DBC6",
+                bottom: 20,
+                right: 20,
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                
+
             }} >
-                 <TouchableOpacity onPress={()=>{
-                    rootContext.updateContext({...rootContext.contextObject, headerString:'Create a post!'})
+                <TouchableOpacity onPress={() => {
+                    rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Create a post!' })
                     props.stackNav.push("Create post")
-                 }}>
+                }}>
                     <Text style={{
-                        color:"white",
-                        fontSize:30,
+                        color: "white",
+                        fontSize: 30,
                     }}
                     >+</Text>
                 </TouchableOpacity>
-                </View>    
-            
+            </View>
+
         </SafeAreaView>
     );
 }

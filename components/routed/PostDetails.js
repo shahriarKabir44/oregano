@@ -12,8 +12,10 @@ import CartServices from '../../services/CartServices';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
 import LocationView from '../shared/LocationView';
+import PostService from '../../services/PostService';
 
 function PostDetails(props) {
+    console.log(props)
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const rootContext = useContext(RootContext)
@@ -70,7 +72,7 @@ function PostDetails(props) {
 
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "" })
 
-            Globals.getPostInfo(postId)
+            PostService.findPost(postId)
                 .then(postInfo => {
                     setCurrentPost(postInfo)
                     rootContext.updateContext({ ...rootContext.contextObject, headerString: `${postInfo.owner.facebookToken.name}' post` })
