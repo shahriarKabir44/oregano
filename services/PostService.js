@@ -36,7 +36,7 @@ export default class PostService {
 
     }
     static async getPosts() {
-        return await fetch('http://192.168.43.90:3000/graphql', {
+        let res = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,6 +58,8 @@ export default class PostService {
                       } 
                 }`
             })
-        }).then(res => res.json()).reverse()
+        }).then(res => res.json())
+        return res
+
     }
 }

@@ -7,6 +7,7 @@ import Globals from './Globals';
 
 import { RootContext } from './contexts/GlobalContext'
 import PostService from '../services/PostService';
+import UserService from '../services/UserService';
 
 
 
@@ -14,6 +15,7 @@ function Home(props) {
     const rootContext = React.useContext(RootContext)
 
     const [postList, setPostList] = useState([])
+    const [subscribedPosts, setSubscribedPosts] = useState([])
     useEffect(() => {
         PostService.getPosts()
             .then((data) => {
@@ -26,7 +28,10 @@ function Home(props) {
                 }
                 setPostList(data.data.getPosts)
             })
-
+        UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
+            .then(data => {
+                setSubscribedPosts(data)
+            })
     }, [])
     return (
         <SafeAreaView style={{
@@ -43,8 +48,8 @@ function Home(props) {
                             fontSize: 30,
                             paddingLeft: 5
                         }}
-                    >From Your Favourites</Text>
-                    <PostCardRoot {...props} postList={postList} />
+                    >From People you follow</Text>
+                    <PostCardRoot {...props} postList={subscribedPosts} />
                     <Text
                         style={{
                             fontSize: 20,

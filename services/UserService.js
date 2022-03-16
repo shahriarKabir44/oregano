@@ -31,6 +31,95 @@ export default class UserService {
     static async getLastPost(id) {
         return postList[0]
     }
+    static async getFollowees(id) {
+        console.log(id);
+        let data = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getFollowees(followerId:"${id}"){
+                        followee{
+                            facebookToken
+                            id
+                            lastPost{
+                              itemName
+                              id
+                              images
+                              amountProduced
+                              unitPrice
+                              postedOn
+                              tags
+                            }
+                          }
+                  }
+                }`
+            })
+        }).then(res => res.json())
+
+        let result = data.data.getFollowees
+        for (let user of result) {
+            user.followee.facebookToken = JSON.parse(user.followee.facebookToken)
+            if (user.followee.lastPost) {
+                user.followee.lastPost.images = JSON.parse(user.followee.lastPost.images)
+                user.followee.lastPost.tags = JSON.parse(user.followee.lastPost.tags)
+            }
+
+
+        }
+        return result
+    }
+    static async getFolloweesPosts(id) {
+
+        let data = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getFollowees(followerId:"${id}"){
+                        followee{
+                            facebookToken
+                            id
+                            lastPost{
+                              itemName
+                              id
+                              images
+                              amountProduced
+                              unitPrice
+                              postedOn
+                              tags
+                            }
+                          }
+                  }
+                }`
+            })
+        }).then(res => res.json())
+
+        let result = data.data.getFollowees
+        for (let user of result) {
+            user.followee.facebookToken = JSON.parse(user.followee.facebookToken)
+            if (user.followee.lastPost) {
+                user.followee.lastPost.images = JSON.parse(user.followee.lastPost.images)
+                user.followee.lastPost.tags = JSON.parse(user.followee.lastPost.tags)
+            }
+
+
+        }
+        let postList = []
+        for (let data of result) {
+            let post = data.followee.lastPost
+            if (post) {
+                post['owner'] = { facebookToken: data.followee.facebookToken, id: data.followee.id }
+                postList.push(post)
+            }
+
+        }
+        return postList
+    }
     static async getPosts(userId) {
         console.log(userId)
         let data = await fetch('http://192.168.43.90:3000/graphql', {
