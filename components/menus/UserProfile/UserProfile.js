@@ -29,11 +29,13 @@ function UserProfile(props) {
     const [isLoaded, setLoadedStatus] = useState(false)
     useEffect(() => {
         if (isFocused) {
+            console.log(props.route?.params?.id)
             if (!props.route?.params?.id) {
                 setCurrentUserFlag(true)
+                console.log('first')
                 setUserInfo(rootContext.contextObject.currentUser)
                 rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
-                Globals.getPostOfAUser(UserProfileInfo.id)
+                UserService.getPosts(UserProfileInfo.id)
                     .then(posts => {
                         setPostList(posts)
                         setLoadedStatus(true)
@@ -46,11 +48,24 @@ function UserProfile(props) {
                     .then(data => {
                         setUserInfo(data)
                         rootContext.updateContext({ ...rootContext.contextObject, headerString: data.facebookToken.name })
-                        Globals.getPostOfAUser(UserProfileInfo.id)
+                        UserService.getPosts(props.route?.params?.id)
                             .then(posts => {
+
                                 setPostList(posts)
                                 setLoadedStatus(true)
                             })
+                    })
+            }
+            else if (rootContext.contextObject.currentUser.id == props.route?.params?.id) {
+                setCurrentUserFlag(true)
+                console.log(rootContext.contextObject.currentUser.id)
+                setUserInfo(rootContext.contextObject.currentUser)
+                rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
+                UserService.getPosts(rootContext.contextObject.currentUser.id)
+                    .then(posts => {
+                        setPostList(posts)
+                        console.log(posts)
+                        setLoadedStatus(true)
                     })
             }
         }

@@ -24,7 +24,6 @@ function Home(props) {
                     post.tags = JSON.parse(post.tags)
                     post.images = JSON.parse(post.images)
                 }
-                console.log(data.data.getPosts)
                 setPostList(data.data.getPosts)
             })
 

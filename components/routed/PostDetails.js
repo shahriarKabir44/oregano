@@ -15,7 +15,6 @@ import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
 
 function PostDetails(props) {
-    console.log(props)
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const rootContext = useContext(RootContext)
@@ -141,7 +140,6 @@ function PostDetails(props) {
                             }}> Prepared By: </Text>
                             <TouchableOpacity onPress={() => {
                                 rootContext.updateContext({ ...rootContext.contextObject, headerString: '' })
-
                                 props.navigation.push('profile', {
                                     id: post.owner.id
                                 })

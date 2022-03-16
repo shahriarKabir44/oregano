@@ -3,7 +3,6 @@ import { View, Text, Button } from 'react-native';
 import LocationView from '../shared/LocationView';
 
 function DeliveryInfo(props) {
-    console.log(props.route.params)
     const [mapVisibility, setMapVisibility] = React.useState(false)
     return (
         <View style={{

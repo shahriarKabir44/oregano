@@ -58,6 +58,6 @@ export default class PostService {
                       } 
                 }`
             })
-        }).then(res => res.json())
+        }).then(res => res.json()).reverse()
     }
 }
