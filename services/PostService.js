@@ -1,8 +1,41 @@
 import postList from "../components/postList";
 
 export default class PostService {
-    static async searchPost(params) {
-        return postList
+    static async searchPostByTags(tagName) {
+        console.log(tagName)
+        let res = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    searchByTags(tagName:"${tagName}"){
+                        findPost{
+                            id
+                            itemName
+                            unitPrice
+                            owner{
+                                facebookToken
+                                id
+                            }
+                            images
+                            
+                        }
+                       }
+                   }`
+            })
+        }).then(res => res.json())
+        let data = res.data.searchByTags
+
+        let posts = []
+        for (let post of data) {
+            let postData = post.findPost
+            postData.images = JSON.parse(postData.images)
+            postData.owner.facebookToken = JSON.parse(postData.owner.facebookToken)
+            posts.push(postData)
+        }
+        return posts
     }
     static async findPost(id) {
         let res = await fetch('http://192.168.43.90:3000/graphql', {

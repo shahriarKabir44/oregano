@@ -16,9 +16,10 @@ function ResultsRoot(props) {
         if (isFocused) {
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "Search result" })
             setTagName(props.route.params.tag)
-            PostService.searchPost(props.route.params.tag)
+            PostService.searchPostByTags(props.route.params.tag)
                 .then(data => {
                     setSearchResult(data)
+                    console.log(data)
                 })
         }
 
