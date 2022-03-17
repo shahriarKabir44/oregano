@@ -5,12 +5,12 @@ export default function GlobalContext({ children }) {
         headerString: "",
         tagList: [],
         currentUser: {
-            "facebookToken": JSON.parse("{\"name\":\"Laura Wilson\",\"profileImageURL\":\"https://www.camc.org/sites/default/files/styles/800x600/public/2020-09/employee%20wellness%20center_hero.jpg?itok=9qCcPtUE\",\"coverPhotoURL\":\"https://cdnimg.webstaurantstore.com/images/articles/359/blog-chefs-header.jpg\",\"email\":\"laura@gmail.com\",\"phone\":\"12345\",\"address\":\"Nirala, Khulna\"}"),
-            "id": "62310ad1528bf9f5625f5fea",
+            "facebookToken": JSON.parse("{\"name\":\"Nusrat jahan\",\"profileImageURL\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN_wHjuRlqs0B2niLg6q092Lyrjbuv6MPHRg&usqp=CAU\",\"coverPhotoURL\":\"https://cdnimg.webstaurantstore.com/images/articles/359/blog-chefs-header.jpg\",\"email\":\"nusrat@gmail.com\",\"phone\":\"01234567891\",\"address\":\"Nirala, Khulna\"}"),
+            "id": "6233763287e53dc7547b702c",
             "rating": 3.5,
             "currentCity": "Nirala, Khulna",
-            "currentLatitude": 12.33,
-            "currentLongitude": 23.44
+            "currentLatitude": 22.803272881875372,
+            "currentLongitude": 89.5545602022129
         }
     })
     return (

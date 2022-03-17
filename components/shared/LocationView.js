@@ -36,7 +36,7 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel })
                 latitude: target.latitude,
                 longitude: target.longitude
             })
-            setTargetLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
+            setTargetLocationGeoCode(`${targetLocationGeocode[0].name}, ${targetLocationGeocode[0].street}, ${targetLocationGeocode[0].postalCode}, ${targetLocationGeocode[0].city}`)
         })();
     }, [])
     return (

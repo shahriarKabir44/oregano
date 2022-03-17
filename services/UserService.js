@@ -72,7 +72,7 @@ export default class UserService {
         return result
     }
     static async getFolloweesPosts(id) {
-
+        console.log(id)
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
