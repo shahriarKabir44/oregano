@@ -10,14 +10,14 @@ function PostCard({ post, drawerNav, stackNav }) {
         <TouchableOpacity onPress={() => {
             stackNav.push('Post details', {
                 postId: post.id,
-                headerString: `${post.owner.facebookToken.name}'s post`
+                headerString: `${post?.owner?.facebookToken?.name}'s post`
             })
         }}>
             <View style={styles.container}>
                 <View>
                     <Image style={styles.cardImg} source={{
 
-                        uri: post.images[0],
+                        uri: post?.images[0],
                         height: "100%"
                     }} />
                 </View>
@@ -25,18 +25,18 @@ function PostCard({ post, drawerNav, stackNav }) {
                     <Text style={{
                         fontWeight: "bold",
                         fontSize: 20
-                    }}>{post.itemName}</Text>
+                    }}>{post?.itemName}</Text>
                 </View>
                 <View style={[styles.marginVertical]}>
                     <View style={[styles.cookInfo, styles.additionalInfo, styles.marginVertical]}>
                         <View>
                             <Image style={styles.cookImg} source={{
                                 height: "100%",
-                                uri: post.owner.facebookToken.profileImageURL
+                                uri: post?.owner?.facebookToken?.profileImageURL
                             }} />
                         </View>
                         <View style={styles.cookName}>
-                            <Text> {post.owner.facebookToken.name} </Text>
+                            <Text> {post?.owner?.facebookToken?.name} </Text>
                         </View>
                     </View>
 
@@ -48,14 +48,14 @@ function PostCard({ post, drawerNav, stackNav }) {
                 }]}>
                     <Text style={styles.tagIcon}>🏷️</Text>
 
-                    {post.tags.map((tag, index) => (
+                    {post?.tags?.map((tag, index) => (
                         <Tags key={index} name={tag} />
                     ))}
                 </View>
                 <View style={[styles.otherInfo, styles.marginVertical]}>
-                    <Text> Tk {post.unitPrice} </Text>
+                    <Text> Tk {post?.unitPrice} </Text>
                     <Text> 5kms </Text>
-                    <Text> {post.amountProduced} {post.unitType} available </Text>
+                    <Text> {post?.amountProduced} {post?.unitType} available </Text>
                 </View>{/* */}
             </View>
         </TouchableOpacity>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         paddingTop: 2
     },
     cardImg: {
-        backgroundColor: "green",
+        backgroundColor: "#7579efc4",
         height: 170
     },
     cookInfo: {

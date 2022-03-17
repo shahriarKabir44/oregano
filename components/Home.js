@@ -9,6 +9,7 @@ import { RootContext } from './contexts/GlobalContext'
 import PostService from '../services/PostService';
 import UserService from '../services/UserService';
 import AvailableTags from './shared/AvailableTags';
+import PostCard from './shared/PostCard';
 
 
 
@@ -16,12 +17,25 @@ function Home(props) {
     const rootContext = React.useContext(RootContext)
 
     const [postList, setPostList] = useState([])
+    let initialPost = {
+        itemName: "Loading..",
+        id: -1,
+        images: ["https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/articles/2016/02/plate-1508865660.jpg?crop=1xw:0.75xh;center,top&resize=480:*"],
+        tags: [],
+        owner: {
+            facebookToken: {
+                name: "Loading..."
+            }
+        }
+    }
+    const [isLoaded, setIsLoaded] = useState(false)
     const [subscribedPosts, setSubscribedPosts] = useState([])
     useEffect(() => {
 
         UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
             .then(data => {
                 setSubscribedPosts(data)
+                setIsLoaded(true)
             })
     }, [])
     return (
@@ -40,7 +54,8 @@ function Home(props) {
                             paddingLeft: 5
                         }}
                     >From People you follow</Text>
-                    <PostCardRoot {...props} postList={subscribedPosts} />
+                    {!isLoaded && <PostCard post={initialPost} />}
+                    {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
                     <Text
                         style={{
                             fontSize: 20,
