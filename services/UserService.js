@@ -85,16 +85,16 @@ export default class UserService {
                             facebookToken
                             id
                             lastPost{
-                              itemName
-                              id
-                              images
-                              amountProduced
-                              unitPrice
-                              postedOn
-                              tags
+                                itemName
+                                id
+                                images
+                                amountProduced
+                                unitPrice
+                                postedOn
+                                tags
                             }
-                          }
-                  }
+                        }
+                    }
                 }`
             })
         }).then(res => res.json())

@@ -8,6 +8,7 @@ import Globals from './Globals';
 import { RootContext } from './contexts/GlobalContext'
 import PostService from '../services/PostService';
 import UserService from '../services/UserService';
+import AvailableTags from './shared/AvailableTags';
 
 
 
@@ -17,17 +18,7 @@ function Home(props) {
     const [postList, setPostList] = useState([])
     const [subscribedPosts, setSubscribedPosts] = useState([])
     useEffect(() => {
-        PostService.getPosts()
-            .then((data) => {
 
-
-                for (let post of data.data.getPosts) {
-                    post.owner.facebookToken = JSON.parse(post.owner.facebookToken)
-                    post.tags = JSON.parse(post.tags)
-                    post.images = JSON.parse(post.images)
-                }
-                setPostList(data.data.getPosts)
-            })
         UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
             .then(data => {
                 setSubscribedPosts(data)
@@ -56,8 +47,8 @@ function Home(props) {
                             marginVertical: 5,
                             paddingLeft: 5
                         }}
-                    >From your recent searches</Text>
-                    <PostCardRoot {...props} postList={postList} />
+                    >Available food items</Text>
+                    <AvailableTags navigator={props.stackNav} />
                 </View>
             </ScrollView>
 

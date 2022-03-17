@@ -228,7 +228,7 @@ function PostDetails(props) {
                                 <TouchableOpacity key={index} onPress={() => {
                                     rootContext.updateContext({ ...rootContext.contextObject, headerString: "" })
 
-                                    props.navigation.navigate('searchResult', {
+                                    props.navigation.push('searchResult', {
                                         tag: tag
                                     })
                                 }} >
