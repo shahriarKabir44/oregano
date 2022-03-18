@@ -87,7 +87,7 @@ function CartListView(props) {
                 }}
             >
                 <View style={styles.bottomNavigationView}>
-                    <OrderConfirmation setRefreshFlag={setRefreshFlag} groupedCartList={groupedCartList} setBottomSheetVisibility={setBottomSheetVisibility} />
+                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} groupedCartList={groupedCartList} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
         </View>

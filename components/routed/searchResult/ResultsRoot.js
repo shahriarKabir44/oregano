@@ -19,7 +19,6 @@ function ResultsRoot(props) {
             PostService.searchPostByTags(props.route.params.tag)
                 .then(data => {
                     setSearchResult(data)
-                    console.log(data)
                 })
         }
 

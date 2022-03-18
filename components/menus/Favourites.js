@@ -51,7 +51,6 @@ function Favourites(props) {
 
 
 function FollowingListItem({ followee }) {
-    console.log(followee.facebookToken);
 
     function limitText(text) {
         let res = ""

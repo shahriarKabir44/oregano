@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } fr
 import { RadioButton, TextInput } from 'react-native-paper';
 import * as Location from 'expo-location';
 import CartServices from '../../../services/CartServices'
-function OrderConfirmation({ setRefreshFlag, groupedCartList, setBottomSheetVisibility }) {
+function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
     const [orderLocation, setOrderLocation] = React.useState('')
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("")
@@ -90,6 +90,7 @@ function OrderConfirmation({ setRefreshFlag, groupedCartList, setBottomSheetVisi
                         })
                         .then(() => {
                             setRefreshFlag(true)
+                            setTotalCharge(0)
                         })
                         .then(() => {
                             ToastAndroid.showWithGravity(

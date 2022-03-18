@@ -29,7 +29,6 @@ function UserProfile(props) {
     const [isLoaded, setLoadedStatus] = useState(false)
     useEffect(() => {
         if (isFocused) {
-            console.log(props.route?.params?.id)
             if (!props.route?.params?.id) {
                 setCurrentUserFlag(true)
                 setUserInfo(rootContext.contextObject.currentUser)
@@ -57,13 +56,11 @@ function UserProfile(props) {
             }
             else if (rootContext.contextObject.currentUser.id == props.route?.params?.id) {
                 setCurrentUserFlag(true)
-                console.log(rootContext.contextObject.currentUser.id)
                 setUserInfo(rootContext.contextObject.currentUser)
                 rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
                 UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {
                         setPostList(posts)
-                        console.log(posts)
                         setLoadedStatus(true)
                     })
             }

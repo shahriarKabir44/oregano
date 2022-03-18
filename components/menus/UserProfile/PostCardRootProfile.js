@@ -37,21 +37,20 @@ export default function PostCardRootProfile(props) {
     //             actualData[n].owner.facebookToken=(JSON.parse (actualData[n].owner.facebookToken) )
     //        }
     //          setPostList(actualData)
-    //          console.log(JSON.stringify(actualData))
     //     })
     // },[])
-    function renderCard(post){
-        return <PostCardProfile {...props} post={post } />
+    function renderCard(post) {
+        return <PostCardProfile {...props} post={post} />
     }
     return (
         <View>
-            <FlatList 
+            <FlatList
                 horizontal={true}
-                data={props.postList} 
-                keyExtractor={post=>post.id}
-                renderItem={ renderCard}
-            />  
-             
+                data={props.postList}
+                keyExtractor={post => post.id}
+                renderItem={renderCard}
+            />
+
         </View>
     );
 }

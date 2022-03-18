@@ -26,7 +26,6 @@ export default class UserService {
         return res.data.findUser
     }
     static async findFollowingList(id) {
-        console.log(id, 'here')
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
@@ -59,7 +58,6 @@ export default class UserService {
         return postList[0]
     }
     static async getFollowees(id) {
-        console.log(id);
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
@@ -147,7 +145,6 @@ export default class UserService {
         return postList
     }
     static async getPosts(userId) {
-        console.log(userId)
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {

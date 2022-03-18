@@ -10,7 +10,9 @@ export default class OrderServices {
         order['seller'] = await UserService.findUser(order['sellerId'])
         return order
     }
+    static async placeOrder(groupedOrderList) {
 
+    }
 }
 
 

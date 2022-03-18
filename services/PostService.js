@@ -2,7 +2,6 @@ import postList from "../components/postList";
 
 export default class PostService {
     static async searchPostByTags(tagName) {
-        console.log(tagName)
         let res = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {

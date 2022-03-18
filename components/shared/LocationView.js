@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 
 import * as Location from 'expo-location';
 import openMap from 'react-native-open-maps';
-function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel }) {
+function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel, shouldChangeOnDrag }) {
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("")
 
     const [targetLocationGeoCode, setTargetLocationGeoCode] = React.useState("")
@@ -14,7 +14,10 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel })
         latitude: 0,
         longitude: 0
     })
-
+    const [targetCoords, setTargetCoords] = React.useState({
+        latitude: target.latitude,
+        longitude: target.longitude
+    })
     React.useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -82,18 +85,28 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel })
                     </TouchableOpacity>
                 </View>
                 <MapView region={{
-                    latitude: target.latitude,
-                    longitude: target.longitude,
+                    latitude: targetCoords.latitude,
+                    longitude: targetCoords.longitude,
                     latitudeDelta: 0.05,
                     longitudeDelta: 0.05
+                }} onRegionChangeComplete={(e) => {
+                    if (shouldChangeOnDrag) {
+                        setTargetCoords({
+                            latitude: e.latitude,
+                            longitude: e.longitude
+                        })
+                    }
                 }} style={{
                     flex: 1,
                     overflow: "hidden"
                 }} >
 
-                    <Marker coordinate={{
-                        latitude: target.latitude,
-                        longitude: target.longitude,
+                    <Marker style={{
+                        position: "absolute",
+                        top: 0
+                    }} coordinate={{
+                        latitude: targetCoords.latitude,
+                        longitude: targetCoords.longitude,
                         atitudeDelta: 0.05,
                         longitudeDelta: 0.05
                     }} title={tagnameLabel} />
