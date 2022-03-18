@@ -16,6 +16,7 @@ import CreatePost from '../menus/CreatePost';
 import Favourites from '../menus/Favourites'
 import PreviousOrders from '../menus/PreviousOrders';
 import CustomHeader from '../shared/CustomHeader';
+import { RootContext } from '../contexts/GlobalContext';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation }) {
 	const stackNavigator = navigation
@@ -55,6 +56,7 @@ export default function DrawerRoot({ navigation }) {
 }
 
 function DrawerContentRoot(props) {
+	const { updateContext, contextObject } = React.useContext(RootContext)
 	const cookImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4QfHXtZSr7Y9IoJWng-WknDoAHZxbxPC6QQ&usqp=CAU"
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -65,13 +67,13 @@ function DrawerContentRoot(props) {
 				paddingHorizontal: 10
 			}} >
 				<Image style={styles.sideMenuProfileIcon} source={{
-					uri: cookImage
+					uri: contextObject.currentUser.facebookToken.profileImageURL
 				}} />
 				<Text
 					style={{
 						paddingVertical: 15
 					}}
-				> Firoza Khan </Text>
+				> {contextObject.currentUser.facebookToken.name} </Text>
 			</View>
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />

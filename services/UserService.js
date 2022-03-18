@@ -26,7 +26,34 @@ export default class UserService {
         return res.data.findUser
     }
     static async findFollowingList(id) {
-        return users
+        console.log(id, 'here')
+        let data = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getFollowees(followerId:"${id}"){
+                        followee{
+                        facebookToken
+                        id
+                        lastPost{
+                          itemName
+                          images
+                          postedOn
+                        }
+                      }
+                      }
+                }`
+            })
+        }).then(res => res.json())
+        data = data.data.getFollowees
+        for (let entry of data) {
+            entry.followee.facebookToken = JSON.parse(entry.followee.facebookToken)
+            entry.followee.lastPost.images = JSON.parse(entry.followee.lastPost.images)
+        }
+        return data
     }
     static async getLastPost(id) {
         return postList[0]
@@ -72,7 +99,6 @@ export default class UserService {
         return result
     }
     static async getFolloweesPosts(id) {
-        console.log(id)
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {

@@ -32,10 +32,9 @@ function UserProfile(props) {
             console.log(props.route?.params?.id)
             if (!props.route?.params?.id) {
                 setCurrentUserFlag(true)
-                console.log('first')
                 setUserInfo(rootContext.contextObject.currentUser)
                 rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
-                UserService.getPosts(UserProfileInfo.id)
+                UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {
                         setPostList(posts)
                         setLoadedStatus(true)

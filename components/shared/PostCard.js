@@ -7,13 +7,20 @@ import Tags from './Tags';
 function PostCard({ post, drawerNav, stackNav }) {
     post = post.item
     return (
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity style={{
+
+            margin: 5,
+            borderWidth: 1.5,
+            borderRadius: 15,
+            overflow: 'hidden',
+
+        }} onPress={() => {
             stackNav.push('Post details', {
                 postId: post.id,
                 headerString: `${post?.owner?.facebookToken?.name}'s post`
             })
         }}>
-            <View style={styles.container}>
+            <View>
                 <View>
                     <Image style={styles.cardImg} source={{
 

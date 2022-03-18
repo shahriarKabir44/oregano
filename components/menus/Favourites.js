@@ -39,8 +39,8 @@ function Favourites(props) {
                         alignItems: "center",
                         justifyContent: "space-evenly"
                     }]}>
-                        {followingList.map((user, index) => {
-                            return <FollowingListItem {...props} user={user} key={index} />
+                        {followingList.map((entry, index) => {
+                            return <FollowingListItem {...props} followee={entry.followee} key={index} />
                         })}
                     </View>
                 </ScrollView>
@@ -50,25 +50,9 @@ function Favourites(props) {
 }
 
 
-function FollowingListItem(props) {
-    const [lastPost, setLastPost] = useState({
-        "itemName": "",
-        "images": [
-            "https://images-gmi-pmc.edge-generalmills.com/99d8ae9a-737f-491c-a7f7-34b014e5682c.jpg",
-        ],
-        "ownerId": "6213a30y8220b000e00185",
-        "id": "64162873f6ff9efc53efd8",
-        "amountProduced": 1,
-        "unitPrice": 100,
-        "tags": ["cake", "pastry"],
-        "unitType": "Units"
-    })
-    useEffect(() => {
-        UserService.getLastPost(props.user.id)
-            .then(post => {
-                setLastPost(post)
-            })
-    }, [])
+function FollowingListItem({ followee }) {
+    console.log(followee.facebookToken);
+
     function limitText(text) {
         let res = ""
         for (let n = 0; n < Math.min(12, text.length); n++) {
@@ -94,44 +78,39 @@ function FollowingListItem(props) {
                     aspectRatio: 1,
                     borderRadius: 50
                 }} source={{
-                    uri: props.user.facebookToken.profileImageURL
+                    uri: followee.facebookToken.profileImageURL
                 }} />
-                <Text> {limitText(props.user.facebookToken.name)} </Text>
+                <Text> {limitText(followee.facebookToken.name)} </Text>
             </View>
             <View style={{
                 marginVertical: 5
             }}>
-                <Text>Frequent tags</Text>
-                <View style={[styles.horizontalAlign, {
-                    flexWrap: "wrap",
-                    justifyContent: "space-evenly"
-                }]}>
-                    <Tags name={"chicken"} />
-                    <Tags name={"spicy"} />
-                    <Tags name={"spicy"} />
-                </View>
+
 
             </View>
             <View style={{
                 marginVertical: 5
             }}>
                 <Text>Recently posted:</Text>
-                <View style={[styles.horizontalAlign, {
-                    justifyContent: "space-between"
-                }]}>
-                    <Image style={{
-                        height: 30,
-                        aspectRatio: 1,
-                        borderRadius: 50
-                    }} source={{
-                        uri: lastPost.images[0]
-                    }} />
-                    <Text> {limitText(lastPost.itemName)} </Text>
-                </View>
-                <Text style={{
-                    textAlign: "center",
-                    marginVertical: 5
-                }}> 2 hours ago </Text>
+                {followee.lastPost && <View>
+                    <View style={[styles.horizontalAlign, {
+                        justifyContent: "space-between"
+                    }]}>
+                        <Image style={{
+                            height: 30,
+                            aspectRatio: 1,
+                            borderRadius: 50
+                        }} source={{
+                            uri: followee.lastPost.images[0]
+                        }} />
+                        <Text> {limitText(followee.lastPost.itemName)} </Text>
+                    </View>
+                    <Text style={{
+                        textAlign: "center",
+                        marginVertical: 5
+                    }}> 2 hours ago </Text>
+                </View>}
+                {!followee.lastPost && <Text>No last post</Text>}
             </View>
         </TouchableOpacity>
     )
