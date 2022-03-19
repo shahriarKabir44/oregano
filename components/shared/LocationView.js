@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 
 import * as Location from 'expo-location';
 import openMap from 'react-native-open-maps';
-function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel, shouldChangeOnDrag }) {
+function LocationView({ setTargetCoordinates, mapVisibility, setMapVisibility, target, tagnameLabel, shouldChangeOnDrag, onLocationSelect }) {
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("")
 
     const [targetLocationGeoCode, setTargetLocationGeoCode] = React.useState("")
@@ -50,6 +50,7 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel, s
             }}
             onBackdropPress={() => {
                 setMapVisibility(false)
+                console.log('object');
             }}
         >
 
@@ -67,11 +68,11 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel, s
                     zIndex: 1000,
 
                 }}>
-                    <TouchableOpacity onPress={() => {
+                    {!shouldChangeOnDrag && <TouchableOpacity onPress={() => {
 
                         openMap({
-                            start: "1981 Landings Dr, Mountain View, CA 94043, USA",
-                            end: "1000 N Rengstorff Ave, Mountain View, CA 94043, USA",
+                            start: currentLocationGeoCode,
+                            end: targetLocationGeoCode,
                             navigate: true
 
                         })
@@ -82,9 +83,22 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel, s
 
                     }}>
                         <Text>Expand</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
+                    {shouldChangeOnDrag && <TouchableOpacity onPress={() => {
+                        onLocationSelect()
+                    }} style={{
+
+                        padding: 20,
+                        backgroundColor: "#c4c4c4",
+                        width: '100%',
+                        alignItems: 'center',
+                        alignContent: "center",
+                        borderRadius: 5
+                    }}>
+                        <Text>Select location</Text>
+                    </TouchableOpacity>}
                 </View>
-                <MapView region={{
+                <MapView style={{ flex: 1 }} region={{
                     latitude: targetCoords.latitude,
                     longitude: targetCoords.longitude,
                     latitudeDelta: 0.05,
@@ -95,11 +109,12 @@ function LocationView({ mapVisibility, setMapVisibility, target, tagnameLabel, s
                             latitude: e.latitude,
                             longitude: e.longitude
                         })
+                        setTargetCoordinates({
+                            latitude: e.latitude,
+                            longitude: e.longitude
+                        })
                     }
-                }} style={{
-                    flex: 1,
-                    overflow: "hidden"
-                }} >
+                }}  >
 
                     <Marker style={{
                         position: "absolute",
