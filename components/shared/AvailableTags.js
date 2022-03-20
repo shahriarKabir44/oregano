@@ -28,7 +28,7 @@ function AvailableTags({ navigator }) {
                     backgroundColor: "#4da5ffe0",
                     padding: 10,
                     borderRadius: 5,
-                    width: '45%',
+                    width: '30%',
                     margin: 5,
 
                 }} key={index} onPress={() => {

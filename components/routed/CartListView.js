@@ -59,6 +59,9 @@ function CartListView(props) {
     useEffect(() => {
         if (isFocused)
             updateCartList()
+        else {
+            setTotalCharge(0)
+        }
     }, [isFocused, shouldRefresh])
     return (
         <View style={{
