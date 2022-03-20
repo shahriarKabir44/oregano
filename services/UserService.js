@@ -97,6 +97,7 @@ export default class UserService {
         return result
     }
     static async getFolloweesPosts(id) {
+
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
@@ -122,7 +123,6 @@ export default class UserService {
                 }`
             })
         }).then(res => res.json())
-
         let result = data.data.getFollowees
         for (let user of result) {
             user.followee.facebookToken = JSON.parse(user.followee.facebookToken)
@@ -130,9 +130,8 @@ export default class UserService {
                 user.followee.lastPost.images = JSON.parse(user.followee.lastPost.images)
                 user.followee.lastPost.tags = JSON.parse(user.followee.lastPost.tags)
             }
-
-
         }
+
         let postList = []
         for (let data of result) {
             let post = data.followee.lastPost

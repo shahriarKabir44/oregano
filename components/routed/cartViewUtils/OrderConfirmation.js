@@ -2,18 +2,18 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
 import { RadioButton, TextInput } from 'react-native-paper';
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
 
 import CartServices from '../../../services/CartServices'
 import LocationView from '../../shared/LocationView';
-function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, setBottomSheetVisibility }) {
+import OrderServices from '../../../services/OrderServices';
+function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupByCooks, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
     const [orderLocation, setOrderLocation] = React.useState('')
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("Loading..")
     const [customLocation, setCustomLocation] = React.useState("")
     const [mapViewVisibility, setMapViewVisibility] = React.useState(false)
     const [currentLocationCoords, setCurrentLocationCoords] = React.useState(null)
-
+    const [hasLocationGeocodeLoaded, setLoadingStatus] = React.useState(false)
     const [customLocationGeocode, setCustomLocationGeocode] = React.useState("Pick from map")
 
     React.useEffect(() => {
@@ -33,9 +33,18 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, se
                 longitude: location.coords.longitude
             })
             setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
-
+            setLoadingStatus(1 == 1)
         })()
     }, [])
+    function limitText(text) {
+        let res = ""
+        let limit = 30
+        for (let n = 0; n < Math.min(limit, text.length); n++) {
+            res += text[n]
+        }
+        if (text.length > limit) res += "..."
+        return res
+    }
     return (
         <View style={{
             flex: 1
@@ -67,6 +76,7 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, se
                         alignItems: "center",
                     }}>
                         <RadioButton
+                            disabled={!hasLocationGeocodeLoaded}
                             value={currentLocationGeoCode}
                             status={locationType === 1 ? 'checked' : 'unchecked'}
                             onPress={() => {
@@ -77,7 +87,7 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, se
                         <Text style={{
                             fontSize: 20,
                             flexWrap: "wrap"
-                        }}>{currentLocationGeoCode}</Text>
+                        }}>{limitText(currentLocationGeoCode)}</Text>
                     </View>
 
                     <View style={{
@@ -87,6 +97,7 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, se
                         alignItems: "center",
                     }}>
                         <RadioButton
+                            disabled={!hasLocationGeocodeLoaded}
                             value={customLocation}
                             status={locationType === 2 ? 'checked' : 'unchecked'}
                             onPress={() => {
@@ -95,28 +106,35 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupedCartList, se
                                 setMapViewVisibility(1 == 1)
                             }}
                         />
-                        <Text style={{ fontSize: 20 }}>{customLocationGeocode}</Text>
+                        <Text style={{ fontSize: 20 }}>{limitText(customLocationGeocode)}</Text>
                     </View>
 
                 </View>
             </ScrollView>
             <View style={styles.footer}>
                 <TouchableOpacity onPress={() => {
-                    CartServices.clearAll()
-                        .then(() => {
-                            setBottomSheetVisibility(false)
-                        })
-                        .then(() => {
-                            setRefreshFlag(true)
-                            setTotalCharge(0)
-                        })
-                        .then(() => {
-                            ToastAndroid.showWithGravity(
-                                "Order placed succesfully!",
-                                ToastAndroid.SHORT,
-                                ToastAndroid.CENTER
-                            );
-                        })
+
+                    OrderServices.placeOrders(groupByCooks, {
+                        ...currentLocationCoords,
+                        dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
+                    }).then(() => {
+                        CartServices.clearAll()
+                            .then(() => {
+                                setBottomSheetVisibility(false)
+                            })
+                            .then(() => {
+                                setRefreshFlag(true)
+                                setTotalCharge(0)
+                            })
+                            .then(() => {
+                                ToastAndroid.showWithGravity(
+                                    "Order placed succesfully!",
+                                    ToastAndroid.SHORT,
+                                    ToastAndroid.CENTER
+                                );
+                            })
+                    })
+
 
                 }}>
                     <Text style={{

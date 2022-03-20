@@ -14,6 +14,7 @@ function CartListView(props) {
     const [totalCharge, setTotalCharge] = useState(0)
     const [shouldRefresh, setRefreshFlag] = useState(false)
     const [isListEmpty, setEmptinessStatus] = useState(false)
+    const [groupByCooks, setGroupByCooks] = useState([])
     function updateCartList() {
         CartServices.getCartList().then(carts => {
             if (!carts || carts.length == 0) setEmptinessStatus(true)
@@ -21,11 +22,28 @@ function CartListView(props) {
 
             let cookIndex = 0
             let cookIds = {}
+            let cooksPosts = {}
             for (let n = 0; n < carts.length; n++) {
                 carts[n]['itemIndex'] = n
                 let cookId = carts[n].owner.id
-                if (!cookIds[cookId]) cookIds[cookId] = cookIndex++
+                if (!cookIds[cookId]) {
+                    cookIds[cookId] = cookIndex++
+                    cooksPosts[cookId] = [{
+                        postId: carts[n].id,
+                        amount: carts[n].amount,
+
+                    }]
+                }
+                else {
+                    cooksPosts[cookId].push({
+                        postId: carts[n].id,
+                        amount: carts[n].amount,
+
+                    })
+                }
             }
+            setGroupByCooks(cooksPosts)
+
             let groupedList = new Array(cookIndex).fill([]).map(item => [])
             for (let n = 0; n < carts.length; n++) {
                 let itemIndex = cookIds[carts[n].owner.id]
@@ -87,7 +105,7 @@ function CartListView(props) {
                 }}
             >
                 <View style={styles.bottomNavigationView}>
-                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} groupedCartList={groupedCartList} setBottomSheetVisibility={setBottomSheetVisibility} />
+                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} groupByCooks={groupByCooks} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
         </View>

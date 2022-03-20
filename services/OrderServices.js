@@ -10,8 +10,68 @@ export default class OrderServices {
         order['seller'] = await UserService.findUser(order['sellerId'])
         return order
     }
-    static async placeOrder(groupedOrderList) {
+    static async createOrder(cartGroup, orderLocationInfo) {
+        let userData = await UserService.findUser(cartGroup.cookId)
+        let orderInfo = await fetch('http://192.168.43.90:3000/createNewOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                drop_lat: orderLocationInfo.latitude,
+                drop_long: orderLocationInfo.longitude,
+                dropLocationGeocode: orderLocationInfo.dropLocationGeocode,
+                buyerId: orderLocationInfo.buyerId,
+                sellerId: cartGroup.cookId,
+                riderId: null,
+                status: 0,
+                charge: 30,
+                time: (new Date()) * 1,
+                pickupLat: userData.currentLatitude,
+                pickupLong: userData.currentLongitude,
+                pickupLocationGeocode: userData.currentCity
+            })
+        }).then(res => res.json())
+        return orderInfo.data
 
+    }
+    static async createOrderItem(orderItem, orderId) {
+        let orderItemData = await fetch('http://192.168.43.90:3000/graphql', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({
+                query: `mutation{
+                    createOrderItem(
+                      orderId:"${orderId}",
+                      postId:"${orderItem.postId}",
+                      amount:${orderItem.amount}
+                    ){
+                      postId
+                    }
+                  }`
+            })
+        }).then(res => res.json())
+        return orderItemData.data.createOrderItem
+    }
+    static async placeOrders(groupedOrderList, orderLocationInfo) {
+        let orderGroup = []
+        for (let group in groupedOrderList) {
+            let data = {
+                cookId: group,
+                items: groupedOrderList[group]
+            }
+            orderGroup.push(data)
+        }
+        for (let orderGroupItem of orderGroup) {
+
+            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo)
+            for (let items of orderGroupItem.items) {
+                await OrderServices.createOrderItem(items, newOrderId._id)
+            }
+        }
     }
 }
 

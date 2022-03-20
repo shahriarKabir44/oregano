@@ -26,6 +26,9 @@ const CartServices = {
             }
         }
         await this.setCartList(carts)
+    },
+    restructureCartGroups: function (cartGroups) {
+
     }
 }
 export default CartServices

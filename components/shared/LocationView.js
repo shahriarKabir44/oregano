@@ -50,7 +50,6 @@ function LocationView({ setTargetCoordinates, mapVisibility, setMapVisibility, t
             }}
             onBackdropPress={() => {
                 setMapVisibility(false)
-                console.log('object');
             }}
         >
 
