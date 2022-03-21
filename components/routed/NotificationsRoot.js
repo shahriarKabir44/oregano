@@ -14,7 +14,7 @@ function NotificationsRoot(props) {
     React.useEffect(() => {
         if (isFocused) {
             updateContext({ ...contextObject, headerString: "Notifications" })
-            NotificationService.getNotifications(1)
+            NotificationService.getNotifications(contextObject.currentUser.id)
                 .then(data => {
                     setNotificationList(data)
                 })

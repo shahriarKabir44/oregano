@@ -10,8 +10,9 @@ export default class OrderServices {
         order['seller'] = await UserService.findUser(order['sellerId'])
         return order
     }
-    static async createOrder(cartGroup, orderLocationInfo) {
+    static async createOrder(cartGroup, orderLocationInfo, buyerName) {
         let userData = await UserService.findUser(cartGroup.cookId)
+        let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
         let orderInfo = await fetch('http://192.168.43.90:3000/createNewOrder', {
             method: 'POST',
             headers: {
@@ -29,7 +30,8 @@ export default class OrderServices {
                 time: (new Date()) * 1,
                 pickupLat: userData.currentLatitude,
                 pickupLong: userData.currentLongitude,
-                pickupLocationGeocode: userData.currentCity
+                pickupLocationGeocode: userData.currentCity,
+                notificationMessage: notificationMessage
             })
         }).then(res => res.json())
         return orderInfo.data
@@ -56,7 +58,7 @@ export default class OrderServices {
         }).then(res => res.json())
         return orderItemData.data.createOrderItem
     }
-    static async placeOrders(groupedOrderList, orderLocationInfo) {
+    static async placeOrders(groupedOrderList, orderLocationInfo, buyerName) {
         let orderGroup = []
         for (let group in groupedOrderList) {
             let data = {
@@ -67,7 +69,7 @@ export default class OrderServices {
         }
         for (let orderGroupItem of orderGroup) {
 
-            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo)
+            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo, buyerName)
             for (let items of orderGroupItem.items) {
                 await OrderServices.createOrderItem(items, newOrderId._id)
             }

@@ -2,12 +2,13 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
 import { RadioButton, TextInput } from 'react-native-paper';
 import * as Location from 'expo-location';
-
+import { RootContext } from '../../contexts/GlobalContext'
 import CartServices from '../../../services/CartServices'
 import LocationView from '../../shared/LocationView';
 import OrderServices from '../../../services/OrderServices';
 function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupByCooks, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
+    let { contextObject, updateContext } = React.useContext(RootContext)
     const [orderLocation, setOrderLocation] = React.useState('')
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("Loading..")
     const [customLocation, setCustomLocation] = React.useState("")
@@ -117,7 +118,7 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupByCooks, setBo
                     OrderServices.placeOrders(groupByCooks, {
                         ...currentLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
-                    }).then(() => {
+                    }, contextObject.currentUser.facebookToken.name).then(() => {
                         CartServices.clearAll()
                             .then(() => {
                                 setBottomSheetVisibility(false)

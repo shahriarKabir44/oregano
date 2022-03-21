@@ -37,7 +37,13 @@ function NotificationItem({ notificationItem, navigator }) {
                         }
                     })
             }}>
-                <Text> {notificationItem.message} </Text>
+                <Text style={{
+                    fontSize: 15,
+                    color: 'white'
+                }}>{notificationItem.message} </Text>
+                <Text style={{
+                    textAlign: "right"
+                }}>{(new Date(notificationItem.time)).toDateString()}</Text>
             </TouchableOpacity>
 
         </View>
