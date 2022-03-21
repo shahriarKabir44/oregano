@@ -14,22 +14,32 @@ function OrderDetails(props) {
     let { updateContext, contextObject } = React.useContext(RootContext)
     let orderDetails = props.route.params
     const isFocused = useIsFocused()
+    const [buyerInfo, setBuyerInfo] = React.useState({
+        id: 0,
+        facebookToken: {
+            name: "",
+            profileImageURL: "aa"
+        }
+    })
     const [productList, setProductList] = React.useState([])
     React.useEffect(() => {
 
         (async () => {
             if (isFocused) {
                 updateContext({ ...contextObject, headerString: "Order info" })
-
-                let products = []
-                for (let order of orderDetails.orderItems) {
-                    let product = await PostService.findPost(order.postId)
-                    products.push({
-                        product: product,
-                        amount: order.amount
-                    })
+                let productList = []
+                setBuyerInfo({
+                    id: orderDetails.buyer.id,
+                    facebookToken: JSON.parse(orderDetails.buyer.facebookToken)
+                })
+                for (let item of orderDetails.orderedItems) {
+                    let data = {
+                        amount: item.amount,
+                        product: item.post
+                    }
+                    productList.push(data)
                 }
-                setProductList(products)
+                setProductList(productList)
             }
 
         })()
@@ -59,12 +69,12 @@ function OrderDetails(props) {
                     aspectRatio: 1,
                     borderRadius: 90
                 }} source={{
-                    uri: orderDetails.buyer.facebookToken.profileImageURL
+                    uri: buyerInfo.facebookToken.profileImageURL
                 }} />
                 <View>
                     <Text style={{
                         fontSize: 20
-                    }}>{orderDetails.buyer.facebookToken.name}</Text>
+                    }}>{buyerInfo.facebookToken.name}</Text>
                     <Button title='View profile' />
                 </View>
             </View>
@@ -93,7 +103,7 @@ function OrderDetails(props) {
             <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={{
                 latitude: 21.8022,
                 longitude: 89.5339
-            }} tagnameLabel={`${orderDetails.buyer.facebookToken.name}`} />
+            }} tagnameLabel={`${buyerInfo.facebookToken.name}`} />
             <View style={{
                 display: "flex",
                 flexDirection: "row",

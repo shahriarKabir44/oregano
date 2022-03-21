@@ -3,6 +3,7 @@ import { View, Image, Text, TouchableOpacity, Button } from 'react-native';
 
 
 function OrderListItem(props) {
+
     return (
         <View style={{
             display: "flex",
@@ -30,7 +31,7 @@ function OrderListItem(props) {
                     aspectRatio: 1,
                     borderRadius: 50
                 }} source={{
-                    uri: props.order.product.images[0]
+                    uri: JSON.parse(props.order.product.images)[0]
                 }} />
                 <View>
                     <Text style={{

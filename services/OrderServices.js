@@ -5,12 +5,43 @@ export default class OrderServices {
         return orders.filter(order => order.buyerId == id)
     }
     static async getOrderInfo(orderId) {
-        let order = orders.filter(order => order.id == orderId)[0]
-        order['buyer'] = await UserService.findUser(order.buyerId)
-        order['seller'] = await UserService.findUser(order['sellerId'])
-        return order
+        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getOrderInfo(id:"${orderId}"){
+                        buyer{
+                        facebookToken
+                        id
+                      }
+                           seller{
+                        facebookToken
+                        id
+                      }
+                        orderedItems{
+                        post{
+                          itemName
+                          images
+                          id
+                          city
+                          district
+                        }
+                        amount
+                        
+                      }
+                      drop_lat
+                      drop_long
+                      dropLocationGeocode
+                      }
+                }`
+            })
+        }).then(res => res.json())
+        return data.getOrderInfo
     }
-    static async createOrder(cartGroup, orderLocationInfo, buyerName) {
+    static async createOrder(cartGroup, orderLocationInfo, buyerName, buyerId) {
         let userData = await UserService.findUser(cartGroup.cookId)
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
         let orderInfo = await fetch('http://192.168.43.90:3000/createNewOrder', {
@@ -22,7 +53,7 @@ export default class OrderServices {
                 drop_lat: orderLocationInfo.latitude,
                 drop_long: orderLocationInfo.longitude,
                 dropLocationGeocode: orderLocationInfo.dropLocationGeocode,
-                buyerId: orderLocationInfo.buyerId,
+                buyerId: buyerId,
                 sellerId: cartGroup.cookId,
                 riderId: null,
                 status: 0,
@@ -58,7 +89,7 @@ export default class OrderServices {
         }).then(res => res.json())
         return orderItemData.data.createOrderItem
     }
-    static async placeOrders(groupedOrderList, orderLocationInfo, buyerName) {
+    static async placeOrders(groupedOrderList, orderLocationInfo, buyerName, buyerId) {
         let orderGroup = []
         for (let group in groupedOrderList) {
             let data = {
@@ -69,7 +100,7 @@ export default class OrderServices {
         }
         for (let orderGroupItem of orderGroup) {
 
-            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo, buyerName)
+            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo, buyerName, buyerId)
             for (let items of orderGroupItem.items) {
                 await OrderServices.createOrderItem(items, newOrderId._id)
             }

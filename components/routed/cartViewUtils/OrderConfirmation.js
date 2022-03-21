@@ -118,7 +118,7 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupByCooks, setBo
                     OrderServices.placeOrders(groupByCooks, {
                         ...currentLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
-                    }, contextObject.currentUser.facebookToken.name).then(() => {
+                    }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id).then(() => {
                         CartServices.clearAll()
                             .then(() => {
                                 setBottomSheetVisibility(false)
