@@ -14,20 +14,20 @@ export default class OrderServices {
                 query: `query{
                     getOrderInfo(id:"${orderId}"){
                         buyer{
-                        facebookToken
-                        id
-                      }
-                           seller{
                             facebookToken
                             id
-                      }
+                        }
+                        seller{
+                            facebookToken
+                            id
+                        }
                         orderedItems{
                         post{
-                          itemName
-                          images
-                          id
-                          city
-                          district
+                            itemName
+                            images
+                            id
+                            city
+                            district
                         }
                         amount
                         
@@ -36,11 +36,17 @@ export default class OrderServices {
                       drop_long
                       status
                       dropLocationGeocode
+                      id
                       }
                 }`
             })
         }).then(res => res.json())
         return data.getOrderInfo
+    }
+    static async acceptOrders(orderId, orderItemList) {
+        let { data } = await fetch(`http://192.168.43.90:3000/acceptOrder/${orderId}`)
+            .then(res => res.json())
+        return data
     }
     static async createOrder(cartGroup, orderLocationInfo, buyerName, buyerId) {
         let userData = await UserService.findUser(cartGroup.cookId)

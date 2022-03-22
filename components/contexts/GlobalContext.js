@@ -26,7 +26,7 @@ let users = [
         "currentLongitude": 89.5545602022129
     }
 ]
-users[0].facebookToken
+
 export default function GlobalContext({ children }) {
     const [globalObject, setGlobalObject] = useState({
         headerString: "",

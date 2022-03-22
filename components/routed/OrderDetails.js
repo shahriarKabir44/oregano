@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Button } from 'react-native';
+import { View, Text, Image, Button, ToastAndroid } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 import PostService from '../../services/PostService';
@@ -7,6 +7,7 @@ import LocationView from '../shared/LocationView';
 import OrderListItem from './OrderListItem/OrderListItem';
 import { RootContext } from '../contexts/GlobalContext';
 import { useIsFocused } from '@react-navigation/native';
+import OrderServices from '../../services/OrderServices';
 
 
 function OrderDetails(props) {
@@ -114,7 +115,6 @@ function OrderDetails(props) {
             <ScrollView>
                 {productList.map((order, index) => {
                     return <OrderListItem onReject={() => {
-                        console.log(order.product.id);
                         rejectAProduct(order.product.id)
                     }} onAccept={() => {
                         acceptAProduct(order.product.id)
@@ -134,7 +134,16 @@ function OrderDetails(props) {
                     backgroundColor: "green"
                 }]} onPress={() => {
 
-
+                    OrderServices.acceptOrders(orderDetails.id, productList)
+                        .then(data => {
+                            console.log(data)
+                            ToastAndroid.showWithGravity(
+                                "Order accepted succesfully!",
+                                ToastAndroid.SHORT,
+                                ToastAndroid.CENTER
+                            )
+                            props.navigation.navigate('HomeView')
+                        })
                 }}>
                     <Text style={{
                         fontSize: 15

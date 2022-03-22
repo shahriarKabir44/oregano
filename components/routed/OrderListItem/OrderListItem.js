@@ -3,7 +3,6 @@ import { View, Image, Text, TouchableOpacity, Button } from 'react-native';
 
 
 function OrderListItem(props) {
-    console.log(props.order.status);
     React.useEffect(() => { }, [props.order])
     return (
         <View style={{

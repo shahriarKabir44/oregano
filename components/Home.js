@@ -77,7 +77,7 @@ function Home(props) {
                             marginVertical: 5,
                             paddingLeft: 5
                         }}
-                    >Posts from your locality</Text>
+                    >Posts from your area</Text>
                     {!isLocalPostsLoaded && <PostCard post={initialPost} />}
                     {isLocalPostsLoaded && <PostCardRoot {...props} postList={localPostList.filter(post => post.owner.id != rootContext.contextObject.currentUser.id)} />}
                 </View>

@@ -1,6 +1,5 @@
 export default class NotificationService {
     static async getNotifications(currentUserid) {
-        console.log(currentUserid)
         let { data } = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
