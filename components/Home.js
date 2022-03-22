@@ -16,7 +16,7 @@ import PostCard from './shared/PostCard';
 function Home(props) {
     const rootContext = React.useContext(RootContext)
 
-    const [postList, setPostList] = useState([])
+    const [localPostList, setlocalPostList] = useState([])
     let initialPost = {
         itemName: "Loading..",
         id: -1,
@@ -30,12 +30,19 @@ function Home(props) {
     }
     const [isLoaded, setIsLoaded] = useState(false)
     const [subscribedPosts, setSubscribedPosts] = useState([])
+    const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     useEffect(() => {
 
         UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
             .then(data => {
                 setSubscribedPosts(data)
                 setIsLoaded(true)
+            })
+
+        PostService.findLocalPosts()
+            .then(data => {
+                setIsLocalPostsLoaded(1 == 1)
+                setlocalPostList(data)
             })
     }, [])
     return (
@@ -64,6 +71,15 @@ function Home(props) {
                         }}
                     >Available food items</Text>
                     <AvailableTags navigator={props.stackNav} />
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            marginVertical: 5,
+                            paddingLeft: 5
+                        }}
+                    >Posts from your locality</Text>
+                    {!isLocalPostsLoaded && <PostCard post={initialPost} />}
+                    {isLocalPostsLoaded && <PostCardRoot {...props} postList={localPostList.filter(post => post.owner.id != rootContext.contextObject.currentUser.id)} />}
                 </View>
             </ScrollView>
 
