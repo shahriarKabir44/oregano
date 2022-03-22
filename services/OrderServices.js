@@ -18,8 +18,8 @@ export default class OrderServices {
                         id
                       }
                            seller{
-                        facebookToken
-                        id
+                            facebookToken
+                            id
                       }
                         orderedItems{
                         post{
@@ -34,6 +34,7 @@ export default class OrderServices {
                       }
                       drop_lat
                       drop_long
+                      status
                       dropLocationGeocode
                       }
                 }`

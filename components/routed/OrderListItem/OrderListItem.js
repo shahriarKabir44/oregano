@@ -3,12 +3,15 @@ import { View, Image, Text, TouchableOpacity, Button } from 'react-native';
 
 
 function OrderListItem(props) {
-
+    console.log(props.order.status);
+    React.useEffect(() => { }, [props.order])
     return (
         <View style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            alignItems: "center",
+            alignContent: "center"
         }}>
             <TouchableOpacity onPress={() => {
                 props.navigation.push('Post details', {
@@ -42,20 +45,21 @@ function OrderListItem(props) {
                 </View>
             </TouchableOpacity>
             <View>
-                <TouchableOpacity style={{
+
+                {props.order.status == 1 && <TouchableOpacity onPress={props.onReject} style={{
+                    backgroundColor: "red",
+                    padding: 10,
+                    borderRadius: 10
+                }}>
+                    <Text>Reject</Text>
+                </TouchableOpacity>}
+                {props.order.status == -1 && <TouchableOpacity onPress={props.onAccept} style={{
                     backgroundColor: "green",
                     padding: 10,
                     borderRadius: 10
                 }}>
                     <Text>Accept</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    backgroundColor: "red",
-                    padding: 10,
-                    borderRadius: 10
-                }}>
-                    <Text>Accept</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
         </View>
     );

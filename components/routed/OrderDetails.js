@@ -22,6 +22,20 @@ function OrderDetails(props) {
         }
     })
     const [productList, setProductList] = React.useState([])
+    function rejectAProduct(id) {
+        let temp = productList
+        for (let item of temp) {
+            if (item.product.id == id) item.status = -1
+        }
+        setProductList(temp)
+    }
+    function acceptAProduct(id) {
+        let temp = productList
+        for (let item of temp) {
+            if (item.product.id == id) item.status = -1
+        }
+        setProductList(temp)
+    }
     React.useEffect(() => {
 
         (async () => {
@@ -35,9 +49,11 @@ function OrderDetails(props) {
                 for (let item of orderDetails.orderedItems) {
                     let data = {
                         amount: item.amount,
-                        product: item.post
+                        product: item.post,
+                        status: 1
                     }
                     productList.push(data)
+
                 }
                 setProductList(productList)
             }
@@ -97,12 +113,17 @@ function OrderDetails(props) {
             <Text>Ordered items</Text>
             <ScrollView>
                 {productList.map((order, index) => {
-                    return <OrderListItem navigation={props.navigation} key={index} order={order} />
+                    return <OrderListItem onReject={() => {
+                        console.log(order.product.id);
+                        rejectAProduct(order.product.id)
+                    }} onAccept={() => {
+                        acceptAProduct(order.product.id)
+                    }} navigation={props.navigation} key={index} order={order} />
                 })}
             </ScrollView>
             <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={{
-                latitude: 21.8022,
-                longitude: 89.5339
+                latitude: orderDetails.drop_lat,
+                longitude: orderDetails.drop_long
             }} tagnameLabel={`${buyerInfo.facebookToken.name}`} />
             <View style={{
                 display: "flex",
@@ -117,7 +138,7 @@ function OrderDetails(props) {
                 }}>
                     <Text style={{
                         fontSize: 15
-                    }}>Accept all</Text>
+                    }}>Done</Text>
 
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.footer, {

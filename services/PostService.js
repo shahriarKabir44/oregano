@@ -36,6 +36,40 @@ export default class PostService {
         }
         return posts
     }
+    static async findLocalPosts(district = "California") {
+        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    findLocalPosts(district:"${district}"){
+                      itemName
+                      id
+                        images
+                        unitPrice
+                        amountProduced
+                        tags
+                        owner{
+                        facebookToken
+                        id
+                        
+                      }
+                        
+                      }
+                }`
+            })
+
+        }).then(res => res.json())
+        data = data.findLocalPosts
+        for (let post of data) {
+            post.images = JSON.parse(post.images)
+            post.owner.facebookToken = JSON.parse(post.owner.facebookToken)
+            post.tags = JSON.parse(post.tags)
+        }
+        return data
+    }
     static async findPost(id) {
         let res = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
