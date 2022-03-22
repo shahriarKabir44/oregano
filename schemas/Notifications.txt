@@ -9,8 +9,8 @@
     id:{type:mongoose.Objectid},
 }
 
-1: someone ordered my food -> orderId => sellerId=self.id && buyerId= buyer.id && status==0
-2: Someone is unable to provide the item -> none
+1: User ordered my food -> orderId => sellerId=self.id && buyerId= buyer.id && status==0
+2: Cook is unable to provide the item -> none
 3: Rider has picked up my order -> none
 4: I am assigned for a delivery -> delivery => riderId=self.id && status==0
 5: I have to rate an item -> item.id

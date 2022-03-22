@@ -61,7 +61,7 @@ function PostCard({ post, drawerNav, stackNav }) {
                 </View>
                 <View style={[styles.otherInfo, styles.marginVertical]}>
                     <Text> Tk {post?.unitPrice} </Text>
-                    <Text> 5kms </Text>
+                    <Text> {Math.ceil(Math.random() * 5) + 1} kms </Text>
                     <Text> {post?.amountProduced} {post?.unitType} available </Text>
                 </View>{/* */}
             </View>
