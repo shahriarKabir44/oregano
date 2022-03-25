@@ -27,7 +27,7 @@ function CreatePost(props) {
 			setItemProperty({ ...item, tags: props.route.params ? props.route.params.tags : [] })
 		}
 	}, [isFocused])
-	const [images, setImagesList] = useState([{ index: 4, body: null }])
+	const [images, setImagesList] = useState([{ index: 4, body: null, type: "", base64: "" }])
 	const [lastImageId, setLastImageId] = useState(0)
 	async function handleUpload() {
 		let result = await ImagePicker.launchImageLibraryAsync({
@@ -35,15 +35,19 @@ function CreatePost(props) {
 			allowsEditing: true,
 			aspect: [4, 3],
 			quality: 1,
+			base64: true
 		})
 		if (result) {
 			if (!result.cancelled) {
+
 				let newImage = {
 					body: result.uri,
-					index: lastImageId
+					index: lastImageId,
+					base64: `data:image/jpeg;base64,${result.base64}`,
+					type: result.type
 				}
 				setImagesList([...images, newImage])
-
+				console.log(newImage.base64.length);
 				if (lastImageId == 3) setLastImageId(5)
 				else setLastImageId(lastImageId + 1)
 
@@ -161,7 +165,19 @@ function CreatePost(props) {
 			</ScrollView>
 
 			<TouchableOpacity onPress={() => {
-
+				let formData = new FormData();
+				formData.append('file', images[1].base64)
+				//console.log(images[1].base64);
+				fetch('http://192.168.43.90:3000/upload', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					},
+					body: formData
+				}).then(res => res.json())
+					.then(data => {
+						console.log(data);
+					})
 			}}>
 				<View style={{
 					backgroundColor: "#FFA500",
