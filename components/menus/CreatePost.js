@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, FlatList, Image, Button, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, FlatList, StyleSheet, Image, Button, TouchableOpacity, ToastAndroid, Modal } from 'react-native';
 import { TextInput } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,6 +13,7 @@ import LocationService from '../../services/LocationService';
 import PostService from '../../services/PostService';
 
 function CreatePost(props) {
+	const [modalVisible, setModalVisible] = useState(false);
 	const isFocused = useIsFocused()
 	const rootContext = React.useContext(RootContext)
 	const [item, setItemProperty] = useState({
@@ -103,6 +104,22 @@ function CreatePost(props) {
 			flex: 1,
 			backgroundColor: "#DFDFDF"
 		}}>
+			<Modal
+				animationType="slide"
+				transparent={1 == 1}
+				visible={modalVisible}
+				onRequestClose={() => {
+					Alert.alert("Modal has been closed.");
+					setModalVisible(!modalVisible);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View style={styles.modalView}>
+						<Text style={styles.modalText}>Please wait...</Text>
+
+					</View>
+				</View>
+			</Modal>
 			<ScrollView style={{
 
 				backgroundColor: "white",
@@ -182,6 +199,7 @@ function CreatePost(props) {
 
 					}}>
 						<TextInput
+							keyboardType="numeric"
 							label="Amount Produced"
 							value={item.amountProduced}
 							onChangeText={text => setItemProperty({ ...item, amountProduced: text })}
@@ -197,6 +215,7 @@ function CreatePost(props) {
 					</View>
 					<View>
 						<TextInput
+							keyboardType="numeric"
 							label="Price"
 							value={item.unitPrice}
 							onChangeText={text => setItemProperty({ ...item, unitPrice: text })}
@@ -206,6 +225,7 @@ function CreatePost(props) {
 			</ScrollView>
 
 			<TouchableOpacity onPress={() => {
+				setModalVisible(1 == 1)
 				setGeoInfo()
 					.then(() => {
 						let newPost = {
@@ -221,6 +241,13 @@ function CreatePost(props) {
 							.then(({ data }) => {
 								PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
 									.then(resp => {
+										setModalVisible(1 == 0)
+										ToastAndroid.showWithGravity(
+											"Post created succesfully!",
+											ToastAndroid.SHORT,
+											ToastAndroid.CENTER
+										)
+										props.navigation.navigate('HomeView')
 									})
 							})
 					})
@@ -243,5 +270,46 @@ function CreatePost(props) {
 		</View>
 	);
 }
-
+const styles = StyleSheet.create({
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 22
+	},
+	modalView: {
+		margin: 20,
+		backgroundColor: "white",
+		borderRadius: 20,
+		padding: 35,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5
+	},
+	button: {
+		borderRadius: 20,
+		padding: 10,
+		elevation: 2
+	},
+	buttonOpen: {
+		backgroundColor: "#F194FF",
+	},
+	buttonClose: {
+		backgroundColor: "#2196F3",
+	},
+	textStyle: {
+		color: "white",
+		fontWeight: "bold",
+		textAlign: "center"
+	},
+	modalText: {
+		textAlign: "center"
+	}
+})
 export default CreatePost;
