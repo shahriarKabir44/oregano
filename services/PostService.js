@@ -71,6 +71,16 @@ export default class PostService {
         }
         return data
     }
+    static async createPost(body) {
+        let data = await fetch('http://192.168.43.90:3000/createPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }).then(res => res.json())
+        return data
+    }
     static async findPost(id) {
         let res = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
@@ -100,6 +110,51 @@ export default class PostService {
         res.data.findPost.owner.facebookToken = JSON.parse(res.data.findPost.owner.facebookToken)
 
         return res.data.findPost
+
+    }
+    static async uploadImages(images, postedBy, postid, postedOn) {
+        let urls = []
+        let index = 0
+        for (let image of images) {
+            if (image.index != 4) {
+                let { data } = await PostService.updateImage(image, postedBy, postid, postedOn, index++)
+                urls.push(data)
+            }
+        }
+
+        return this.updateImageURLs(postid, urls)
+    }
+    static async updateImageURLs(postId, images) {
+        let { data } = await fetch('http://192.168.43.90:3000/updatePostImages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                postId: postId,
+                images: JSON.stringify(images)
+            })
+        }).then(response => response.json())
+        return data
+    }
+    static async updateImage(image, postedBy, postid, postedOn, index) {
+        let formData = new FormData()
+        formData.append('file', image.base64)
+
+        let data = await fetch('http://192.168.43.90:3000/upload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                postedOn: postedOn,
+                postedBy: postedBy,
+                postid: postid,
+                type: image.type,
+                fileName: postid + "image-" + index
+            },
+            body: formData
+        }).then(res => res.json())
+        console.log(data);
+        return data
 
     }
     static async getPosts() {

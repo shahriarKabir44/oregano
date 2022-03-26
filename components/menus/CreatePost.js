@@ -9,6 +9,8 @@ import { Picker } from '@react-native-picker/picker';
 import TagsSelectionService from '../../services/TagsSelectionService';
 import { useIsFocused } from '@react-navigation/native';
 import { RootContext } from '../contexts/GlobalContext'
+import LocationService from '../../services/LocationService';
+import PostService from '../../services/PostService';
 
 function CreatePost(props) {
 	const isFocused = useIsFocused()
@@ -16,18 +18,58 @@ function CreatePost(props) {
 	const [item, setItemProperty] = useState({
 		itemName: "",
 		tags: [],
-		images: [],
+		images: "",
 		unitPrice: "",
 		amountProduced: "",
-		amountType: "Units"
+		unitType: "Units",
+		country: "",
+		district: "",
+		city: "",
+		latitude: "",
+		longitude: "",
+		postedOn: "",
+		postedBy: "",
 	})
+	const [currentLocation, setCurrentLocation] = React.useState({})
+	const [currentGeocode, setCurrentGeocode] = React.useState({
+		country: "",
+		district: "",
+		city: "",
+	})
+	async function setGeoInfo() {
+		LocationService.getCurrentLocation()
+			.then(location => {
+
+				setCurrentLocation({
+					latitude: location.latitude,
+					longitude: location.longitude
+				})
+
+				return location
+			})
+			.then(location => {
+				LocationService.getLocationGeocode(location)
+					.then(data => {
+						setCurrentGeocode({ ...currentGeocode, district: data[0].district ? data[0].district : "California", city: data[0].city, country: data[0].country })
+					})
+			})
+	}
 	useEffect(() => {
 		if (isFocused) {
+
+			setItemProperty({ ...item, postedBy: rootContext.contextObject.currentUser.id })
 			rootContext.updateContext({ ...rootContext.contextObject, headerString: "Create a post" })
-			setItemProperty({ ...item, tags: props.route.params ? props.route.params.tags : [] })
+			setItemProperty({ ...item, tags: props.route.params ? [...props.route.params.tags] : [] })
 		}
+
 	}, [isFocused])
-	const [images, setImagesList] = useState([{ index: 4, body: null, type: "", base64: "" }])
+	const [images, setImagesList] = useState([
+		{
+			index: 4,
+			body: null,
+			type: "",
+			base64: ""
+		}])
 	const [lastImageId, setLastImageId] = useState(0)
 	async function handleUpload() {
 		let result = await ImagePicker.launchImageLibraryAsync({
@@ -39,12 +81,13 @@ function CreatePost(props) {
 		})
 		if (result) {
 			if (!result.cancelled) {
-
+				let imageUriSplit = result.uri.split(".")
+				console.log(imageUriSplit[imageUriSplit.length - 1]);
 				let newImage = {
 					body: result.uri,
 					index: lastImageId,
-					base64: `data:image/jpeg;base64,${result.base64}`,
-					type: result.type
+					base64: `data:image/${imageUriSplit[imageUriSplit.length - 1]};base64,${result.base64}`,
+					type: imageUriSplit[imageUriSplit.length - 1],
 				}
 				setImagesList([...images, newImage])
 				console.log(newImage.base64.length);
@@ -146,9 +189,9 @@ function CreatePost(props) {
 							onChangeText={text => setItemProperty({ ...item, amountProduced: text })}
 						/>
 						<Picker
-							selectedValue={item.amountType}
+							selectedValue={item.unitType}
 
-							onValueChange={(itemValue, itemIndex) => setItemProperty({ ...item, amountType: itemValue })}
+							onValueChange={(itemValue, itemIndex) => setItemProperty({ ...item, unitType: itemValue })}
 						>
 							<Picker.Item label="Units" value="Units" />
 							<Picker.Item label="Kgs" value="Kgs" />
@@ -165,19 +208,30 @@ function CreatePost(props) {
 			</ScrollView>
 
 			<TouchableOpacity onPress={() => {
-				let formData = new FormData();
-				formData.append('file', images[1].base64)
-				//console.log(images[1].base64);
-				fetch('http://192.168.43.90:3000/upload', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'multipart/form-data'
-					},
-					body: formData
-				}).then(res => res.json())
-					.then(data => {
-						console.log(data);
+				setGeoInfo()
+					.then(() => {
+						let newPost = {
+							...item,
+							...currentLocation,
+							...currentGeocode,
+							postedBy: rootContext.contextObject.currentUser.id,
+							tags: JSON.stringify(item.tags),
+							postedOn: (new Date()) * 1
+
+						};
+						PostService.createPost(newPost)
+							.then(({ data }) => {
+								console.log(data._id);
+								PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
+									.then(resp => {
+										console.log(resp);
+									})
+							})
 					})
+
+
+
+
 			}}>
 				<View style={{
 					backgroundColor: "#FFA500",
