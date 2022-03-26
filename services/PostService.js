@@ -37,7 +37,6 @@ export default class PostService {
         return posts
     }
     static async findLocalPosts(district = "California") {
-        console.log('here');
         let { data } = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
@@ -153,7 +152,6 @@ export default class PostService {
             },
             body: formData
         }).then(res => res.json())
-        console.log(data);
         return data
 
     }

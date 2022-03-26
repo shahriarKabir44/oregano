@@ -136,7 +136,6 @@ function OrderDetails(props) {
 
                     OrderServices.acceptOrders(orderDetails.id, productList)
                         .then(data => {
-                            console.log(data)
                             ToastAndroid.showWithGravity(
                                 "Order accepted succesfully!",
                                 ToastAndroid.SHORT,

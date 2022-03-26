@@ -82,7 +82,6 @@ function CreatePost(props) {
 		if (result) {
 			if (!result.cancelled) {
 				let imageUriSplit = result.uri.split(".")
-				console.log(imageUriSplit[imageUriSplit.length - 1]);
 				let newImage = {
 					body: result.uri,
 					index: lastImageId,
@@ -90,7 +89,6 @@ function CreatePost(props) {
 					type: imageUriSplit[imageUriSplit.length - 1],
 				}
 				setImagesList([...images, newImage])
-				console.log(newImage.base64.length);
 				if (lastImageId == 3) setLastImageId(5)
 				else setLastImageId(lastImageId + 1)
 
@@ -221,10 +219,8 @@ function CreatePost(props) {
 						};
 						PostService.createPost(newPost)
 							.then(({ data }) => {
-								console.log(data._id);
 								PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
 									.then(resp => {
-										console.log(resp);
 									})
 							})
 					})
