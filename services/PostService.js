@@ -71,7 +71,7 @@ export default class PostService {
         return data
     }
     static async createPost(body) {
-        let data = await fetch('http://192.168.43.90:3000/createPost', {
+        let data = await fetch('http://192.168.43.90:3000/posts/createPost', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ export default class PostService {
         return this.updateImageURLs(postid, urls)
     }
     static async updateImageURLs(postId, images) {
-        let { data } = await fetch('http://192.168.43.90:3000/updatePostImages', {
+        let { data } = await fetch('http://192.168.43.90:3000/posts/updatePostImages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -140,7 +140,7 @@ export default class PostService {
         let formData = new FormData()
         formData.append('file', image.base64)
 
-        let data = await fetch('http://192.168.43.90:3000/upload', {
+        let data = await fetch('http://192.168.43.90:3000/posts/upload', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',
