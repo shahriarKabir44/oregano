@@ -29,16 +29,14 @@ function Favourites(props) {
         }}>
             <Text style={{
                 textAlign: "center",
-                fontSize: 20
+                fontSize: 20,
+
             }}>People you follow</Text>
             <View>
                 <ScrollView>
-                    <View style={[styles.horizontalAlign, {
-                        padding: 5,
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                        justifyContent: "space-evenly"
-                    }]}>
+                    <View style={{
+                        padding: 5
+                    }} >
                         {followingList.map((entry, index) => {
                             return <FollowingListItem {...props} followee={entry.followee} key={index} />
                         })}
@@ -63,14 +61,15 @@ function FollowingListItem({ followee }) {
     return (
         <TouchableOpacity style={{
             backgroundColor: "white",
-            padding: 10,
+            padding: 15,
             margin: 5,
             borderRadius: 5,
-            width: "45%"
+
+            // width: "45%"
         }}>
             <View style={[styles.horizontalAlign, {
-                justifyContent: "space-between",
-                marginVertical: 5
+
+                marginVertical: .5
             }]}>
                 <Image style={{
                     width: 50,
@@ -79,7 +78,11 @@ function FollowingListItem({ followee }) {
                 }} source={{
                     uri: followee.facebookToken.profileImageURL
                 }} />
-                <Text> {limitText(followee.facebookToken.name)} </Text>
+                <Text style={{
+                    fontWeight: 'bold',
+                    marginLeft: 20,
+                    fontSize: 18
+                }}> {(followee.facebookToken.name)} </Text>
             </View>
             <View style={{
                 marginVertical: 5
@@ -87,14 +90,14 @@ function FollowingListItem({ followee }) {
 
 
             </View>
-            <View style={{
-                marginVertical: 5
-            }}>
-                <Text>Recently posted:</Text>
-                {followee.lastPost && <View>
-                    <View style={[styles.horizontalAlign, {
-                        justifyContent: "space-between"
-                    }]}>
+            <View >
+                <Text style={{
+                    marginVertical: 5
+                }}>Recently posted:</Text>
+                {followee.lastPost && <View style={[styles.horizontalAlign, , {
+                    justifyContent: "space-between",
+                }]}>
+                    <View style={[styles.horizontalAlign]}>
                         <Image style={{
                             height: 30,
                             aspectRatio: 1,
@@ -102,12 +105,12 @@ function FollowingListItem({ followee }) {
                         }} source={{
                             uri: followee.lastPost.images[0]
                         }} />
-                        <Text> {limitText(followee.lastPost.itemName)} </Text>
+                        <Text style={{ fontSize: 15, marginLeft: 10 }}> {(followee.lastPost.itemName)} </Text>
                     </View>
                     <Text style={{
-                        textAlign: "center",
+
                         marginVertical: 5
-                    }}> 2 hours ago </Text>
+                    }}> {Math.floor(Math.random() * 3) + 1} hour(s) ago </Text>
                 </View>}
                 {!followee.lastPost && <Text>No last post</Text>}
             </View>

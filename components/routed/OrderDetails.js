@@ -71,8 +71,8 @@ function OrderDetails(props) {
         }}>
 
             <Text style={{
-                fontSize: 15
-            }}>Ordered by:</Text>
+                fontSize: 18
+            }}>Ordered by</Text>
             <View style={{
                 marginVertical: 5,
                 display: "flex",
@@ -104,15 +104,19 @@ function OrderDetails(props) {
                 <TouchableOpacity onPress={() => {
                     setMapVisibility(true)
                 }} style={{
-                    backgroundColor: "#c4c4c4",
+                    backgroundColor: "#e1bee0",
                     padding: 10,
-
+                    borderRadius: 5
                 }}>
-                    <Text>View user location:</Text>
+                    <Text>View user location</Text>
                 </TouchableOpacity>
             </View>
-            <Text>Ordered items</Text>
-            <ScrollView>
+            <Text style={{
+                fontSize: 18
+            }}>Ordered items</Text>
+            <ScrollView style={{
+                padding: 10
+            }}>
                 {productList.map((order, index) => {
                     return <OrderListItem onReject={() => {
                         rejectAProduct(order.product.id)
@@ -131,7 +135,7 @@ function OrderDetails(props) {
                 justifyContent: "space-between"
             }}>
                 <TouchableOpacity style={[styles.footer, {
-                    backgroundColor: "green"
+                    backgroundColor: "#11b015"
                 }]} onPress={() => {
 
                     OrderServices.acceptOrders(orderDetails.id, productList)
@@ -150,7 +154,7 @@ function OrderDetails(props) {
 
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.footer, {
-                    backgroundColor: "red"
+                    backgroundColor: "#ea0291"
                 }]} onPress={() => {
 
 

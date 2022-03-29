@@ -57,10 +57,11 @@ function Home(props) {
                 }}>
                     <Text
                         style={{
-                            fontSize: 30,
-                            paddingLeft: 5
+                            fontSize: 20,
+                            paddingLeft: 5,
+                            padding: 10
                         }}
-                    >From People you follow</Text>
+                    >From people you follow</Text>
                     {!isLoaded && <PostCard post={initialPost} />}
                     {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
                     <Text

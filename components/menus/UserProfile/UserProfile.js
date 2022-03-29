@@ -136,8 +136,8 @@ function UserProfile(props) {
                             <Text>{UserProfileInfo.rating}⭐</Text>
                         </View>
                         <View style={styles.horizontalAlign}>
-                            <Text>Followers:</Text>
-                            <Text>{UserProfileInfo.followers}</Text>
+                            {/* <Text>Followers:</Text>
+                            <Text>{UserProfileInfo.followers}</Text> */}
                         </View>
                     </View>
                     <Text style={{

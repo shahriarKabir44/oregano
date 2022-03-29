@@ -22,7 +22,7 @@ function OrderListItem(props) {
                 flexDirection: "row",
                 alignContent: "center",
                 alignItems: "center",
-                backgroundColor: "#878aed94",
+                backgroundColor: "#e7ddd1",
                 borderRadius: 10,
                 width: "80%",
                 justifyContent: "space-around",
@@ -46,7 +46,7 @@ function OrderListItem(props) {
             <View>
 
                 {props.order.status == 1 && <TouchableOpacity onPress={props.onReject} style={{
-                    backgroundColor: "red",
+                    backgroundColor: "#ea0291",
                     padding: 10,
                     borderRadius: 10
                 }}>
