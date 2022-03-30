@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LocationService from '../../services/LocationService';
 export const RootContext = React.createContext()
 let users = [
     {
@@ -28,15 +29,68 @@ let users = [
 ]
 
 export default function GlobalContext({ children }) {
+
     const [globalObject, setGlobalObject] = useState({
         headerString: "",
         tagList: [],
-        currentUser: users[0]
+        currentUser: users[0],
+        currentLocation: {
+            coords: {
+                latitude: 0,
+                longitude: 0
+            },
+            currentLocationGeoCode: {
+
+            }
+        }
     })
+    function updateCurrentLocationInfo() {
+        LocationService.getCurrentLocation()
+            .then(coords => {
+                let locationInfo = {
+                    coords: {
+                        ...coords
+                    }
+                }
+                return locationInfo
+            }).then(locationInfo => {
+                LocationService.getLocationGeocode(locationInfo.coords)
+                    .then(data => {
+                        let geocode = {}
+                        if (data.length) {
+                            console.log(data[0])
+                            geocode = { ...data }
+                        }
+                        locationInfo = {
+                            ...locationInfo,
+                            currentLocationGeoCode: geocode
+                        }
+
+                        setGlobalObject({ ...globalObject, currentLocation: locationInfo })
+                        return geocode
+                    })
+                    .then(geocode => {
+                        fetch('http://192.168.43.90:3000/updateUserLocation', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                locationInfo: JSON.stringify(geocode),
+                                userId: globalObject.currentUser.id
+                            })
+                        }).then(data => {
+
+                        })
+                    })
+
+            })
+    }
     return (
         <RootContext.Provider value={{
             contextObject: globalObject,
-            updateContext: setGlobalObject
+            updateContext: setGlobalObject,
+            updateCurrentLocationInfo: updateCurrentLocationInfo
         }}>
             {children}
         </RootContext.Provider>

@@ -52,7 +52,6 @@ export default class UserService {
             entry.followee.facebookToken = JSON.parse(entry.followee.facebookToken)
             entry.followee.lastPost.images = JSON.parse(entry.followee.lastPost.images)
         }
-        console.log(data);
         return data
     }
     static async getLastPost(id) {

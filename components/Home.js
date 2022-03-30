@@ -32,7 +32,7 @@ function Home(props) {
     const [subscribedPosts, setSubscribedPosts] = useState([])
     const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     useEffect(() => {
-
+        rootContext.updateCurrentLocationInfo()
         UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
             .then(data => {
                 setSubscribedPosts(data)
