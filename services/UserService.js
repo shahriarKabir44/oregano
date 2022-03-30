@@ -52,12 +52,13 @@ export default class UserService {
             entry.followee.facebookToken = JSON.parse(entry.followee.facebookToken)
             entry.followee.lastPost.images = JSON.parse(entry.followee.lastPost.images)
         }
+        console.log(data);
         return data
     }
     static async getLastPost(id) {
         return postList[0]
     }
-    static async getFollowees(id) {
+    static async getFollowers(id) {
         let data = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
             headers: {
@@ -65,8 +66,8 @@ export default class UserService {
             },
             body: JSON.stringify({
                 query: `query{
-                    getFollowees(followerId:"${id}"){
-                        followee{
+                    getFollowers(followeeId:"${id}"){
+                        follower{
                             facebookToken
                             id
                             lastPost{
@@ -84,12 +85,12 @@ export default class UserService {
             })
         }).then(res => res.json())
 
-        let result = data.data.getFollowees
+        let result = data.data.getFollowers
         for (let user of result) {
-            user.followee.facebookToken = JSON.parse(user.followee.facebookToken)
-            if (user.followee.lastPost) {
-                user.followee.lastPost.images = JSON.parse(user.followee.lastPost.images)
-                user.followee.lastPost.tags = JSON.parse(user.followee.lastPost.tags)
+            user.follower.facebookToken = JSON.parse(user.follower.facebookToken)
+            if (user.follower.lastPost) {
+                user.follower.lastPost.images = JSON.parse(user.follower.lastPost.images)
+                user.follower.lastPost.tags = JSON.parse(user.follower.lastPost.tags)
             }
 
 

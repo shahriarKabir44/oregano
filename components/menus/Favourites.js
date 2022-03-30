@@ -10,6 +10,7 @@ import Tags from '../shared/Tags';
 function Favourites(props) {
     const rootContext = React.useContext(RootContext)
     const [followingList, setFollowingList] = useState([])
+    const [followers, setFollowersList] = useState([])
     const isFocused = useIsFocused()
     useEffect(() => {
         if (isFocused) {
@@ -17,6 +18,10 @@ function Favourites(props) {
             UserService.findFollowingList(rootContext.contextObject.currentUser.id)
                 .then(data => {
                     setFollowingList(data)
+                })
+            UserService.getFollowers(rootContext.contextObject.currentUser.id)
+                .then(data => {
+                    setFollowersList([...data])
                 })
         }
 
@@ -39,6 +44,22 @@ function Favourites(props) {
                     }} >
                         {followingList.map((entry, index) => {
                             return <FollowingListItem {...props} followee={entry.followee} key={index} />
+                        })}
+                    </View>
+                </ScrollView>
+            </View>
+            <Text style={{
+                textAlign: "center",
+                fontSize: 20,
+
+            }}>People following you</Text>
+            <View>
+                <ScrollView>
+                    <View style={{
+                        padding: 5
+                    }} >
+                        {followers.map((entry, index) => {
+                            return <FollowerListItem {...props} follower={entry.follower} key={index} />
                         })}
                     </View>
                 </ScrollView>
@@ -113,6 +134,76 @@ function FollowingListItem({ followee }) {
                     }}> {Math.floor(Math.random() * 3) + 1} hour(s) ago </Text>
                 </View>}
                 {!followee.lastPost && <Text>No last post</Text>}
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+function FollowerListItem({ follower }) {
+
+    function limitText(text) {
+        let res = ""
+        for (let n = 0; n < Math.min(12, text.length); n++) {
+            res += text[n]
+        }
+        if (text.length > 12) res += "..."
+        return res
+    }
+    return (
+        <TouchableOpacity style={{
+            backgroundColor: "white",
+            padding: 15,
+            margin: 5,
+            borderRadius: 5,
+
+            // width: "45%"
+        }}>
+            <View style={[styles.horizontalAlign, {
+
+                marginVertical: .5
+            }]}>
+                <Image style={{
+                    width: 50,
+                    aspectRatio: 1,
+                    borderRadius: 50
+                }} source={{
+                    uri: follower.facebookToken.profileImageURL
+                }} />
+                <Text style={{
+                    fontWeight: 'bold',
+                    marginLeft: 20,
+                    fontSize: 18
+                }}> {(follower.facebookToken.name)} </Text>
+            </View>
+            <View style={{
+                marginVertical: 5
+            }}>
+
+
+            </View>
+            <View >
+                <Text style={{
+                    marginVertical: 5
+                }}>Recently posted:</Text>
+                {follower.lastPost && <View style={[styles.horizontalAlign, , {
+                    justifyContent: "space-between",
+                }]}>
+                    <View style={[styles.horizontalAlign]}>
+                        <Image style={{
+                            height: 30,
+                            aspectRatio: 1,
+                            borderRadius: 50
+                        }} source={{
+                            uri: follower.lastPost.images[0]
+                        }} />
+                        <Text style={{ fontSize: 15, marginLeft: 10 }}> {(follower.lastPost.itemName)} </Text>
+                    </View>
+                    <Text style={{
+
+                        marginVertical: 5
+                    }}> {Math.floor(Math.random() * 3) + 1} hour(s) ago </Text>
+                </View>}
+                {!follower.lastPost && <Text>No last post</Text>}
             </View>
         </TouchableOpacity>
     )
