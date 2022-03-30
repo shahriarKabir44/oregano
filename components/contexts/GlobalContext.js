@@ -25,15 +25,30 @@ let users = [
         "currentCity": "2425 Garcia Ave, Mountain View",
         "currentLatitude": 22.803272881875372,
         "currentLongitude": 89.5545602022129
+    },
+    {
+        "id": "62337746e01e7759847f1d8d",
+        "facebookToken": {
+            name: 'Musfiq Rahman',
+            profileImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAPqv9XyrSDyn0GcBiCmKj7WzhH_nzgDJ-tw&usqp=CAU',
+            coverPhotoURL: 'https://image.shutterstock.com/image-photo/chef-hands-keep-wok-fire-260nw-1758966962.jpg',
+            email: 'drew@gmail.com',
+            phone: '01712345623'
+        },
+        "phone": "01712345623",
+        "currentLatitude": 37.423596213254115,
+        "currentLongitude": -122.09753731238035,
+        "isRider": 1,
+        "rating": 2.5,
+        "currentCity": "2470 Charleston Rd"
     }
 ]
 
 export default function GlobalContext({ children }) {
-
     const [globalObject, setGlobalObject] = useState({
         headerString: "",
         tagList: [],
-        currentUser: users[0],
+        currentUser: users[2],
         currentLocation: {
             coords: {
                 latitude: 0,
@@ -58,7 +73,6 @@ export default function GlobalContext({ children }) {
                     .then(data => {
                         let geocode = {}
                         if (data.length) {
-                            console.log(data[0])
                             geocode = { ...data }
                         }
                         locationInfo = {

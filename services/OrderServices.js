@@ -16,28 +16,43 @@ export default class OrderServices {
                         buyer{
                             facebookToken
                             id
+                            personalInfo{
+                                name
+                                profileImageURL
+                                coverPhotoURL
+                            }
+                            phone
                         }
                         seller{
                             facebookToken
                             id
+                            personalInfo{
+                                name
+                                profileImageURL
+                                coverPhotoURL
+                            }
+                            phone
                         }
                         orderedItems{
-                        post{
-                            itemName
-                            images
-                            id
-                            city
-                            district
+                                post{
+                                    itemName
+                                    images
+                                    id
+                                    city
+                                    district
+                                }
+                            amount
+                            
                         }
-                        amount
-                        
-                      }
-                      drop_lat
-                      drop_long
-                      status
-                      dropLocationGeocode
-                      id
-                      }
+                        drop_lat
+                        drop_long
+                        status
+                        dropLocationGeocode
+                        id
+                        pickupLat
+                        pickupLong
+                        pickupLocationGeocode
+                    }
                 }`
             })
         }).then(res => res.json())

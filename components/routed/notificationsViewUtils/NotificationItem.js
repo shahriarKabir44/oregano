@@ -28,6 +28,7 @@ function NotificationItem({ notificationItem, navigator }) {
                                         case 4:
                                             updateContext({ ...contextObject, headerString: "Delivery info" })
                                             navigator.push('delivery_details', orderInfo)
+                                            break;
                                         default:
                                             break;
                                     }
