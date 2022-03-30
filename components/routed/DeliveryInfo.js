@@ -1,22 +1,34 @@
 import React from 'react';
-import { View, Text, Button, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
 import LocationView from '../shared/LocationView';
 import Collapsible from 'react-native-collapsible';
 import { RootContext } from '../contexts/GlobalContext';
+import OrderServices from '../../services/OrderServices';
 
 function DeliveryInfo(props) {
     const { contextObject, updateContext } = React.useContext(RootContext)
+    const [isPickedUp, setPickupStatus] = React.useState(false)
+    const [deliveryDetails, setDeliveryDetails] = React.useState({})
+    const [isLoaded, setLoadedStatus] = React.useState(false)
     React.useEffect(() => {
         updateContext({ ...contextObject, headerString: "Delivery Info" })
+        OrderServices.getOrderInfo(props.route.params)
+            .then(data => {
+                setDeliveryDetails(data)
+                if (data.status === 4) setPickupStatus(true)
+
+            }).then(() => {
+                setLoadedStatus(1 == 1)
+            })
     }, [])
-    const deliveryDetails = props.route.params
+
     const [pickupLocationMapVisibility, setPickupLocationMapVisibility] = React.useState(false)
 
     const [dropLocationMapVisibility, setDropLocationMapVisibility] = React.useState(false)
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(1 == 0)
     return (
         <View style={styles.container}>
-
+            {/* order pickup */}
             <TouchableOpacity style={{
                 borderRadius: 20,
                 borderColor: '#a783d6',
@@ -29,7 +41,7 @@ function DeliveryInfo(props) {
                     <Text style={styles.headerText}>Order Pickup info</Text>
                 </View>
             </TouchableOpacity>
-            <Collapsible collapsed={collapsibleVisibility} align="center">
+            {isLoaded && <Collapsible collapsed={collapsibleVisibility} align="center">
                 <View style={styles.content}>
                     <View style={{
                         display: 'flex',
@@ -73,9 +85,30 @@ function DeliveryInfo(props) {
                     }}>
                         <Text>View Location 🚩</Text>
                     </TouchableOpacity>
+                    {!isPickedUp && <TouchableOpacity style={{
+                        margin: 10,
+                        marginVertical: 20,
+                        padding: 10,
+                        backgroundColor: '#c4c4c4',
+                        display: 'flex',
+                        alignItems: 'center',
+                        borderRadius: 5
+                    }} onPress={() => {
+                        OrderServices.markPickedUp(deliveryDetails.id, deliveryDetails.buyer.id)
+                            .then(data => {
+                                ToastAndroid.showWithGravity(
+                                    "The user has been notified",
+                                    ToastAndroid.SHORT,
+                                    ToastAndroid.CENTER
+                                )
+                                setPickupStatus(true)
+                            })
+                    }}>
+                        <Text>Mark as picked up</Text>
+                    </TouchableOpacity>}
                 </View>
 
-            </Collapsible>
+            </Collapsible>}
 
             <TouchableOpacity style={{
                 borderRadius: 20,
@@ -89,7 +122,7 @@ function DeliveryInfo(props) {
                     <Text style={styles.headerText}>Order Delivery info</Text>
                 </View>
             </TouchableOpacity>
-            <Collapsible collapsed={!collapsibleVisibility} align="center">
+            {isLoaded && <Collapsible collapsed={!collapsibleVisibility} align="center">
                 <View style={styles.content}>
                     <View style={{
                         display: 'flex',
@@ -134,16 +167,18 @@ function DeliveryInfo(props) {
                         <Text>View Location 🚩</Text>
                     </TouchableOpacity>
                 </View>
-            </Collapsible>
-            <LocationView mapVisibility={dropLocationMapVisibility} setMapVisibility={setDropLocationMapVisibility} target={{
-                latitude: deliveryDetails.drop_lat,
-                longitude: deliveryDetails.drop_long
-            }} tagnameLabel="Deliver to" onLocationSelect={() => { }} />
+            </Collapsible>}
+            {isLoaded && <View>
+                <LocationView mapVisibility={dropLocationMapVisibility} setMapVisibility={setDropLocationMapVisibility} target={{
+                    latitude: deliveryDetails.drop_lat,
+                    longitude: deliveryDetails.drop_long
+                }} tagnameLabel="Deliver to" onLocationSelect={() => { }} />
 
-            <LocationView mapVisibility={pickupLocationMapVisibility} setMapVisibility={setPickupLocationMapVisibility} target={{
-                latitude: deliveryDetails.pickupLat,
-                longitude: deliveryDetails.pickupLong
-            }} tagnameLabel="Pick up from" onLocationSelect={() => { }} />
+                <LocationView mapVisibility={pickupLocationMapVisibility} setMapVisibility={setPickupLocationMapVisibility} target={{
+                    latitude: deliveryDetails.pickupLat,
+                    longitude: deliveryDetails.pickupLong
+                }} tagnameLabel="Pick up from" onLocationSelect={() => { }} />
+            </View>}
         </View>
     );
 }

@@ -17,22 +17,23 @@ function NotificationItem({ notificationItem, navigator }) {
                 NotificationService.updateSeenStatus(notificationItem.id)
                     .then(() => {
                         if (notificationItem.relatedSchemaId) {
-
-                            OrderServices.getOrderInfo(notificationItem.relatedSchemaId)
-                                .then((orderInfo) => {
-                                    switch (notificationItem.type) {
-                                        case 1:
+                            switch (notificationItem.type) {
+                                case 1:
+                                    OrderServices.getOrderInfo(notificationItem.relatedSchemaId)
+                                        .then((orderInfo) => {
                                             updateContext({ ...contextObject, headerString: "Order info" })
                                             navigator.push('order_details', orderInfo)
-                                            break;
-                                        case 4:
-                                            updateContext({ ...contextObject, headerString: "Delivery info" })
-                                            navigator.push('delivery_details', orderInfo)
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                })
+                                        })
+
+                                    break;
+                                case 4:
+                                    updateContext({ ...contextObject, headerString: "Delivery info" })
+                                    navigator.push('delivery_details', notificationItem.relatedSchemaId)
+                                    break;
+                                default:
+                                    break;
+                            }
+
 
 
                         }
