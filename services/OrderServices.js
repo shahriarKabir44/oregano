@@ -44,14 +44,14 @@ export default class OrderServices {
         return data.getOrderInfo
     }
     static async acceptOrders(orderId, orderItemList) {
-        let { data } = await fetch(`http://192.168.43.90:3000/acceptOrder/${orderId}`)
+        let { data } = await fetch(`http://192.168.43.90:3000/orders/acceptOrder/${orderId}`)
             .then(res => res.json())
         return data
     }
     static async createOrder(cartGroup, orderLocationInfo, buyerName, buyerId) {
         let userData = await UserService.findUser(cartGroup.cookId)
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
-        let orderInfo = await fetch('http://192.168.43.90:3000/createNewOrder', {
+        let orderInfo = await fetch('http://192.168.43.90:3000/orders/createNewOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
