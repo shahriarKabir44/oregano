@@ -22,8 +22,12 @@ function AssignedDeliveries(props) {
     }, [isFocused])
     return (
         <View>
-            {!deliveries.length && <View>
-                <Text>No pending deliveries</Text>
+            {!deliveries.length && <View style={{
+                padding: 10
+            }}>
+                <Text style={{
+                    fontSize: 20
+                }}>No pending deliveries</Text>
             </View>}
             {deliveries.length > 0 && <View>
                 {deliveries.map((item, index) => <TouchableOpacity key={index} onPress={() => {
@@ -38,6 +42,9 @@ function AssignedDeliveries(props) {
                         <Text>Pickup from:{item.pickupLocationGeocode}</Text>
                         <Text>Deliver to:{item.dropLocationGeocode}</Text>
                         <Text>Total items:{item.itemsCount}</Text>
+                        <Text>
+                            {(new Date(item.time * 1)).toLocaleString()}
+                        </Text>
                     </View>
                 </TouchableOpacity>)}
             </View>}

@@ -46,4 +46,27 @@ export default class DeliveyService {
         }).then(res => res.json())
         return data.getAssignedOrders
     }
+
+    static async getDeliveredOrders(userId) {
+        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                        getDeliveredOrders(id:"${userId}"){
+                                id
+                                time
+                                status
+                                pickupLocationGeocode
+                                dropLocationGeocode
+                                itemsCount
+                                isPaid
+                            }
+                        }`
+            })
+        }).then(res => res.json())
+        return data.getDeliveredOrders
+    }
 }

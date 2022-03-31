@@ -25,7 +25,7 @@ function DeliveryInfo(props) {
                         setPickupStatus(true)
                         setDeliveredStatus(1 == 0)
                     }
-                    if (data.status == 5) {
+                    if (data.status >= 5) {
                         setPickupStatus(true)
                         setDeliveredStatus(1 == 1)
                     }
