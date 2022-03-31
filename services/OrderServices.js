@@ -58,11 +58,6 @@ export default class OrderServices {
         }).then(res => res.json())
         return data.getOrderInfo
     }
-    static async acceptOrders(orderId, orderItemList) {
-        let { data } = await fetch(`http://192.168.43.90:3000/orders/acceptOrder/${orderId}`)
-            .then(res => res.json())
-        return data
-    }
     static async markDelivered(orderId, buyerId) {
         let { data } = await fetch(`http://192.168.43.90:3000/orders/markDelivered`, {
             method: 'POST',
@@ -76,6 +71,12 @@ export default class OrderServices {
         }).then(res => res.json())
         return data
     }
+    static async acceptOrders(orderId, orderItemList) {
+        let { data } = await fetch(`http://192.168.43.90:3000/orders/acceptOrder/${orderId}`)
+            .then(res => res.json())
+        return data
+    }
+
     static async markPickedUp(orderId, buyerId) {
         let { data } = await fetch(`http://192.168.43.90:3000/orders/markPickedUp`, {
             method: 'POST',
@@ -89,7 +90,7 @@ export default class OrderServices {
         }).then(res => res.json())
         return data
     }
-    static async createOrder(cartGroup, orderLocationInfo, buyerName, buyerId) {
+    static async createOrder(cartGroup, orderLocationInfo, buyerName, buyerId, itemsCount) {
         let userData = await UserService.findUser(cartGroup.cookId)
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
         let orderInfo = await fetch('http://192.168.43.90:3000/orders/createNewOrder', {
@@ -110,7 +111,8 @@ export default class OrderServices {
                 pickupLat: userData.currentLatitude,
                 pickupLong: userData.currentLongitude,
                 pickupLocationGeocode: userData.currentCity,
-                notificationMessage: notificationMessage
+                notificationMessage: notificationMessage,
+                itemsCount: itemsCount
             })
         }).then(res => res.json())
         return orderInfo.data
@@ -147,8 +149,11 @@ export default class OrderServices {
             orderGroup.push(data)
         }
         for (let orderGroupItem of orderGroup) {
-
-            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo, buyerName, buyerId)
+            let totalItems = 0;
+            for (let items of orderGroupItem.items) {
+                totalItems += items.amount;
+            }
+            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo, buyerName, buyerId, totalItems)
             for (let items of orderGroupItem.items) {
                 await OrderServices.createOrderItem(items, newOrderId._id)
             }
