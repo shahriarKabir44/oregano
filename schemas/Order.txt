@@ -1,15 +1,4 @@
-{
-    id:{type:mongoose.Objectid},
-    drop_lat:{type:Number},
-    drop_long:{type:Number},
-    dropLocationGeocode:{type:String},
-    buyerId:{type:mongoose.Objectid},
-    sellerId:{type:mongoose.Objectid},
-    riderId:{type:mongoose.Objectid},
-    status:{type:Number},
-    charge:{type:Number},
-    time:{type:Number},
-}
+
 
 status:
 
@@ -19,5 +8,7 @@ status:
 3= rider assigned
 4= order picked up
 5= order delivered
-
+6= pending payment
+7= payment completed 
+order status 6+ is shown in user's order history
 if rider is unavailable, the management team will cancel the order

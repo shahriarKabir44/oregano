@@ -63,6 +63,19 @@ export default class OrderServices {
             .then(res => res.json())
         return data
     }
+    static async markDelivered(orderId, buyerId) {
+        let { data } = await fetch(`http://192.168.43.90:3000/orders/markDelivered`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: orderId,
+                buyerId: buyerId
+            })
+        }).then(res => res.json())
+        return data
+    }
     static async markPickedUp(orderId, buyerId) {
         let { data } = await fetch(`http://192.168.43.90:3000/orders/markPickedUp`, {
             method: 'POST',

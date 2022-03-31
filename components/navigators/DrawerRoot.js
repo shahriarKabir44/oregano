@@ -17,8 +17,11 @@ import Favourites from '../menus/Favourites'
 import PreviousOrders from '../menus/PreviousOrders';
 import CustomHeader from '../shared/CustomHeader';
 import { RootContext } from '../contexts/GlobalContext';
+import AssignedDeliveries from '../shared/AssignedDeliveries';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation }) {
+	const { updateContext, contextObject } = React.useContext(RootContext)
+
 	const stackNavigator = navigation
 	return (
 		<Drawer.Navigator
@@ -49,6 +52,15 @@ export default function DrawerRoot({ navigation }) {
 					return <CustomHeader name={"Favourites"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				}
 			}} name='Connections' component={Favourites} />
+
+			{contextObject.currentUser.isRider && <Drawer.Screen options={{
+				header: (prop) => {
+					return <CustomHeader name={"Assigned Deliveries"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				}
+			}} name="Assigned orders" >
+				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
+			</Drawer.Screen>}
+
 			<Drawer.Screen name='Order History' component={PreviousOrders} />
 		</Drawer.Navigator>
 

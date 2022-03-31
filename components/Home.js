@@ -55,13 +55,16 @@ function Home(props) {
                 <View style={{
                     overflow: "visible"
                 }}>
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            paddingLeft: 5,
-                            padding: 10
-                        }}
-                    >From people you follow</Text>
+
+                    <View>
+                        {subscribedPosts.length > 0 && <Text
+                            style={{
+                                fontSize: 20,
+                                paddingLeft: 5,
+                                padding: 10
+                            }}
+                        >From people you follow</Text>}
+                    </View>
                     {!isLoaded && <PostCard post={initialPost} />}
                     {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
                     <Text

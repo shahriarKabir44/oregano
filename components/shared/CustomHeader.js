@@ -22,6 +22,7 @@ function CustomHeader({ name, drawerNavigation, stackNavigation }) {
                 <Text onPress={() => {
 
                     updateContext({ ...contextObject, headerString: "" })
+
                     stackNavigation.goBack()
                 }} style={{
 

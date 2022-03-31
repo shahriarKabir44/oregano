@@ -14,6 +14,7 @@ import ResultsRoot from '../routed/searchResult/ResultsRoot';
 import NotificationsRoot from '../routed/NotificationsRoot';
 import OrderDetails from '../routed/OrderDetails';
 import DeliveryInfo from '../routed/DeliveryInfo';
+import AssignedDeliveries from '../shared/AssignedDeliveries';
 
 function StackNavigatorRoot(props) {
 	const rootContext = React.useContext(RootContext)
@@ -41,6 +42,17 @@ function StackNavigatorRoot(props) {
 			{(props) => {
 
 				return <CartListView {...props} />
+			}}
+		</Stack.Screen>
+
+		<Stack.Screen name='assigned_deliveries_stack'
+			options={{
+				header: props => <CustomHeader stackNavigation={props.navigation} name={"Assigned deliveries"} />
+			}}
+		>
+			{(props) => {
+
+				return <AssignedDeliveries {...props} />
 			}}
 		</Stack.Screen>
 

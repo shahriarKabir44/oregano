@@ -109,7 +109,6 @@ function CreatePost(props) {
 				transparent={1 == 1}
 				visible={modalVisible}
 				onRequestClose={() => {
-					Alert.alert("Modal has been closed.");
 					setModalVisible(!modalVisible);
 				}}
 			>
