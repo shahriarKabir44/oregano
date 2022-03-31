@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Button, Text, Modal, ScrollView, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
+import { View, Button, Text, ScrollView, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
 import LocationView from '../shared/LocationView';
 import Collapsible from 'react-native-collapsible';
 import { RootContext } from '../contexts/GlobalContext';
 import OrderServices from '../../services/OrderServices';
+import DeliveyService from '../../services/DeliveryService'
+import { useIsFocused } from '@react-navigation/native';
 
 function DeliveryInfo(props) {
     const { contextObject, updateContext } = React.useContext(RootContext)
@@ -11,20 +13,28 @@ function DeliveryInfo(props) {
     const [deliveryDetails, setDeliveryDetails] = React.useState({})
     const [isLoaded, setLoadedStatus] = React.useState(false)
     const [isDelivered, setDeliveredStatus] = React.useState(false)
+    const isFocused = useIsFocused()
+
     React.useEffect(() => {
-        updateContext({ ...contextObject, headerString: "Delivery Info" })
-        OrderServices.getOrderInfo(props.route.params)
-            .then(data => {
-                setDeliveryDetails(data)
-                if (data.status === 4) setPickupStatus(true)
-                if (data.status == 5) {
-                    setPickupStatus(true)
-                    setDeliveredStatus(1 == 1)
-                }
-            }).then(() => {
-                setLoadedStatus(1 == 1)
-            })
-    }, [])
+        if (isFocused) {
+            updateContext({ ...contextObject, headerString: "Delivery Info" })
+            OrderServices.getOrderInfo(props.route.params)
+                .then(data => {
+                    setDeliveryDetails(data)
+                    if (data.status === 4) {
+                        setPickupStatus(true)
+                        setDeliveredStatus(1 == 0)
+                    }
+                    if (data.status == 5) {
+                        setPickupStatus(true)
+                        setDeliveredStatus(1 == 1)
+                    }
+                }).then(() => {
+                    setLoadedStatus(1 == 1)
+                })
+        }
+
+    }, [isFocused])
 
     const [pickupLocationMapVisibility, setPickupLocationMapVisibility] = React.useState(false)
     const [modalVisible, setModalVisible] = React.useState(false)
@@ -32,52 +42,7 @@ function DeliveryInfo(props) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(1 == 0)
     return (
         <View style={styles.container}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>You have succesfully delivered the order!</Text>
 
-                        <View style={styles.modalText}>
-                            <TouchableOpacity style={{
-                                backgroundColor: "#c4c4c4",
-                                padding: 5,
-                                margin: 5,
-                                borderRadius: 5,
-                                alignItems: "center"
-
-                            }} onPress={() => {
-                                setModalVisible(!modalVisible);
-                            }}>
-                                <Text>Ok</Text>
-                            </TouchableOpacity>
-
-
-                            <TouchableOpacity style={{
-                                backgroundColor: "#c4c4c4",
-                                padding: 5,
-                                margin: 5,
-                                borderRadius: 5,
-                                alignItems: "center"
-                            }} onPress={() => {
-                                setModalVisible(!modalVisible);
-
-                                props.navigation.navigate('HomeView')
-                            }}>
-                                <Text>Home</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                    </View>
-                </View>
-            </Modal>
-            {/* order pickup */}
             <ScrollView>
                 <TouchableOpacity style={{
                     borderRadius: 20,
@@ -93,6 +58,9 @@ function DeliveryInfo(props) {
                 </TouchableOpacity>
                 {isLoaded && <Collapsible collapsed={collapsibleVisibility} align="center">
                     <View style={styles.content}>
+                        <Text style={{
+                            fontSize: 20
+                        }}>Pickup info</Text>
                         <View style={{
                             display: 'flex',
                             flexDirection: "row",
@@ -154,6 +122,9 @@ function DeliveryInfo(props) {
                 </TouchableOpacity>
                 {isLoaded && <Collapsible collapsed={!collapsibleVisibility} align="center">
                     <View style={styles.content}>
+                        <Text style={{
+                            fontSize: 20
+                        }}>Delivery info</Text>
                         <View style={{
                             display: 'flex',
                             flexDirection: "row",
@@ -216,46 +187,41 @@ function DeliveryInfo(props) {
             <View style={[styles.footer, {
                 backgroundColor: ((!isPickedUp) || (!isDelivered)) ? "#FFA500" : "#c4c4c4"
             }]}>
-                {!isPickedUp && <TouchableOpacity style={{
-                    margin: 10,
-                    marginVertical: 20,
-                    padding: 10,
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderRadius: 5
-                }} onPress={() => {
-                    OrderServices.markPickedUp(deliveryDetails.id, deliveryDetails.buyer.id)
-                        .then(data => {
-                            ToastAndroid.showWithGravity(
-                                "The user has been notified",
-                                ToastAndroid.SHORT,
-                                ToastAndroid.CENTER
-                            )
-                            setPickupStatus(true)
-                        })
-                }}>
-                    <Text>Mark as picked up</Text>
-                </TouchableOpacity>}
 
-                {isPickedUp && !isDelivered && <TouchableOpacity style={{
+
+                {(!isPickedUp || !isDelivered) && <TouchableOpacity style={{
                     margin: 10,
                     padding: 10,
                     display: 'flex',
                     alignItems: 'center',
                     borderRadius: 5
                 }} onPress={() => {
-                    OrderServices.markDelivered(deliveryDetails.id, deliveryDetails.buyer.id)
-                        .then(() => {
-                            ToastAndroid.showWithGravity(
-                                "Order has been delivered!",
-                                ToastAndroid.SHORT,
-                                ToastAndroid.CENTER
-                            );
-                            setDeliveredStatus(true)
-                            setModalVisible(true)
-                        })
+                    if (!isPickedUp) {
+                        DeliveyService.markPickedUp(deliveryDetails.id, deliveryDetails.buyer.id)
+                            .then(data => {
+                                ToastAndroid.showWithGravity(
+                                    "The user has been notified",
+                                    ToastAndroid.SHORT,
+                                    ToastAndroid.CENTER
+                                )
+                                setPickupStatus(true)
+                            })
+                    }
+                    else if (!isDelivered) {
+                        DeliveyService.markDelivered(deliveryDetails.id, deliveryDetails.buyer.id)
+                            .then(() => {
+                                ToastAndroid.showWithGravity(
+                                    "Order has been delivered!",
+                                    ToastAndroid.SHORT,
+                                    ToastAndroid.CENTER
+                                );
+                                setDeliveredStatus(true)
+                                setModalVisible(true)
+                            })
+                    }
                 }}>
-                    <Text>Mark as delivered</Text>
+                    {!isPickedUp && <Text>Mark as picked up</Text>}
+                    {isPickedUp && !isDelivered && <Text>Mark as delivered</Text>}
                 </TouchableOpacity>}
                 {isDelivered && <TouchableOpacity style={{
                     margin: 10,
