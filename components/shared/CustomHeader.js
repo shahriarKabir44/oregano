@@ -5,7 +5,7 @@ import { Text, View, StyleSheet, Image, SafeAreaView, TouchableOpacity } from 'r
 import { EvilIcons } from '@expo/vector-icons';
 import { RootContext } from '../contexts/GlobalContext'
 
-function CustomHeader({ name, drawerNavigation, stackNavigation }) {
+function CustomHeader({ name, drawerNavigation, stackNavigation, goBackOnly }) {
 
     const { contextObject, updateContext } = React.useContext(RootContext)
 
@@ -30,7 +30,7 @@ function CustomHeader({ name, drawerNavigation, stackNavigation }) {
                     fontFamily: "sans-serif",
                     fontSize: 20
                 }}><AntDesign name="arrowleft" size={24} color="black" /> {contextObject.headerString} </Text>
-                <View style={{
+                {!goBackOnly && <View style={{
                     display: "flex",
                     flexDirection: "row",
 
@@ -45,7 +45,7 @@ function CustomHeader({ name, drawerNavigation, stackNavigation }) {
                     }} >
                         <EvilIcons name="cart" size={40} color="black" />
                     </TouchableOpacity>
-                </View>
+                </View>}
 
             </View>
         </SafeAreaView>

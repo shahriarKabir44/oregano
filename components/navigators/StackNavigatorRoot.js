@@ -31,12 +31,12 @@ function StackNavigatorRoot(props) {
 			}
 		}} component={PostDetails} />
 		<Stack.Screen name='Create post' options={{
-			header: props => <CustomHeader stackNavigation={props.navigation} name={"Create Post"} />
+			header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} name={"Create Post"} />
 		}} component={CreatePost} />
 		<Stack.Screen name='Add tags' component={Addtags} />
 		<Stack.Screen name='Cart'
 			options={{
-				header: props => <CustomHeader stackNavigation={props.navigation} name={"Cart"} />
+				header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} name={"Cart"} />
 			}}
 		>
 			{(props) => {
@@ -68,7 +68,7 @@ function StackNavigatorRoot(props) {
 		</Stack.Screen>
 		<Stack.Screen name='notifications'
 			options={{
-				header: props => <CustomHeader stackNavigation={props.navigation} />
+				header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} />
 			}}
 		>
 			{(props) => {
@@ -78,7 +78,7 @@ function StackNavigatorRoot(props) {
 		</Stack.Screen>
 		<Stack.Screen name='searchResult'
 			options={{
-				header: props => <CustomHeader stackNavigation={props.navigation} />
+				header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} />
 			}}
 		>
 			{(props) => {
@@ -88,7 +88,7 @@ function StackNavigatorRoot(props) {
 		</Stack.Screen>
 		<Stack.Screen name='order_details'
 			options={{
-				header: props => <CustomHeader stackNavigation={props.navigation} />
+				header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} />
 			}}
 		>
 			{(props) => {
@@ -99,7 +99,7 @@ function StackNavigatorRoot(props) {
 
 		<Stack.Screen name='delivery_details'
 			options={{
-				header: props => <CustomHeader stackNavigation={props.navigation} />
+				header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} />
 			}}
 		>
 			{(props) => {
