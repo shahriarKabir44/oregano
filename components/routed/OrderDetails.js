@@ -89,7 +89,7 @@ function OrderDetails(props) {
             })
             else acceptedItems.push(productList[n])
         }
-        console.log(rejectedItems);
+
         if (!acceptedItems.length) {
             OrderServices.rejectOrder(orderDetails.id, rejectedItems, contextObject.currentUser.facebookToken.name, buyerInfo.id)
                 .then(() => {
@@ -151,6 +151,7 @@ function OrderDetails(props) {
                             fontSize: 20
                         }}>{buyerInfo.facebookToken.name}</Text>
                         <Button title='View profile' />
+                        <Text>{(new Date(orderDetails.time)).toLocaleTimeString()},{(new Date(orderDetails.time)).toDateString()}</Text>
                     </View>
                 </View>
                 <View style={{

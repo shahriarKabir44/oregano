@@ -27,7 +27,7 @@ function StackNavigatorRoot(props) {
 		}} />
 		<Stack.Screen name='Post details' options={{
 			header: (prop) => {
-				return <CustomHeader stackNavigation={prop.navigation} name={"Post details"} />
+				return <CustomHeader goBackOnly={true} stackNavigation={prop.navigation} name={"Post details"} />
 			}
 		}} component={PostDetails} />
 		<Stack.Screen name='Create post' options={{
