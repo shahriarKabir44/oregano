@@ -32,7 +32,7 @@ let users = [
             name: 'Musfiq Rahman',
             profileImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAPqv9XyrSDyn0GcBiCmKj7WzhH_nzgDJ-tw&usqp=CAU',
             coverPhotoURL: 'https://image.shutterstock.com/image-photo/chef-hands-keep-wok-fire-260nw-1758966962.jpg',
-            email: 'drew@gmail.com',
+            email: 'musfiq@gmail.com',
             phone: '01712345623'
         },
         "phone": "01712345623",

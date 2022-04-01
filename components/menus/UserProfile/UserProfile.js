@@ -32,10 +32,14 @@ function UserProfile(props) {
             if (!props.route?.params?.id) {
                 setCurrentUserFlag(true)
                 setUserInfo(rootContext.contextObject.currentUser)
+                console.log(rootContext.contextObject.currentUser)
                 rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
                 UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {
                         setPostList(posts)
+
+                    })
+                    .then(() => {
                         setLoadedStatus(true)
                     })
             }
@@ -50,6 +54,9 @@ function UserProfile(props) {
                             .then(posts => {
 
                                 setPostList(posts)
+
+                            })
+                            .then(() => {
                                 setLoadedStatus(true)
                             })
                     })
@@ -61,6 +68,9 @@ function UserProfile(props) {
                 UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {
                         setPostList(posts)
+
+                    })
+                    .then(() => {
                         setLoadedStatus(true)
                     })
             }
@@ -136,8 +146,7 @@ function UserProfile(props) {
                             <Text>{UserProfileInfo.rating}⭐</Text>
                         </View>
                         <View style={styles.horizontalAlign}>
-                            {/* <Text>Followers:</Text>
-                            <Text>{UserProfileInfo.followers}</Text> */}
+
                         </View>
                     </View>
                     <Text style={{
