@@ -54,21 +54,27 @@ export default function DrawerRoot({ navigation }) {
 				}
 			}} name='Connections' component={Favourites} />
 
-			{contextObject.currentUser.isRider && <Drawer.Screen options={{
+			<Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Assigned Deliveries"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				},
+				drawerItemStyle: {
+					display: contextObject.currentUser.isRider ? 'flex' : 'none'
 				}
 			}} name="Assigned deliveries" >
 				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>}
+			</Drawer.Screen>
 
-			{contextObject.currentUser.isRider && <Drawer.Screen options={{
+			<Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Deliveries history"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				},
+				drawerItemStyle: {
+					display: contextObject.currentUser.isRider ? 'flex' : 'none'
 				}
 			}} name="Deliveries history" >
 				{props => <DeliveryHistory drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>}
+			</Drawer.Screen>
 
 			<Drawer.Screen name='Order History' component={PreviousOrders} />
 		</Drawer.Navigator>

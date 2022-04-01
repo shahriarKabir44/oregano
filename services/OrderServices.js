@@ -4,6 +4,43 @@ export default class OrderServices {
     static async getMyOrders(id) {
         return orders.filter(order => order.buyerId == id)
     }
+
+    static async rejectOrderItem(orderId, postId, shouldGenerateNotification, itemName, sellerName, buyerId) {
+        let { data } = await fetch(`http://192.168.43.90:3000/orders/rejectOrderItem`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: orderId,
+                postId: postId,
+                shouldGenerateNotification: shouldGenerateNotification,
+                buyerId: buyerId,
+                notificationMessage: `${sellerName} is unable to provide the ${itemName} you've ordered.`
+            })
+        }).then(response => response.json())
+        return data;
+    }
+    static async rejectOrder(orderId, items, sellerName, buyerId) {
+        let promises = []
+        for (let item of items) {
+            promises.push(OrderServices.rejectOrderItem(orderId, item.postid, 0, item.itemName, sellerName, buyerId))
+        }
+        await Promise.all([...promises, fetch('http://192.168.43.90:3000/orders/rejectOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: orderId,
+                buyerId: buyerId,
+                notificationMessage: `Unfortunately, ${sellerName} is unable to accept your orders.`
+            })
+        }).then(res => res.json())])
+
+        return
+
+    }
     static async getOrderInfo(orderId) {
         let { data } = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',
@@ -34,15 +71,15 @@ export default class OrderServices {
                             phone
                         }
                         orderedItems{
-                                post{
-                                    itemName
-                                    images
-                                    id
-                                    city
-                                    district
-                                }
+                            post{
+                                itemName
+                                images
+                                id
+                                city
+                                district
+                            }
                             amount
-                            
+                            status
                         }
                         drop_lat
                         drop_long
@@ -61,10 +98,20 @@ export default class OrderServices {
 
 
 
-    static async acceptOrders(orderId, orderItemList) {
-        let { data } = await fetch(`http://192.168.43.90:3000/orders/acceptOrder/${orderId}`)
-            .then(res => res.json())
-        return data
+    static async acceptOrders(orderId, rejectedItems, sellerName, buyerId) {
+        let promises = [];
+        console.log(orderId, rejectedItems, sellerName, buyerId);
+        for (let item of rejectedItems) {
+            promises.push(OrderServices.rejectOrderItem(orderId, item.postid, 1, item.itemName, sellerName, buyerId))
+        }
+        promises.push(fetch('http://192.168.43.90:3000/orders/acceptOrder/' + orderId)
+            .then(response => response.json())
+            .catch(e => {
+                console.log(e)
+            })
+        )
+        await Promise.all(promises)
+        return
     }
 
 

@@ -19,12 +19,8 @@ function NotificationItem({ notificationItem, navigator }) {
                         if (notificationItem.relatedSchemaId) {
                             switch (notificationItem.type) {
                                 case 1:
-                                    OrderServices.getOrderInfo(notificationItem.relatedSchemaId)
-                                        .then((orderInfo) => {
-                                            updateContext({ ...contextObject, headerString: "Order info" })
-                                            navigator.push('order_details', orderInfo)
-                                        })
-
+                                    updateContext({ ...contextObject, headerString: "Order info" })
+                                    navigator.push('order_details', notificationItem.relatedSchemaId)
                                     break;
                                 case 4:
                                     updateContext({ ...contextObject, headerString: "Delivery info" })
@@ -45,7 +41,7 @@ function NotificationItem({ notificationItem, navigator }) {
                 }}>{notificationItem.message} </Text>
                 <Text style={{
                     textAlign: "right"
-                }}>{(new Date(notificationItem.time)).toDateString()}</Text>
+                }}>{(new Date(notificationItem.time)).toLocaleString()}</Text>
             </TouchableOpacity>
 
         </View>

@@ -43,23 +43,7 @@ function OrderListItem(props) {
                     <Text>Amount: {props.order.amount}{props.order.product.unitType} </Text>
                 </View>
             </TouchableOpacity>
-            <View>
 
-                {props.order.status == 1 && <TouchableOpacity onPress={props.onReject} style={{
-                    backgroundColor: "#ea0291",
-                    padding: 10,
-                    borderRadius: 10
-                }}>
-                    <Text>Reject</Text>
-                </TouchableOpacity>}
-                {props.order.status == -1 && <TouchableOpacity onPress={props.onAccept} style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    borderRadius: 10
-                }}>
-                    <Text>Accept</Text>
-                </TouchableOpacity>}
-            </View>
         </View>
     );
 }

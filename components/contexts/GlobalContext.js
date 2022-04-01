@@ -48,7 +48,7 @@ export default function GlobalContext({ children }) {
     const [globalObject, setGlobalObject] = useState({
         headerString: "",
         tagList: [],
-        currentUser: users[2],
+        currentUser: users[0],
         currentLocation: {
             coords: {
                 latitude: 0,
