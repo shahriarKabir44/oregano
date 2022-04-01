@@ -155,6 +155,35 @@ export default class PostService {
         return data
 
     }
+    static async getOrderList(postId) {
+        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getOrderListOfAPost(postId:"${postId}"){
+                            amount
+                            orderDetails{
+                                buyerId
+                                time
+                                id
+                                status
+                                buyer{
+                                    personalInfo{
+                                        name
+                                        profileImageURL
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }`
+            })
+        }).then(res => res.json())
+        return data.getOrderListOfAPost
+    }
     static async getPosts() {
         let res = await fetch('http://192.168.43.90:3000/graphql', {
             method: 'POST',

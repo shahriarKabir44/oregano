@@ -32,7 +32,6 @@ function UserProfile(props) {
             if (!props.route?.params?.id) {
                 setCurrentUserFlag(true)
                 setUserInfo(rootContext.contextObject.currentUser)
-                console.log(rootContext.contextObject.currentUser)
                 rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
                 UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {

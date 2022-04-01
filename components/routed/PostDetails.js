@@ -15,6 +15,8 @@ import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
 
 function PostDetails(props) {
+    const [isOwnPost, setOwnershipStatus] = React.useState(false)
+
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const rootContext = useContext(RootContext)
@@ -63,7 +65,7 @@ function PostDetails(props) {
     function updatecartAmount(inc) {
         setCartInfo({ ...cartInfo, info: { ...cartInfo.info, amount: Math.max(1, Math.min(cartInfo.info.amount + inc, post.amountProduced)) } })
     }
-
+    const [orderList, setOrderList] = useState([])
     const [canPopUpImageModal, setImageModalVisibility] = useState(false)
     useEffect(() => {
 
@@ -74,7 +76,15 @@ function PostDetails(props) {
             PostService.findPost(postId)
                 .then(postInfo => {
                     setCurrentPost(postInfo)
-                    rootContext.updateContext({ ...rootContext.contextObject, headerString: `${postInfo.owner.facebookToken.name}' post` })
+                    setOwnershipStatus(postInfo.owner.id == rootContext.contextObject.currentUser.id)
+                    if (postInfo.owner.id == rootContext.contextObject.currentUser.id) {
+                        PostService.getOrderList(postId)
+                            .then(data => {
+                                setOrderList(data);
+                                console.log(data);
+                            })
+                    }
+                    rootContext.updateContext({ ...rootContext.contextObject, headerString: `${postInfo.owner.id == rootContext.contextObject.currentUser.id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}` })
                     let images = []
                     for (let image of postInfo.images) {
                         images.push({
@@ -238,78 +248,132 @@ function PostDetails(props) {
                             ))}
                         </View>
                     </View>
+
+
+                    {isOwnPost && <View>
+                        <Text style={{
+                            fontSize: 15,
+                            fontWeight: 'bold',
+                            margin: 10
+                        }}>Order list</Text>
+                        {orderList.map((item, index) => {
+                            return (<View key={index} style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                padding: 10,
+                                alignItems: 'center',
+                                alignContent: 'center',
+                                backgroundColor: "#c5d9ec",
+                                borderRadius: 10,
+
+                            }}>
+                                <View style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+
+                                }}>
+                                    <Image style={{
+                                        height: 50,
+                                        aspectRatio: 1,
+                                        borderRadius: 50,
+                                        margin: 5
+                                    }} source={{ uri: item.orderDetails.buyer.personalInfo.profileImageURL }} />
+                                    <View style={{
+                                        margin: 5
+                                    }}>
+                                        <Text>{item.orderDetails.buyer.personalInfo.name}</Text>
+                                        <Text>Amount:{item.amount}pcs</Text>
+                                        <Text>{(new Date(item.orderDetails.time)).toLocaleTimeString()}, {(new Date(item.orderDetails.time)).toDateString()} </Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    {item.orderDetails.status == 0 && <Text>Pending</Text>}
+                                    {(item.orderDetails.status == 1 || item.orderDetails.status == 4) && <Text>Accepted</Text>}
+                                    {item.orderDetails.status == 2 && <Text>Rejected</Text>}
+                                    {item.orderDetails.status >= 5 && <Text>Rejected</Text>}
+                                </View>
+                            </View>)
+                        })}
+                    </View>}
                 </ScrollView>
 
-                {!isAddedToCart && <View style={styles.footer}>
-                    <TouchableOpacity onPress={() => {
-                        toggleBottomNavigationView()
-
-                    }}>
-                        <Text style={{
-                            fontSize: 20
-                        }}> Add to cart </Text>
-
-                    </TouchableOpacity>
-
-                </View>}
-                {isAddedToCart && <View style={styles.footer2}>
-                    <View style={{
-                        padding: 5,
-                        borderRadius: 5,
-                        backgroundColor: "#c4c4c4"
-                    }}>
-                        <FontAwesome onPress={() => {
-                            CartServices.removeItem(post.id)
-                            setCartStatus(false)
-                        }} name="trash-o" size={30} color="black" />
-                    </View>
-                    {isCartUpdated && <TouchableOpacity style={{
-                        paddingVertical: 10,
-                        paddingHorizontal: 80,
-                        backgroundColor: "#77cf8e",
-                        borderRadius: 10,
-
-                    }} onPress={() => {
-
-                        CartServices.updateCartAmount(postId, cartInfo?.info?.amount)
-                            .then(() => {
-                                updateCartInfo()
-                                setCartUpdateStatus(false)
-                            })
-                    }} >
-                        <Text>Update</Text>
-                    </TouchableOpacity>}
-                    <View style={styles.alighnHorizontal}>
+                {!isOwnPost && <View>
+                    {!isAddedToCart && <View style={styles.footer}>
                         <TouchableOpacity onPress={() => {
-                            updatecartAmount(1)
-                            setCartUpdateStatus(true)
-                        }} >
-                            <View style={styles.updateAmountBtn}>
-                                <Text style={{
-                                    fontSize: 20
-                                }}>+</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <View style={[styles.updateAmountBtn, {
-                            backgroundColor: "#C4C4C4"
-                        }]}>
-                            <Text style={{
-                                fontSize: 20
-                            }}>{cartInfo?.info?.amount}</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => {
-                            updatecartAmount(-1)
-                            setCartUpdateStatus(true)
+                            toggleBottomNavigationView()
 
                         }}>
-                            <View style={styles.updateAmountBtn}>
+                            <Text style={{
+                                fontSize: 20
+                            }}> Add to cart </Text>
+
+                        </TouchableOpacity>
+
+                    </View>}
+                    {isAddedToCart && <View style={styles.footer2}>
+                        <View style={{
+                            padding: 5,
+                            borderRadius: 5,
+                            backgroundColor: "#c4c4c4"
+                        }}>
+                            <FontAwesome onPress={() => {
+                                CartServices.removeItem(post.id)
+                                setCartStatus(false)
+                            }} name="trash-o" size={30} color="black" />
+                        </View>
+                        {isCartUpdated && <TouchableOpacity style={{
+                            paddingVertical: 10,
+                            paddingHorizontal: 80,
+                            backgroundColor: "#77cf8e",
+                            borderRadius: 10,
+
+                        }} onPress={() => {
+
+                            CartServices.updateCartAmount(postId, cartInfo?.info?.amount)
+                                .then(() => {
+                                    updateCartInfo()
+                                    setCartUpdateStatus(false)
+                                })
+                        }} >
+                            <Text>Update</Text>
+                        </TouchableOpacity>}
+                        <View style={styles.alighnHorizontal}>
+                            <TouchableOpacity onPress={() => {
+                                updatecartAmount(1)
+                                setCartUpdateStatus(true)
+                            }} >
+                                <View style={styles.updateAmountBtn}>
+                                    <Text style={{
+                                        fontSize: 20
+                                    }}>+</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <View style={[styles.updateAmountBtn, {
+                                backgroundColor: "#C4C4C4"
+                            }]}>
                                 <Text style={{
                                     fontSize: 20
-                                }}>-</Text>
+                                }}>{cartInfo?.info?.amount}</Text>
                             </View>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity onPress={() => {
+                                updatecartAmount(-1)
+                                setCartUpdateStatus(true)
+
+                            }}>
+                                <View style={styles.updateAmountBtn}>
+                                    <Text style={{
+                                        fontSize: 20
+                                    }}>-</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>}
                 </View>}
+
+
 
                 <BottomSheet
                     visible={canShowModal}
