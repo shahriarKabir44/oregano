@@ -13,7 +13,7 @@ function Addtags(props) {
     const [selected, setSelected] = useState([])
     const [availableTags, setAvailableTagList] = useState([])
 
-    const [doesSearchExist, setExistence] = useState(false)
+    const [doesSearchExist, setExistence] = useState(true)
 
     const [tags, setAvailableTags] = useState([])
     useEffect(() => {
@@ -29,11 +29,17 @@ function Addtags(props) {
                 for (let tag of props.route.params.selectedNames) {
                     tempAvailable = tempAvailable.filter(tagName => tagName != tag)
                 }
+                console.log(tempAvailable)
                 setAvailableTags(tempAvailable)
             })
 
     }, [])
+    /**
+     * 
+     * @param {String} tag 
+     */
     function addTag(tag) {
+        tag = tag.toLowerCase()
         if (selected.length < 3) {
             setSelected([...selected, tag])
 
@@ -42,6 +48,7 @@ function Addtags(props) {
 
     }
     function removeTag(tagName) {
+        tagName = tagName.toLowerCase()
         setSelected(selected.filter(name => name != tagName))
         let temp = availableTags
         for (let tag in selected) {
@@ -50,6 +57,7 @@ function Addtags(props) {
         setAvailableTags([...temp])
     }
     function search(query) {
+        query = query.toLowerCase()
         setSeatchText(query)
         let temp = availableTags
         for (let tag of selected) {

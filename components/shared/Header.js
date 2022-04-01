@@ -25,7 +25,7 @@ function Header(props) {
             <View style={styles.horizontal_vert_Align} >
 
                 <EvilIcons onPress={() => {
-                    updateContext({ ...contextObject, headerString: "Notificatons" })
+                    updateContext({ ...contextObject, headerString: "Notifications" })
                     props.navigation.push('notifications')
                 }} name="bell" size={40} color="black" />
                 <TouchableOpacity onPress={() => {

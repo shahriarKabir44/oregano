@@ -40,7 +40,7 @@ function CreatePost(props) {
 	async function setGeoInfo() {
 		LocationService.getCurrentLocation()
 			.then(location => {
-
+				console.log(location);
 				setCurrentLocation({
 					latitude: location.latitude,
 					longitude: location.longitude
@@ -236,15 +236,18 @@ function CreatePost(props) {
 							postedOn: (new Date()) * 1
 
 						};
+						console.log(currentLocation);
 						PostService.createPost(newPost)
 							.then(({ data }) => {
 								PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
 									.then(resp => {
-										setModalVisible(1 == 0)
+										setModalVisible(false);
+
+									}).then(() => {
 										ToastAndroid.showWithGravity(
 											"Post created succesfully!",
 											ToastAndroid.SHORT,
-											ToastAndroid.CENTER
+											ToastAndroid.BOTTOM
 										)
 										props.navigation.navigate('HomeView')
 									})
