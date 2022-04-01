@@ -128,7 +128,7 @@ export default class OrderServices {
                 drop_long: orderLocationInfo.longitude,
                 dropLocationGeocode: orderLocationInfo.dropLocationGeocode,
                 buyerId: buyerId,
-                sellerId: cookId.cookId,
+                sellerId: cookId,
                 riderId: null,
                 status: 0,
                 charge: 30,
