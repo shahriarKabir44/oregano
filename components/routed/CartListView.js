@@ -14,12 +14,12 @@ function CartListView(props) {
     const [totalCharge, setTotalCharge] = useState(0)
     const [shouldRefresh, setRefreshFlag] = useState(false)
     const [isListEmpty, setEmptinessStatus] = useState(false)
-    const [groupByCooks, setGroupByCooks] = useState([])
+    const [orderItems, setOrderItems] = useState([])
     function updateCartList() {
         CartServices.getCartList().then(carts => {
             if (!carts || carts.length == 0) setEmptinessStatus(true)
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "Cart" })
-
+            let orderItemList = []
             let cookIndex = 0
             let cookIds = {}
             let cooksPosts = {}
@@ -28,21 +28,27 @@ function CartListView(props) {
                 let cookId = carts[n].owner.id
                 if (!cookIds[cookId]) {
                     cookIds[cookId] = cookIndex++
-                    cooksPosts[cookId] = [{
+                    cooksPosts[cookIds[cookId]] = [{
                         postId: carts[n].id,
                         amount: carts[n].amount,
-
+                        cookId: cookId
                     }]
+
                 }
                 else {
-                    cooksPosts[cookId].push({
+                    cooksPosts[cookIds[cookId]].push({
                         postId: carts[n].id,
                         amount: carts[n].amount,
-
+                        cookId: cookId
                     })
                 }
+                orderItemList.push({
+                    postId: carts[n].id,
+                    amount: carts[n].amount,
+                    cookId: cookId
+                })
             }
-            setGroupByCooks(cooksPosts)
+
 
             let groupedList = new Array(cookIndex).fill([]).map(item => [])
             for (let n = 0; n < carts.length; n++) {
@@ -52,6 +58,7 @@ function CartListView(props) {
                 carts[n]['groupNumber'] = itemIndex
                 setTotalCharge(parseInt(totalCharge) + parseInt(parseInt(carts[n].unitPrice) * parseInt(carts[n].amount)))
             }
+            setOrderItems(orderItemList);
             setCartList(groupedList)
         })
     }
@@ -108,7 +115,7 @@ function CartListView(props) {
                 }}
             >
                 <View style={styles.bottomNavigationView}>
-                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} groupByCooks={groupByCooks} setBottomSheetVisibility={setBottomSheetVisibility} />
+                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} orderItems={orderItems} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
         </View>

@@ -115,8 +115,8 @@ export default class OrderServices {
     }
 
 
-    static async createOrder(cartGroup, orderLocationInfo, buyerName, buyerId, itemsCount) {
-        let userData = await UserService.findUser(cartGroup.cookId)
+    static async createOrder(cookId, orderLocationInfo, buyerName, buyerId, itemsCount) {
+        let userData = await UserService.findUser(cookId)
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
         let orderInfo = await fetch('http://192.168.43.90:3000/orders/createNewOrder', {
             method: 'POST',
@@ -128,14 +128,14 @@ export default class OrderServices {
                 drop_long: orderLocationInfo.longitude,
                 dropLocationGeocode: orderLocationInfo.dropLocationGeocode,
                 buyerId: buyerId,
-                sellerId: cartGroup.cookId,
+                sellerId: cookId.cookId,
                 riderId: null,
                 status: 0,
                 charge: 30,
                 time: (new Date()) * 1,
                 pickupLat: userData.currentLatitude,
                 pickupLong: userData.currentLongitude,
-                pickupLocationGeocode: userData.currentCity,
+                pickupLocationGeocode: `${userData.locationInfoJson.city} , ${userData.locationInfoJson.district} , ${userData.locationInfoJson.subregion} , ${userData.locationInfoJson.region}`,
                 notificationMessage: notificationMessage,
                 itemsCount: itemsCount
             })
@@ -164,25 +164,31 @@ export default class OrderServices {
         }).then(res => res.json())
         return orderItemData.data.createOrderItem
     }
-    static async placeOrders(groupedOrderList, orderLocationInfo, buyerName, buyerId) {
-        let orderGroup = []
-        for (let group in groupedOrderList) {
-            let data = {
-                cookId: group,
-                items: groupedOrderList[group]
-            }
-            orderGroup.push(data)
+    static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId) {
+        let cooks = new Set()
+        for (let orderItem of orderItems) {
+            cooks.add(orderItem.cookId)
         }
-        for (let orderGroupItem of orderGroup) {
-            let totalItems = 0;
-            for (let items of orderGroupItem.items) {
-                totalItems += items.amount;
+        cooks = [...cooks]
+        console.log(cooks)
+
+        for (let cook of cooks) {
+            let totalItems = 0
+            for (let item of orderItems) {
+                totalItems += item.amount
+
             }
-            let newOrderId = await OrderServices.createOrder(orderGroupItem, orderLocationInfo, buyerName, buyerId, totalItems)
-            for (let items of orderGroupItem.items) {
-                await OrderServices.createOrderItem(items, newOrderId._id)
+            let newOrderId = await OrderServices.createOrder(cook, orderLocationInfo, buyerName, buyerId, totalItems)
+            let promises = []
+            for (let item of orderItems) {
+                if (item.cookId == cook) {
+                    promises.push(OrderServices.createOrderItem(item, newOrderId._id))
+                }
             }
+            await Promise.all(promises)
         }
+
+
     }
 }
 

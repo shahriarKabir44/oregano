@@ -48,7 +48,7 @@ export default function GlobalContext({ children }) {
     const [globalObject, setGlobalObject] = useState({
         headerString: "",
         tagList: [],
-        currentUser: users[0],
+        currentUser: users[2],
         currentLocation: {
             coords: {
                 latitude: 0,
@@ -73,7 +73,7 @@ export default function GlobalContext({ children }) {
                     .then(data => {
                         let geocode = {}
                         if (data.length) {
-                            geocode = { ...data }
+                            geocode = { ...data[0] }
                         }
                         locationInfo = {
                             ...locationInfo,

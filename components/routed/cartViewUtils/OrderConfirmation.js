@@ -6,7 +6,7 @@ import { RootContext } from '../../contexts/GlobalContext'
 import CartServices from '../../../services/CartServices'
 import LocationView from '../../shared/LocationView';
 import OrderServices from '../../../services/OrderServices';
-function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupByCooks, setBottomSheetVisibility }) {
+function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
     let { contextObject, updateContext } = React.useContext(RootContext)
     const [orderLocation, setOrderLocation] = React.useState('')
@@ -115,26 +115,27 @@ function OrderConfirmation({ setRefreshFlag, setTotalCharge, groupByCooks, setBo
             <View style={styles.footer}>
                 <TouchableOpacity onPress={() => {
 
-                    OrderServices.placeOrders(groupByCooks, {
+                    OrderServices.placeOrders(orderItems, {
                         ...currentLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
-                    }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id).then(() => {
-                        CartServices.clearAll()
-                            .then(() => {
-                                setBottomSheetVisibility(false)
-                            })
-                            .then(() => {
-                                setRefreshFlag(true)
-                                setTotalCharge(0)
-                            })
-                            .then(() => {
-                                ToastAndroid.showWithGravity(
-                                    "Order placed succesfully!",
-                                    ToastAndroid.SHORT,
-                                    ToastAndroid.CENTER
-                                );
-                            })
-                    })
+                    }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id)
+                        .then(() => {
+                            CartServices.clearAll()
+                                .then(() => {
+                                    setBottomSheetVisibility(false)
+                                })
+                                .then(() => {
+                                    setRefreshFlag(true)
+                                    setTotalCharge(0)
+                                })
+                                .then(() => {
+                                    ToastAndroid.showWithGravity(
+                                        "Order placed succesfully!",
+                                        ToastAndroid.SHORT,
+                                        ToastAndroid.CENTER
+                                    );
+                                })
+                        })
 
 
                 }}>

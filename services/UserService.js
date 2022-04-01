@@ -15,8 +15,14 @@ export default class UserService {
                     currentLatitude
                     currentLongitude
                     currentCity
+                    locationInfoJson{
+                        city
+                        district
+                        subregion 
+                        region 
+                    }
                     
-                  }}`
+                }}`
             })
         }).then(res => res.json())
 
