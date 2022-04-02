@@ -3,14 +3,14 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import RatingServices from '../../../services/RatingServices';
 import { RootContext } from '../../contexts/GlobalContext';
 
-function OrderItem({ orderItem, navigator }) {
+function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct }) {
     const [myRating, setMyRating] = React.useState(-1)
     const { contextObject } = React.useContext(RootContext)
     React.useEffect(() => {
         RatingServices.getMyRating(orderItem.post.id, contextObject.currentUser.id)
             .then(data => {
                 console.log(data?.rating)
-                setMyRating(!data?.rating ? -1 : data.rating)
+                setMyRating(!data?.rating ? 0 : data.rating)
             })
     }, [])
     return (
@@ -24,11 +24,17 @@ function OrderItem({ orderItem, navigator }) {
             borderRadius: 5,
             alignItems: "center",
             alignContent: "center"
+        }} onPress={() => {
+            setCurrentProduct({
+                product: orderItem,
+                rating: myRating
+            })
+            popupBottomSheet(true)
         }}>
             <View>
                 <Text>{orderItem.post.itemName}</Text>
                 <Text>{orderItem.amount} {orderItem.post.unitType}</Text>
-                <Text>Your rating:{myRating == -1 ? "Unrated" : `${myRating}⭐`}</Text>
+                <Text>Your rating:{!myRating ? "Unrated" : `${myRating}⭐`}</Text>
             </View>
             <Image style={{
                 height: 50,

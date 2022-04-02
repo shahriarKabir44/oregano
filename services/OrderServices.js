@@ -14,25 +14,28 @@ export default class OrderServices {
             body: JSON.stringify({
                 query: `query{
                     getPreviousOrders(buyerId:"${buyerId}"){
-                      status
-                      id
-                      time
-                      seller{
-                        personalInfo{
-                          profileImageURL
-                          name
-                          
-                        }
-                      }
-                      orderedItems{
-                        amount
-                        post{
+                        status
+                        id
+                        time
+                        seller{
                           id
-                          itemName
-                          images
-                          unitType
+                          personalInfo{
+                            profileImageURL
+                            name
+                             
+                          }
                         }
-                      }
+                        orderedItems{
+                          amount
+                          post{
+                            id
+                            itemName
+                            images
+                            unitType
+                            tags
+                            postedBy
+                          }
+                        }
                     }
                   }`
             })
