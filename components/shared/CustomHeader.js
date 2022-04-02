@@ -30,7 +30,7 @@ function CustomHeader({ name, drawerNavigation, stackNavigation, goBackOnly }) {
                     fontFamily: "sans-serif",
                     fontSize: 20
                 }}><AntDesign name="arrowleft" size={24} color="black" /> {contextObject.headerString} </Text>
-                {!goBackOnly && <View style={{
+                {/* {!goBackOnly && <View style={{
                     display: "flex",
                     flexDirection: "row",
 
@@ -45,7 +45,7 @@ function CustomHeader({ name, drawerNavigation, stackNavigation, goBackOnly }) {
                     }} >
                         <EvilIcons name="cart" size={40} color="black" />
                     </TouchableOpacity>
-                </View>}
+                </View>} */}
 
             </View>
         </SafeAreaView>

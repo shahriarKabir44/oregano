@@ -14,11 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import CreatePost from '../menus/CreatePost';
 import Favourites from '../menus/Favourites'
-import PreviousOrders from '../menus/PreviousOrders';
 import CustomHeader from '../shared/CustomHeader';
 import { RootContext } from '../contexts/GlobalContext';
 import AssignedDeliveries from '../shared/AssignedDeliveries';
 import DeliveryHistory from '../menus/DeliveryHistory';
+import OrderHistory from '../menus/OrderHistory/OrderHistory';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation }) {
 	const { updateContext, contextObject } = React.useContext(RootContext)
@@ -52,7 +52,9 @@ export default function DrawerRoot({ navigation }) {
 				header: (prop) => {
 					return <CustomHeader name={"Favourites"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				}
-			}} name='Connections' component={Favourites} />
+			}} name='Connections' >
+				{props => <Favourites drawerNav={props.navigation} stackNav={stackNavigator} />}
+			</Drawer.Screen>
 
 			<Drawer.Screen options={{
 				header: (prop) => {
@@ -76,7 +78,17 @@ export default function DrawerRoot({ navigation }) {
 				{props => <DeliveryHistory drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>
 
-			<Drawer.Screen name='Order History' component={PreviousOrders} />
+			<Drawer.Screen options={{
+				header: (prop) => {
+					return <CustomHeader name={"Order history"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				},
+				drawerItemStyle: {
+					display: contextObject.currentUser.isRider ? 'flex' : 'none'
+				}
+			}} name="Order History" >
+				{props => <OrderHistory drawerNav={props.navigation} stackNav={stackNavigator} />}
+			</Drawer.Screen>
+
 		</Drawer.Navigator>
 
 	);

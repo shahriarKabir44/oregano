@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native';
 
 import UserService from '../../services/UserService';
 import { RootContext } from '../contexts/GlobalContext'
-import Tags from '../shared/Tags';
 function Favourites(props) {
     const rootContext = React.useContext(RootContext)
     const [followingList, setFollowingList] = useState([])
@@ -17,7 +16,7 @@ function Favourites(props) {
             rootContext.updateContext({ ...rootContext.contextObject, headerString: "Connections" })
             UserService.findFollowingList(rootContext.contextObject.currentUser.id)
                 .then(data => {
-                    setFollowingList(data)
+                    setFollowingList([...data])
                 })
             UserService.getFollowers(rootContext.contextObject.currentUser.id)
                 .then(data => {
@@ -69,7 +68,7 @@ function Favourites(props) {
 }
 
 
-function FollowingListItem({ followee }) {
+function FollowingListItem({ followee, stackNav }) {
 
     function limitText(text) {
         let res = ""
@@ -87,6 +86,10 @@ function FollowingListItem({ followee }) {
             borderRadius: 5,
 
             // width: "45%"
+        }} onPress={() => {
+            stackNav.push('profile', {
+                id: followee.id
+            })
         }}>
             <View style={[styles.horizontalAlign, {
 

@@ -81,7 +81,6 @@ function PostDetails(props) {
                         PostService.getOrderList(postId)
                             .then(data => {
                                 setOrderList(data);
-                                console.log(data);
                             })
                     }
                     rootContext.updateContext({ ...rootContext.contextObject, headerString: `${postInfo.owner.id == rootContext.contextObject.currentUser.id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}` })

@@ -29,7 +29,6 @@ function Addtags(props) {
                 for (let tag of props.route.params.selectedNames) {
                     tempAvailable = tempAvailable.filter(tagName => tagName != tag)
                 }
-                console.log(tempAvailable)
                 setAvailableTags(tempAvailable)
             })
 
