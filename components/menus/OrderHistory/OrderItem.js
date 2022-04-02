@@ -3,13 +3,12 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import RatingServices from '../../../services/RatingServices';
 import { RootContext } from '../../contexts/GlobalContext';
 
-function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct }) {
+function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupIndex, orderItemIndex }) {
     const [myRating, setMyRating] = React.useState(-1)
     const { contextObject } = React.useContext(RootContext)
     React.useEffect(() => {
         RatingServices.getMyRating(orderItem.post.id, contextObject.currentUser.id)
             .then(data => {
-                console.log(data?.rating)
                 setMyRating(!data?.rating ? 0 : data.rating)
             })
     }, [])
@@ -27,7 +26,9 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct }) {
         }} onPress={() => {
             setCurrentProduct({
                 product: orderItem,
-                rating: myRating
+                rating: myRating,
+                orderGroupIndex: orderGroupIndex,
+                orderItemIndex: orderItemIndex
             })
             popupBottomSheet(true)
         }}>

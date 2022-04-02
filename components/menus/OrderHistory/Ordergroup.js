@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import Collapsible from 'react-native-collapsible';
 import OrderItem from './OrderItem';
 
-function Ordergroup({ orderInfo, navigator, popupBottomSheet, setCurrentProduct }) {
+function Ordergroup({ orderInfo, navigator, orderGroupIndex, popupBottomSheet, setCurrentProduct }) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(true)
     return (
         <View style={{
@@ -42,7 +42,7 @@ function Ordergroup({ orderInfo, navigator, popupBottomSheet, setCurrentProduct 
             <Collapsible collapsed={collapsibleVisibility} align="center">
                 <View style={styles.content}>
                     {orderInfo.orderedItems.map((orderItem, index) => {
-                        return <OrderItem setCurrentProduct={setCurrentProduct} key={index} popupBottomSheet={popupBottomSheet} orderItem={orderItem} navigator={navigator} />
+                        return <OrderItem orderGroupIndex={orderGroupIndex} orderItemIndex={index} setCurrentProduct={setCurrentProduct} key={index} popupBottomSheet={popupBottomSheet} orderItem={orderItem} navigator={navigator} />
                     })}
                 </View>
 

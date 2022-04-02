@@ -16,6 +16,7 @@ function OrderHistory(props) {
     const [bottomSheetVisibility, popupBottomSheet] = React.useState(false)
     const [currentlyFocusedProduct, setCurrentProduct] = React.useState(null)
     const [hasRatingChanged, detectChange] = React.useState(false)
+    const [shouldreload, setReloading] = React.useState(false)
     React.useEffect(() => {
         popupBottomSheet(false)
         setCurrentProduct(null)
@@ -24,14 +25,14 @@ function OrderHistory(props) {
             .then(data => {
                 setOrderList(data)
             })
-    }, [isFocused])
+    }, [isFocused, shouldreload])
     return (
         <View style={{
             flex: 1
         }}>
             <ScrollView>
                 {orderList.map((item, key) => {
-                    return <Ordergroup key={key} setCurrentProduct={setCurrentProduct} popupBottomSheet={popupBottomSheet} orderInfo={item} navigator={props.navigation} />
+                    return <Ordergroup orderGroupIndex={key} key={key} setCurrentProduct={setCurrentProduct} popupBottomSheet={popupBottomSheet} orderInfo={item} navigator={props.navigation} />
                 })}
             </ScrollView>
             <BottomSheet visible={bottomSheetVisibility}
@@ -146,6 +147,7 @@ function OrderHistory(props) {
                                 }} onPress={() => {
                                     RatingServices.rateItem(currentlyFocusedProduct?.product.post.id, contextObject.currentUser.id, currentlyFocusedProduct.rating, currentlyFocusedProduct?.product.post.postedBy, currentlyFocusedProduct?.product.post.tags)
                                         .then(() => {
+                                            setOrderList([...orderList])
                                             ToastAndroid.showWithGravity(
                                                 "Thank you for your rating!",
                                                 ToastAndroid.SHORT,
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
     bottomNavigationView: {
         backgroundColor: '#fff',
         width: '100%',
-        height: Dimensions.get('window').height * 0.75,
+        height: Dimensions.get('window').height * 0.8,
         borderRadius: 10,
         padding: 10,
 

@@ -6,8 +6,8 @@ export default class RatingServices {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                productId: productId,
-                userId: userId
+                postId: productId,
+                ratedBy: userId
             })
         }).then(response => response.json())
         return data
