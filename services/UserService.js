@@ -123,6 +123,7 @@ export default class UserService {
                                 unitPrice
                                 postedOn
                                 tags
+                                unitType
                             }
                         }
                     }
@@ -167,6 +168,7 @@ export default class UserService {
                         amountProduced
                         id
                         unitType
+                        postedOn
                   }
                 }`
             })
@@ -176,6 +178,7 @@ export default class UserService {
             post.images = JSON.parse(post.images)
             post.tags = JSON.parse(post.tags)
         }
+
         return data.data.getCreatedPosts
     }
 }

@@ -35,6 +35,8 @@ function PostCardProfile({ post, drawerNav, stackNav }) {
                         fontWeight: "bold",
                         fontSize: 20
                     }}>{post?.itemName}</Text>
+                    <Text >Time: {(new Date(post.postedOn).toLocaleTimeString())}, {(new Date(post.postedOn).toLocaleDateString())}</Text>
+
                 </View>
                 <View style={[styles.marginVertical]}>
                     <View style={[styles.cookInfo, styles.additionalInfo, styles.marginVertical]}>

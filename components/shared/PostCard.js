@@ -47,8 +47,13 @@ function PostCard({ post, drawerNav, stackNav }) {
                         </View>
                     </View>
 
+                    {post && <Text style={{
+                        padding: 5
+                    }} >Time: {(new Date(post.postedOn).toLocaleTimeString())}, {(new Date(post.postedOn).toLocaleDateString())}</Text>
+                    }
 
                 </View>
+
                 <View style={[styles.tags, styles.marginVertical, {
                     padding: 5,
                     flex: 1
@@ -60,8 +65,7 @@ function PostCard({ post, drawerNav, stackNav }) {
                     ))}
                 </View>
                 <View style={[styles.otherInfo, styles.marginVertical]}>
-                    <Text> Tk {post?.unitPrice} </Text>
-                    <Text> {Math.ceil(Math.random() * 5) + 1} kms </Text>
+                    <Text>Tk.{post?.unitPrice}</Text>
                     <Text> {post?.amountProduced} {post?.unitType} available </Text>
                 </View>{/* */}
             </View>

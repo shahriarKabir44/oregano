@@ -19,7 +19,7 @@ export default class PostService {
                                 id
                             }
                             images
-                            
+                            postedOn
                         }
                        }
                    }`
@@ -51,6 +51,7 @@ export default class PostService {
                         unitType
                         unitPrice
                         amountProduced
+                        postedOn
                         tags
                         owner{
                         facebookToken
@@ -102,7 +103,7 @@ export default class PostService {
                     amountProduced
                     latitude
                     longitude
-                    
+                    unitType
                   }}`
             })
         }).then(res => res.json())
