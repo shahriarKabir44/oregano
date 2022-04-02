@@ -123,7 +123,6 @@ export default class PostService {
                 urls.push(data)
             }
         }
-        console.log(urls);
         return this.updateImageURLs(postid, urls)
     }
     static async updateImageURLs(postId, images) {

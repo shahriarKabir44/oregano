@@ -101,14 +101,12 @@ export default class OrderServices {
 
     static async acceptOrders(orderId, rejectedItems, acceptedItems, sellerName, buyerId) {
         let promises = [];
-        console.log(orderId, rejectedItems, sellerName, buyerId);
         for (let item of rejectedItems) {
             promises.push(OrderServices.rejectOrderItem(orderId, item.postid, 1, item.itemName, sellerName, buyerId))
         }
         promises.push(fetch('http://192.168.43.90:3000/orders/acceptOrder/' + orderId)
             .then(response => response.json())
             .catch(e => {
-                console.log(e)
             })
         )
         await Promise.all(promises)

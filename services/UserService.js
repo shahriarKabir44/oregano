@@ -59,6 +59,7 @@ export default class UserService {
             entry.followee.lastPost.images = JSON.parse(entry.followee.lastPost.images)
         }
         return data
+
     }
     static async getLastPost(id) {
         return postList[0]
@@ -83,6 +84,7 @@ export default class UserService {
                               unitPrice
                               postedOn
                               tags
+                              unitType
                             }
                           }
                   }
@@ -123,7 +125,7 @@ export default class UserService {
                                 unitPrice
                                 postedOn
                                 tags
-                                unitType
+                                
                             }
                         }
                     }
