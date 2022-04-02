@@ -48,7 +48,7 @@ export default function GlobalContext({ children }) {
     const [globalObject, setGlobalObject] = useState({
         headerString: "",
         tagList: [],
-        currentUser: users[1],
+        currentUser: users[0],
         currentLocation: {
             coords: {
                 latitude: 0,
@@ -59,6 +59,9 @@ export default function GlobalContext({ children }) {
             }
         }
     })
+    function setHeaderString(title) {
+        setGlobalObject({ ...globalObject, headerString: title })
+    }
     function updateCurrentLocationInfo() {
         LocationService.getCurrentLocation()
             .then(coords => {
@@ -104,7 +107,8 @@ export default function GlobalContext({ children }) {
         <RootContext.Provider value={{
             contextObject: globalObject,
             updateContext: setGlobalObject,
-            updateCurrentLocationInfo: updateCurrentLocationInfo
+            updateCurrentLocationInfo: updateCurrentLocationInfo,
+            setHeaderString: setHeaderString
         }}>
             {children}
         </RootContext.Provider>

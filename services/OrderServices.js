@@ -5,6 +5,41 @@ export default class OrderServices {
         return orders.filter(order => order.buyerId == id)
     }
 
+    static async getPreviousOrders(buyerId) {
+        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getPreviousOrders(buyerId:"${buyerId}"){
+                      status
+                      id
+                      time
+                      seller{
+                        personalInfo{
+                          profileImageURL
+                          name
+                          
+                        }
+                      }
+                      orderedItems{
+                        amount
+                        post{
+                          id
+                          itemName
+                          images
+                          unitType
+                        }
+                      }
+                    }
+                  }`
+            })
+        }).then(res => res.json())
+        return data.getPreviousOrders
+    }
+
     static async rejectOrderItem(orderId, postId, shouldGenerateNotification, itemName, sellerName, buyerId) {
         let { data } = await fetch(`http://192.168.43.90:3000/orders/rejectOrderItem`, {
             method: 'POST',

@@ -81,9 +81,6 @@ export default function DrawerRoot({ navigation }) {
 			<Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Order history"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
-				},
-				drawerItemStyle: {
-					display: contextObject.currentUser.isRider ? 'flex' : 'none'
 				}
 			}} name="Order History" >
 				{props => <OrderHistory drawerNav={props.navigation} stackNav={stackNavigator} />}
