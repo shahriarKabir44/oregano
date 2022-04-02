@@ -99,7 +99,7 @@ export default class OrderServices {
 
 
 
-    static async acceptOrders(orderId, rejectedItems, sellerName, buyerId) {
+    static async acceptOrders(orderId, rejectedItems, acceptedItems, sellerName, buyerId) {
         let promises = [];
         console.log(orderId, rejectedItems, sellerName, buyerId);
         for (let item of rejectedItems) {
@@ -156,7 +156,7 @@ export default class OrderServices {
                     createOrderItem(
                       orderId:"${orderId}",
                       postId:"${orderItem.postId}",
-                      amount:${orderItem.amount}
+                      amount:${orderItem.amount},
                     ){
                       postId
                     }
@@ -171,7 +171,6 @@ export default class OrderServices {
             cooks.add(orderItem.cookId)
         }
         cooks = [...cooks]
-        console.log(cooks)
 
         for (let cook of cooks) {
             let totalItems = 0

@@ -42,7 +42,7 @@ export default function DrawerRoot({ navigation }) {
 			</Drawer.Screen>
 			<Drawer.Screen options={{
 				header: (prop) => {
-					return <CustomHeader name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+					return <CustomHeader goBackOnly={true} name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				}
 			}} name="Profile" >
 				{props => <UserProfile drawerNav={props.navigation} stackNav={stackNavigator} />}

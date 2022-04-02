@@ -58,7 +58,7 @@ function StackNavigatorRoot(props) {
 
 		<Stack.Screen name='profile'
 			options={{
-				header: props => <CustomHeader stackNavigation={props.navigation} />
+				header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} />
 			}}
 		>
 			{(props) => {

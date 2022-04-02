@@ -87,7 +87,10 @@ function OrderDetails(props) {
                 itemName: productList[n].product.itemName,
                 postid: productList[n].product.id
             })
-            else acceptedItems.push(productList[n])
+            else acceptedItems.push({
+                itemName: productList[n].product.itemName,
+                postid: productList[n].product.id
+            })
         }
 
         if (!acceptedItems.length) {
@@ -248,6 +251,7 @@ function OrderDetails(props) {
                     <TouchableOpacity style={[styles.footer, {
                         backgroundColor: "#ea0291"
                     }]} onPress={() => {
+                        setAcceptance(new Array(isAccepted.length).fill(0))
                         rejectSome()
 
                     }}>
