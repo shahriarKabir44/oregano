@@ -38,22 +38,19 @@ function CreatePost(props) {
 		city: "",
 	})
 	async function setGeoInfo() {
-		LocationService.getCurrentLocation()
-			.then(location => {
-				console.log(location);
-				setCurrentLocation({
-					latitude: location.latitude,
-					longitude: location.longitude
-				})
+		let coords = await LocationService.getCurrentLocation()
+		setCurrentLocation({
+			latitude: coords.latitude,
+			longitude: coords.longitude
+		})
 
-				return location
-			})
-			.then(location => {
-				LocationService.getLocationGeocode(location)
-					.then(data => {
-						setCurrentGeocode({ ...currentGeocode, district: data[0].district ? data[0].district : "California", city: data[0].city, country: data[0].country })
-					})
-			})
+		let geocode = await LocationService.getLocationGeocode(coords)
+		let locationInfo = {
+			...coords,
+			district: geocode[0].district ? geocode[0].district : "California", city: geocode[0].city, country: geocode[0].country
+		}
+		return locationInfo
+
 	}
 	useEffect(() => {
 		if (isFocused) {
@@ -224,26 +221,29 @@ function CreatePost(props) {
 			</ScrollView>
 
 			<TouchableOpacity onPress={() => {
-				setModalVisible(1 == 1)
+				//setModalVisible(1 == 1)
 				setGeoInfo()
-					.then(() => {
+					.then((locationData) => {
 						let newPost = {
 							...item,
-							...currentLocation,
-							...currentGeocode,
+							...locationData,
 							postedBy: rootContext.contextObject.currentUser.id,
 							tags: JSON.stringify(item.tags),
 							postedOn: (new Date()) * 1
 
 						};
-						console.log(currentLocation);
+						return newPost
+					})
+					.then(newPost => {
+						setModalVisible(true);
 						PostService.createPost(newPost)
 							.then(({ data }) => {
 								PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
 									.then(resp => {
 										setModalVisible(false);
 
-									}).then(() => {
+									})
+									.then(() => {
 										ToastAndroid.showWithGravity(
 											"Post created succesfully!",
 											ToastAndroid.SHORT,

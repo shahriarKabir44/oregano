@@ -7,17 +7,26 @@ import Tags from '../../shared/Tags';
 function PostCardProfile({ post, drawerNav, stackNav }) {
     post = post.item
     return (
-        <TouchableOpacity onPress={() => {
+
+
+        <TouchableOpacity style={{
+
+            margin: 5,
+            borderWidth: 1.5,
+            borderRadius: 15,
+            overflow: 'hidden',
+
+        }} onPress={() => {
             stackNav.push('Post details', {
                 postId: post.id,
 
             })
         }}>
-            <View style={styles.container}>
+            <View>
                 <View>
                     <Image style={styles.cardImg} source={{
 
-                        uri: post.images[0],
+                        uri: post?.images[0],
                         height: "100%"
                     }} />
                 </View>
@@ -25,30 +34,36 @@ function PostCardProfile({ post, drawerNav, stackNav }) {
                     <Text style={{
                         fontWeight: "bold",
                         fontSize: 20
-                    }}>{post.itemName}</Text>
+                    }}>{post?.itemName}</Text>
                 </View>
+                <View style={[styles.marginVertical]}>
+                    <View style={[styles.cookInfo, styles.additionalInfo, styles.marginVertical]}>
+                        <View>
+                            <Image style={styles.cookImg} source={{
+                                height: "100%",
+                                uri: post?.owner?.facebookToken?.profileImageURL
+                            }} />
+                        </View>
+                        <View style={styles.cookName}>
+                            <Text> {post?.owner?.facebookToken?.name} </Text>
+                        </View>
+                    </View>
 
+
+                </View>
                 <View style={[styles.tags, styles.marginVertical, {
                     padding: 5,
-                    flex: 1,
-
+                    flex: 1
                 }]}>
+                    <Text style={styles.tagIcon}>🏷️</Text>
 
-
-                    <View style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap"
-                    }}>
-                        <Text style={styles.tagIcon}>🏷️</Text>
-                        {post.tags.map((tag, index) => (
-                            <Tags key={index} name={tag} />
-                        ))}
-                    </View>
+                    {post?.tags?.map((tag, index) => (
+                        <Tags key={index} name={tag} />
+                    ))}
                 </View>
                 <View style={[styles.otherInfo, styles.marginVertical]}>
-                    <Text> Tk.{post.unitPrice} </Text>
-                    <Text> {post.amountProduced} pc(s) available </Text>
+                    <Text> Tk {post?.unitPrice} </Text>
+                    <Text> {post?.amountProduced} {post?.unitType} available </Text>
                 </View>{/* */}
             </View>
         </TouchableOpacity>

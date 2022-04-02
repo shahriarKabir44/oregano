@@ -1,4 +1,3 @@
-import postList from "../components/postList";
 
 export default class PostService {
     static async searchPostByTags(tagName) {
@@ -12,6 +11,7 @@ export default class PostService {
                     searchByTags(tagName:"${tagName}"){
                         findPost{
                             id
+                            unitType
                             itemName
                             unitPrice
                             owner{
@@ -48,6 +48,7 @@ export default class PostService {
                       itemName
                       id
                         images
+                        unitType
                         unitPrice
                         amountProduced
                         tags
@@ -69,6 +70,7 @@ export default class PostService {
             post.tags = JSON.parse(post.tags)
         }
         return data
+
     }
     static async createPost(body) {
         let data = await fetch('http://192.168.43.90:3000/posts/createPost', {
@@ -120,7 +122,7 @@ export default class PostService {
                 urls.push(data)
             }
         }
-
+        console.log(urls);
         return this.updateImageURLs(postid, urls)
     }
     static async updateImageURLs(postId, images) {
@@ -195,6 +197,7 @@ export default class PostService {
                     getPosts {
                         itemName
                         images
+                        unitType
                         owner{
                           facebookToken
                           id

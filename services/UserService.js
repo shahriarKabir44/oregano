@@ -166,6 +166,7 @@ export default class UserService {
                         unitPrice
                         amountProduced
                         id
+                        unitType
                   }
                 }`
             })
