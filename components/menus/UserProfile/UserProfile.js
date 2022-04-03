@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, Dimensions, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import Globals from '../../Globals';
+import RatingServices from '../../../services/RatingServices'
 import { RootContext } from '../../contexts/GlobalContext';
 
 import PostCardRootProfile from './PostCardRootProfile';
@@ -27,12 +27,19 @@ function UserProfile(props) {
     const isFocused = useIsFocused()
     const [userPosts, setPostList] = useState([])
     const [isLoaded, setLoadedStatus] = useState(false)
+    const [tagRatingList, setTagRatingList] = React.useState([])
+    function getUserTagRatings(userId) {
+        RatingServices.getTagRatings(rootContext.contextObject.currentUser.id)
+            .then(data => {
+                setTagRatingList(data)
+            })
+    }
     useEffect(() => {
         if (isFocused) {
             if (!props.route?.params?.id) {
                 setCurrentUserFlag(true)
                 setUserInfo(rootContext.contextObject.currentUser)
-                rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
+                rootContext.setHeaderString('Your profile')
                 UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {
                         setPostList(posts)
@@ -41,14 +48,17 @@ function UserProfile(props) {
                     .then(() => {
                         setLoadedStatus(true)
                     })
+                getUserTagRatings(rootContext.contextObject.currentUser.id)
             }
             else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
                 setCurrentUserFlag(false)
+                getUserTagRatings(props.route?.params?.id)
 
                 UserService.findUser(props.route?.params?.id)
                     .then(data => {
                         setUserInfo(data)
-                        rootContext.updateContext({ ...rootContext.contextObject, headerString: data.facebookToken.name })
+                        rootContext.setHeaderString(data.facebookToken.name)
+
                         UserService.getPosts(props.route?.params?.id)
                             .then(posts => {
 
@@ -61,9 +71,11 @@ function UserProfile(props) {
                     })
             }
             else if (rootContext.contextObject.currentUser.id == props.route?.params?.id) {
+                getUserTagRatings(props.route?.params?.id)
+
                 setCurrentUserFlag(true)
                 setUserInfo(rootContext.contextObject.currentUser)
-                rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Your profile' })
+                rootContext.setHeaderString('Your profile')
                 UserService.getPosts(rootContext.contextObject.currentUser.id)
                     .then(posts => {
                         setPostList(posts)
@@ -138,15 +150,25 @@ function UserProfile(props) {
                         <Text style={{
                             fontSize: 20
                         }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} stats </Text>
-                        <View style={[styles.horizontalAlign, {
-                            marginTop: 10
-                        }]}>
-                            <Text>Ratings</Text>
-                            <Text>{UserProfileInfo.rating}⭐</Text>
+                        <View>
+                            {tagRatingList.map((entry, index) => {
+                                return <TouchableOpacity onPress={() => {
+                                    props.stackNav.push('searchResult', {
+                                        tag: entry.tagName
+                                    })
+                                }} key={index} style={[styles.horizontalAlign, {
+                                    margin: 10,
+                                    padding: 10,
+                                    borderRadius: 10,
+                                    borderWidth: 1,
+                                    borderColor: "black"
+                                }]}>
+                                    <Text>{entry.tagName}</Text>
+                                    <Text>{entry.avg_rating}⭐</Text>
+                                </TouchableOpacity >
+                            })}
                         </View>
-                        <View style={styles.horizontalAlign}>
 
-                        </View>
                     </View>
                     <Text style={{
                         fontSize: 20,
