@@ -1,7 +1,8 @@
+import Global from "./Globals";
 
 export default class PostService {
     static async searchPostByTags(tagName) {
-        let res = await fetch('http://192.168.43.90:3000/graphql', {
+        let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,7 +38,7 @@ export default class PostService {
         return posts
     }
     static async findLocalPosts(district = "California") {
-        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,7 +75,7 @@ export default class PostService {
 
     }
     static async createPost(body) {
-        let data = await fetch('http://192.168.43.90:3000/posts/createPost', {
+        let data = await fetch(Global.SERVER_URL + '/posts/createPost', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -84,7 +85,7 @@ export default class PostService {
         return data
     }
     static async findPost(id) {
-        let res = await fetch('http://192.168.43.90:3000/graphql', {
+        let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -126,7 +127,7 @@ export default class PostService {
         return this.updateImageURLs(postid, urls)
     }
     static async updateImageURLs(postId, images) {
-        let { data } = await fetch('http://192.168.43.90:3000/posts/updatePostImages', {
+        let { data } = await fetch(Global.SERVER_URL + '/posts/updatePostImages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -142,7 +143,7 @@ export default class PostService {
         let formData = new FormData()
         formData.append('file', image.base64)
 
-        let data = await fetch('http://192.168.43.90:3000/posts/upload', {
+        let data = await fetch(Global.SERVER_URL + '/posts/upload', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -158,7 +159,7 @@ export default class PostService {
 
     }
     static async getOrderList(postId) {
-        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -187,7 +188,7 @@ export default class PostService {
         return data.getOrderListOfAPost
     }
     static async getPosts() {
-        let res = await fetch('http://192.168.43.90:3000/graphql', {
+        let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

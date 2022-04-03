@@ -1,9 +1,10 @@
 import postList from "../components/postList";
 import users from "./users";
+import Global from "./Globals";
 
 export default class UserService {
     static async findUser(id) {
-        let res = await fetch('http://192.168.43.90:3000/graphql', {
+        let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,7 +33,7 @@ export default class UserService {
         return res.data.findUser
     }
     static async findFollowingList(id) {
-        let data = await fetch('http://192.168.43.90:3000/graphql', {
+        let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -65,7 +66,7 @@ export default class UserService {
         return postList[0]
     }
     static async getFollowers(id) {
-        let data = await fetch('http://192.168.43.90:3000/graphql', {
+        let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -106,7 +107,7 @@ export default class UserService {
     }
     static async getFolloweesPosts(id) {
 
-        let data = await fetch('http://192.168.43.90:3000/graphql', {
+        let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -153,7 +154,7 @@ export default class UserService {
         return postList
     }
     static async getPosts(userId) {
-        let data = await fetch('http://192.168.43.90:3000/graphql', {
+        let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

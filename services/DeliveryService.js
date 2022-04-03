@@ -1,6 +1,8 @@
+import Global from "./Globals"
+
 export default class DeliveyService {
     static async markDelivered(orderId, buyerId) {
-        let { data } = await fetch(`http://192.168.43.90:3000/orders/markDelivered`, {
+        let { data } = await fetch(Global.SERVER_URL + `/orders/markDelivered`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -13,7 +15,7 @@ export default class DeliveyService {
         return data
     }
     static async markPickedUp(orderId, buyerId) {
-        let { data } = await fetch(`http://192.168.43.90:3000/orders/markPickedUp`, {
+        let { data } = await fetch(Global.SERVER_URL + `/orders/markPickedUp`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,7 +28,7 @@ export default class DeliveyService {
         return data
     }
     static async getAssignedDeliveries(userId) {
-        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,7 +50,7 @@ export default class DeliveyService {
     }
 
     static async getDeliveredOrders(userId) {
-        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

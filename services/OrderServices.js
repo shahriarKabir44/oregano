@@ -1,10 +1,12 @@
 import RatingServices from './RatingServices'
 import UserService from './UserService'
+import Global from "./Globals";
+
 export default class OrderServices {
 
 
     static async getPreviousOrders(buyerId) {
-        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +60,7 @@ export default class OrderServices {
     }
 
     static async rejectOrderItem(orderId, postId, shouldGenerateNotification, itemName, sellerName, buyerId) {
-        let { data } = await fetch(`http://192.168.43.90:3000/orders/rejectOrderItem`, {
+        let { data } = await fetch(Global.SERVER_URL + `/orders/rejectOrderItem`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -78,7 +80,7 @@ export default class OrderServices {
         for (let item of items) {
             promises.push(OrderServices.rejectOrderItem(orderId, item.postid, 0, item.itemName, sellerName, buyerId))
         }
-        await Promise.all([...promises, fetch('http://192.168.43.90:3000/orders/rejectOrder', {
+        await Promise.all([...promises, fetch(Global.SERVER_URL + '/orders/rejectOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -94,7 +96,7 @@ export default class OrderServices {
 
     }
     static async getOrderInfo(orderId) {
-        let { data } = await fetch('http://192.168.43.90:3000/graphql', {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -156,7 +158,7 @@ export default class OrderServices {
         for (let item of rejectedItems) {
             promises.push(OrderServices.rejectOrderItem(orderId, item.postid, 1, item.itemName, sellerName, buyerId))
         }
-        promises.push(fetch('http://192.168.43.90:3000/orders/acceptOrder/' + orderId)
+        promises.push(fetch(Global.SERVER_URL + '/orders/acceptOrder/' + orderId)
             .then(response => response.json())
             .catch(e => {
             })
@@ -169,7 +171,7 @@ export default class OrderServices {
     static async createOrder(cookId, orderLocationInfo, buyerName, buyerId, itemsCount) {
         let userData = await UserService.findUser(cookId)
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
-        let orderInfo = await fetch('http://192.168.43.90:3000/orders/createNewOrder', {
+        let orderInfo = await fetch(Global.SERVER_URL + '/orders/createNewOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -195,7 +197,7 @@ export default class OrderServices {
 
     }
     static async createOrderItem(orderItem, orderId) {
-        let orderItemData = await fetch('http://192.168.43.90:3000/graphql', {
+        let orderItemData = await fetch(Global.SERVER_URL + '/graphql', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
