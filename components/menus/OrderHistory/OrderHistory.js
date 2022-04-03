@@ -153,6 +153,10 @@ function OrderHistory(props) {
                                                 ToastAndroid.SHORT,
                                                 ToastAndroid.BOTTOM
                                             )
+                                            detectChange(false)
+                                            let orders = JSON.parse(JSON.stringify(orderList))
+                                            orders[currentlyFocusedProduct.orderGroupIndex].orderedItems[currentlyFocusedProduct.orderItemIndex].rating = currentlyFocusedProduct.rating
+                                            setOrderList(orders)
                                         })
                                 }}>
                                     <Text>Update rating</Text>

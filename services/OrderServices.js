@@ -1,3 +1,4 @@
+import RatingServices from './RatingServices'
 import UserService from './UserService'
 export default class OrderServices {
 
@@ -37,7 +38,23 @@ export default class OrderServices {
                   }`
             })
         }).then(res => res.json())
-        return data.getPreviousOrders
+
+        data = data.getPreviousOrders
+
+        let promises = []
+        for (let n = 0; n < data.length; n++) {
+            for (let k = 0; k < data[n].orderedItems.length; k++) {
+                promises.push(OrderServices.setRating(data, n, k, buyerId))
+            }
+        }
+        await Promise.all(promises)
+
+        return data
+    }
+
+    static async setRating(datas, row, col, buyerId) {
+        let data = await RatingServices.getMyRating(datas[row].orderedItems[col].post.id, buyerId)
+        datas[row].orderedItems[col].rating = data?.rating ? data.rating : 0
     }
 
     static async rejectOrderItem(orderId, postId, shouldGenerateNotification, itemName, sellerName, buyerId) {

@@ -4,14 +4,7 @@ import RatingServices from '../../../services/RatingServices';
 import { RootContext } from '../../contexts/GlobalContext';
 
 function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupIndex, orderItemIndex }) {
-    const [myRating, setMyRating] = React.useState(-1)
-    const { contextObject } = React.useContext(RootContext)
-    React.useEffect(() => {
-        RatingServices.getMyRating(orderItem.post.id, contextObject.currentUser.id)
-            .then(data => {
-                setMyRating(!data?.rating ? 0 : data.rating)
-            })
-    }, [])
+
     return (
         <TouchableOpacity style={{
             display: "flex",
@@ -26,7 +19,7 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupI
         }} onPress={() => {
             setCurrentProduct({
                 product: orderItem,
-                rating: myRating,
+                rating: orderItem.rating,
                 orderGroupIndex: orderGroupIndex,
                 orderItemIndex: orderItemIndex
             })
@@ -35,7 +28,21 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupI
             <View>
                 <Text>{orderItem.post.itemName}</Text>
                 <Text>{orderItem.amount} {orderItem.post.unitType}</Text>
-                <Text>Your rating:{!myRating ? "Unrated" : `${myRating}⭐`}</Text>
+                <View style={{
+                    display: "flex",
+                    flexDirection: "row"
+                }}>
+                    <Text>Your rating:{orderItem.rating}</Text>
+                    <View style={{
+                        display: "flex",
+                        flexDirection: "row"
+                    }}>
+                        {[0, 1, 2, 3, 4].map((item, index) => {
+                            return <Text key={index}>{item + 1 <= orderItem.rating ? "⭐" : ""}</Text>
+                        })}
+                    </View>
+                </View>
+
             </View>
             <Image style={{
                 height: 50,

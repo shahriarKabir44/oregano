@@ -19,7 +19,7 @@ let users = [
         currentCity: '716 Sierra Vista Ave',
     },
     {
-        "facebookToken": JSON.parse("{\"name\":\"Nusrat jahan\",\"profileImageURL\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN_wHjuRlqs0B2niLg6q092Lyrjbuv6MPHRg&usqp=CAU\",\"coverPhotoURL\":\"https://cdnimg.webstaurantstore.com/images/articles/359/blog-chefs-header.jpg\",\"email\":\"nusrat@gmail.com\",\"phone\":\"01234567891\",\"address\":\"Nirala, Khulna\"}"),
+        "facebookToken": JSON.parse("{\"name\":\"Nusrat jahan\",\"profileImageURL\":\"https://imageio.forbes.com/specials-images/imageserve/6109550f1aa8564670194ad4/Close-up-smiling-businesswoman-holding-computer-tablet--looking-to-side/960x0.jpg?fit=bounds&format=jpg&width=960\",\"coverPhotoURL\":\"https://cdnimg.webstaurantstore.com/images/articles/359/blog-chefs-header.jpg\",\"email\":\"nusrat@gmail.com\",\"phone\":\"01234567891\",\"address\":\"Nirala, Khulna\"}"),
         "id": "6233763287e53dc7547b702c",
         "rating": 3.5,
         "currentCity": "2425 Garcia Ave, Mountain View",
@@ -48,7 +48,7 @@ export default function GlobalContext({ children }) {
     const [globalObject, setGlobalObject] = useState({
         headerString: "",
         tagList: [],
-        currentUser: users[0],
+        currentUser: users[2],
         currentLocation: {
             coords: {
                 latitude: 0,
