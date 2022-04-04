@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import PostCardRoot from './shared/PostCardRoot';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import TagsSelectionService from '../services/TagsSelectionService';
-import Globals from './Globals';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
+
 
 import { RootContext } from './contexts/GlobalContext'
 import PostService from '../services/PostService';
@@ -12,8 +14,22 @@ import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
 
 
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
+
 
 function Home(props) {
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+
     const rootContext = React.useContext(RootContext)
 
     const [localPostList, setlocalPostList] = useState([])
@@ -32,6 +48,21 @@ function Home(props) {
     const [subscribedPosts, setSubscribedPosts] = useState([])
     const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     useEffect(() => {
+
+        registerForPushNotificationsAsync().then(token => {
+            rootContext.updatePushToken(token)
+            setExpoPushToken(token)
+        });
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+
+            setNotification(notification);
+        });
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        });
+
+
+
+
         rootContext.updateCurrentLocationInfo()
         UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
             .then(data => {
@@ -44,6 +75,11 @@ function Home(props) {
                 setIsLocalPostsLoaded(1 == 1)
                 setlocalPostList(data)
             })
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+        };
     }, [])
     return (
         <SafeAreaView style={{
@@ -114,6 +150,37 @@ function Home(props) {
 
         </SafeAreaView>
     );
+}
+
+
+async function registerForPushNotificationsAsync() {
+    let token;
+    if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+    } else {
+        alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
+    }
+
+    return token;
 }
 
 export default Home;

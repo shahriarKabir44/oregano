@@ -1,14 +1,16 @@
-import { StyleSheet } from 'react-native';
-import React from 'react'
+
+import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-
+import { Text, View, Button, Platform, StyleSheet } from 'react-native';
 import StackNavigatorRoot from './components/navigators/StackNavigatorRoot';
-import GlobalContext from './components/contexts/GlobalContext';
+import GlobalContext, { RootContext } from './components/contexts/GlobalContext';
 
 
 
 export default function App() {
+
+
 	return (
 		<GlobalContext>
 			<NavigationContainer>
@@ -17,6 +19,7 @@ export default function App() {
 		</GlobalContext>
 	);
 }
+
 
 
 

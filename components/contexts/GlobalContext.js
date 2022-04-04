@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Global from '../../services/Globals';
 import LocationService from '../../services/LocationService';
 export const RootContext = React.createContext()
 let users = [
@@ -57,8 +58,22 @@ export default function GlobalContext({ children }) {
             currentLocationGeoCode: {
 
             }
-        }
+        },
+        expoPushToken: ""
     })
+
+    function updatePushToken(token) {
+        fetch(Global.SERVER_URL + '/updatePushToken', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                token: token,
+                userId: globalObject.currentUser.id
+            })
+        })
+    }
     function setHeaderString(title) {
         setGlobalObject({ ...globalObject, headerString: title })
     }
@@ -87,7 +102,7 @@ export default function GlobalContext({ children }) {
                         return geocode
                     })
                     .then(geocode => {
-                        fetch('http://192.168.43.90:3000/updateUserLocation', {
+                        fetch(Global.SERVER_URL + '/updateUserLocation', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -108,7 +123,8 @@ export default function GlobalContext({ children }) {
             contextObject: globalObject,
             updateContext: setGlobalObject,
             updateCurrentLocationInfo: updateCurrentLocationInfo,
-            setHeaderString: setHeaderString
+            setHeaderString: setHeaderString,
+            updatePushToken: updatePushToken
         }}>
             {children}
         </RootContext.Provider>

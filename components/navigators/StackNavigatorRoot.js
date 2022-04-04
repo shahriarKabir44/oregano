@@ -15,7 +15,7 @@ import NotificationsRoot from '../routed/NotificationsRoot';
 import OrderDetails from '../routed/OrderDetails';
 import DeliveryInfo from '../routed/DeliveryInfo';
 import AssignedDeliveries from '../shared/AssignedDeliveries';
-import AvailableTags from '../routed/searchResult/AvailableTags';
+import AvailableTagsToSearch from '../routed/searchResult/AvailableTagsToSearch';
 
 function StackNavigatorRoot(props) {
 	const rootContext = React.useContext(RootContext)
@@ -75,7 +75,7 @@ function StackNavigatorRoot(props) {
 		>
 			{(props) => {
 
-				return <AvailableTags stackNav={props.navigation}  {...props} />
+				return <AvailableTagsToSearch stackNav={props.navigation}  {...props} />
 			}}
 		</Stack.Screen>
 		<Stack.Screen name='notifications'

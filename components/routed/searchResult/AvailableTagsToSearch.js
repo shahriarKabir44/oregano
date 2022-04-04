@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Button } from 'react-native'
 import { RootContext } from '../../contexts/GlobalContext';
 import { TextInput } from 'react-native-paper'
 
-function AvailableTags(props) {
+function AvailableTagsToSearch(props) {
     const { setHeaderString } = React.useContext(RootContext)
     const [availableTags, setAvailableTags] = React.useState([])
     const [searchText, setSeartchText] = React.useState("")
@@ -48,4 +48,4 @@ function AvailableTags(props) {
     );
 }
 
-export default AvailableTags;
+export default AvailableTagsToSearch;
