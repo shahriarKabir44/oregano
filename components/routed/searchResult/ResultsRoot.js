@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { useEffect, useState } from 'react';
 import { RootContext } from '../../contexts/GlobalContext';
 import { TextInput } from 'react-native-paper';
@@ -7,6 +7,7 @@ import PostService from '../../../services/PostService'
 import { ScrollView } from 'react-native';
 import SearchResultItem from './SearchResultItem';
 import { useIsFocused } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons';
 function ResultsRoot(props) {
     const rootContext = React.useContext(RootContext)
     const [currentTagName, setTagName] = useState("")
@@ -33,11 +34,24 @@ function ResultsRoot(props) {
 
         }}>
             <View>
-                <TextInput
-                    label="Tag Name"
-                    value={currentTagName}
-                    onChangeText={text => setTagName(text)}
-                />
+                <TouchableOpacity onPress={() => {
+                    props.navigation.navigate('availableTagList')
+                }} style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    alignItems: "center",
+                    borderRadius: 30,
+                    borderWidth: 1,
+                    borderColor: "black",
+                    padding: 10
+                }}>
+                    <AntDesign name="search1" size={24} color="black" />
+                    <Text style={{
+                        marginLeft: 10
+                    }}>{props.route.params.tag}</Text>
+
+                </TouchableOpacity>
                 <Text style={{
                     fontSize: 20
                 }}>Search results for {currentTagName} </Text>
