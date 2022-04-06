@@ -5,7 +5,7 @@ import OrderServices from '../../../services/OrderServices';
 import { RootContext } from '../../contexts/GlobalContext';
 
 function NotificationItem({ notificationItem, navigator }) {
-    let { updateContext, contextObject } = React.useContext(RootContext)
+    let { updateContext, contextObject, setHeaderString } = React.useContext(RootContext)
     return (
         <View style={{
             padding: 10,
@@ -19,14 +19,18 @@ function NotificationItem({ notificationItem, navigator }) {
                         if (notificationItem.relatedSchemaId) {
                             switch (notificationItem.type) {
                                 case 1:
-                                    updateContext({ ...contextObject, headerString: "Order info" })
+                                    setHeaderString("Order info")
                                     navigator.push('order_details', notificationItem.relatedSchemaId)
                                     break;
                                 case 4:
-                                    updateContext({ ...contextObject, headerString: "Delivery info" })
+                                    setHeaderString("Delivery info")
                                     navigator.push('delivery_details', notificationItem.relatedSchemaId)
                                     break;
-                                default:
+                                case 8:
+                                    setHeaderString("Your post")
+                                    navigator.push('Post details', {
+                                        postId: notificationItem.relatedSchemaId,
+                                    })
                                     break;
                             }
 

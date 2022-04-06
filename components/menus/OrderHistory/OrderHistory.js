@@ -145,7 +145,7 @@ function OrderHistory(props) {
                                     backgroundColor: "#c4c4c1",
                                     borderRadius: 5
                                 }} onPress={() => {
-                                    RatingServices.rateItem(currentlyFocusedProduct?.product.post.id, contextObject.currentUser.id, currentlyFocusedProduct.rating, currentlyFocusedProduct?.product.post.postedBy, currentlyFocusedProduct?.product.post.tags)
+                                    RatingServices.rateItem(currentlyFocusedProduct?.product.post.id, contextObject.currentUser.id, currentlyFocusedProduct.rating, currentlyFocusedProduct?.product.post.postedBy, currentlyFocusedProduct?.product.post.tags, contextObject.currentUser.facebookToken.name, currentlyFocusedProduct?.product.post.itemName)
                                         .then(() => {
                                             setOrderList([...orderList])
                                             ToastAndroid.showWithGravity(

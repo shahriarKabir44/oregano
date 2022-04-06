@@ -23,7 +23,7 @@ export default class RatingServices {
         }).then(res => res.json())
         return data
     }
-    static async rateItem(postId, userid, rating, ownerid, tagList) {
+    static async rateItem(postId, userid, rating, ownerid, tagList, userName, itemName) {
         let { data } = await fetch(`${Global.SERVER_URL}/ratings/rateItem`, {
             method: 'POST',
             headers: {
@@ -34,8 +34,9 @@ export default class RatingServices {
                 ownerId: ownerid,
                 ratedBy: userid,
                 tagLIst: (tagList),
-                rating: rating
-
+                rating: rating,
+                userName: userName,
+                itemName: itemName
             })
         }).then(response => response.json())
         return data

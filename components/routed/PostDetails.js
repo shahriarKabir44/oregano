@@ -112,7 +112,7 @@ function PostDetails(props) {
     }, [isFocused])
 
     function rateItem(rating) {
-        RatingServices.rateItem(post.id, rootContext.contextObject.currentUser.id, rating, post.owner.id, JSON.stringify(post.tags))
+        RatingServices.rateItem(post.id, rootContext.contextObject.currentUser.id, rating, post.owner.id, JSON.stringify(post.tags), rootContext.contextObject.currentUser.facebookToken.name, post.itemName)
             .then(() => {
                 if (!hasUserRated) {
                     setRatingList([...ratingList, {
@@ -262,7 +262,7 @@ function PostDetails(props) {
                                 flex: 1
                             }} title="View location" />
 
-                            <Button onPress={() => {
+                            {!isOwnPost && < Button onPress={() => {
                                 setRatingWindow(true)
                             }} style={{
                                 paddingHorizontal: 15,
@@ -270,7 +270,7 @@ function PostDetails(props) {
                                 backgroundColor: "#c4c4c4",
                                 borderRadius: 5,
                                 flex: 1
-                            }} title="rate item" />
+                            }} title="rate item" />}
 
                         </View>
                         <View style={[styles.tags, styles.marginVertical, {
@@ -294,10 +294,21 @@ function PostDetails(props) {
                     </View>
 
                     {!ratingList.length && <View>
-                        <Text>Unrated</Text>
+                        <Text style={{
+                            fontSize: 15,
+                            fontWeight: 'bold',
+                            margin: 10
+                        }}>Unrated</Text>
                     </View>}
 
                     {ratingList.length > 0 && <View>
+                        <View>
+                            <Text style={{
+                                fontSize: 15,
+                                fontWeight: 'bold',
+                                margin: 10
+                            }}>Ratings</Text>
+                        </View>
                         {ratingList.map((rating, index) => {
                             return <TouchableOpacity key={index}>
                                 <View style={{
@@ -334,6 +345,10 @@ function PostDetails(props) {
                             fontWeight: 'bold',
                             margin: 10
                         }}>Order list</Text>
+                        {!orderList.length && <Text style={{
+
+                            margin: 10
+                        }}>No order has been placed</Text>}
                         <ScrollView style={{
                             flex: 1
                         }}>
