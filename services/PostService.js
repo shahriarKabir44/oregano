@@ -105,6 +105,7 @@ export default class PostService {
                     latitude
                     longitude
                     unitType
+                    postedOn
                   }}`
             })
         }).then(res => res.json())
@@ -214,5 +215,28 @@ export default class PostService {
         }).then(res => res.json())
         return res
 
+    }
+    static async getPostRatings(postId) {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getPostRatings(postId:"${postId}") {
+                      rating
+                      getUser{
+                        id
+                        personalInfo{
+                          profileImageURL
+                          name
+                        }
+                      }
+                    }
+                  }`
+            })
+        }).then(res => res.json())
+        return data.getPostRatings
     }
 }

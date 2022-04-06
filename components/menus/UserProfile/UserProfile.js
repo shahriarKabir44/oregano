@@ -149,22 +149,28 @@ function UserProfile(props) {
                     }}>
                         <Text style={{
                             fontSize: 20
-                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} stats </Text>
-                        <View>
+                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} stars </Text>
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            justifyContent: "space-around"
+                        }}>
                             {tagRatingList.map((entry, index) => {
                                 return <TouchableOpacity onPress={() => {
                                     props.stackNav.push('searchResult', {
                                         tag: entry.tagName
                                     })
                                 }} key={index} style={[styles.horizontalAlign, {
-                                    margin: 10,
+                                    margin: 5,
                                     padding: 10,
                                     borderRadius: 10,
                                     borderWidth: 1,
-                                    borderColor: "black"
+                                    borderColor: "black",
+                                    width: '45%'
                                 }]}>
                                     <Text>{entry.tagName}</Text>
-                                    <Text>{entry.avg_rating}⭐</Text>
+                                    <Text>{Math.floor(entry.avg_rating * 100) / 100}⭐</Text>
                                 </TouchableOpacity >
                             })}
                         </View>

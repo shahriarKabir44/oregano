@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, Button, Dimensions, Modal } from 'react-native';
-import Globals from '../Globals';
+import { View, Text, StyleSheet, Image, FlatList, ScrollView, Button, Dimensions, Modal, ToastAndroid } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { EvilIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import Tags from '../shared/Tags';
 import { TouchableOpacity } from 'react-native';
@@ -13,25 +12,29 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
 import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
+import RatingServices from '../../services/RatingServices';
 
 function PostDetails(props) {
     const [isOwnPost, setOwnershipStatus] = React.useState(false)
-
+    const [canShowRatingWindow, setRatingWindow] = React.useState(false)
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const rootContext = useContext(RootContext)
     const postId = props.route.params.postId
     const [post, setCurrentPost] = useState(null)
     const [canShowModal, toggleModal] = useState(false)
+    const [currentUserRating, setCurrentUserRating] = useState(0)
     const [cartInfo, setCartInfo] = useState({
         info: null,
         itemIndex: 0
     })
+    const [hasUserRated, setRatingRelation] = React.useState(false)
+    const [isRatingChanged, detectChange] = useState(false)
+    const [ratingList, setRatingList] = useState([])
     const [images, setImageList] = useState([{ url: "abcd", props: "" }])
     const [isCartUpdated, setCartUpdateStatus] = useState(false)
     const [isAddedToCart, setCartStatus] = useState(false)
     const toggleBottomNavigationView = () => {
-        //Toggling the visibility state of the bottom sheet
         toggleModal(!canShowModal);
     }
     function addToCart() {
@@ -71,8 +74,17 @@ function PostDetails(props) {
 
         if (isFocused) {
 
-            rootContext.updateContext({ ...rootContext.contextObject, headerString: "" })
-
+            rootContext.setHeaderString("")
+            PostService.getPostRatings(postId)
+                .then(data => {
+                    for (let ratingInfo of data) {
+                        if (ratingInfo.getUser.id == rootContext.contextObject.currentUser.id) {
+                            setRatingRelation(true)
+                            setCurrentUserRating(ratingInfo.rating)
+                        }
+                    }
+                    setRatingList(data)
+                })
             PostService.findPost(postId)
                 .then(postInfo => {
                     setCurrentPost(postInfo)
@@ -83,7 +95,7 @@ function PostDetails(props) {
                                 setOrderList(data);
                             })
                     }
-                    rootContext.updateContext({ ...rootContext.contextObject, headerString: `${postInfo.owner.id == rootContext.contextObject.currentUser.id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}` })
+                    rootContext.setHeaderString(`${postInfo.owner.id == rootContext.contextObject.currentUser.id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}`)
                     let images = []
                     for (let image of postInfo.images) {
                         images.push({
@@ -98,6 +110,34 @@ function PostDetails(props) {
                 })
         }
     }, [isFocused])
+
+    function rateItem(rating) {
+        RatingServices.rateItem(post.id, rootContext.contextObject.currentUser.id, rating, post.owner.id, JSON.stringify(post.tags))
+            .then(() => {
+                if (!hasUserRated) {
+                    setRatingList([...ratingList, {
+                        rating: rating,
+                        getUser: {
+                            id: rootContext.contextObject.currentUser.id,
+                            personalInfo: {
+                                profileImageURL: rootContext.contextObject.currentUser.facebookToken.profileImageURL,
+                                name: rootContext.contextObject.currentUser.facebookToken.name
+                            }
+                        }
+                    }])
+                }
+                ToastAndroid.showWithGravity(
+                    "Thank you for your rating!",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                )
+                detectChange(false)
+                setRatingRelation(true)
+                setRatingWindow(false)
+            })
+    }
+
+
     return (
         <View style={{
             height: Dimensions.get('window').height,
@@ -133,8 +173,8 @@ function PostDetails(props) {
                                 <Text style={{
                                     fontSize: 30,
                                     fontWeight: "bold"
-                                }}> {post.itemName}
-                                </Text>
+                                }}> {post.itemName} </Text>
+
 
 
                             </View>
@@ -199,24 +239,18 @@ function PostDetails(props) {
                             }}
                         />
                         <View style={styles.horizontalAlign}>
-                            <Text style={styles.infoText}> Tk. {post.unitPrice} </Text>
-                            <Text style={styles.infoText}> {post.amountProduced} {post.unitType} available </Text>
+                            <Text style={styles.infoText}>Tk. {post.unitPrice} </Text>
+                            <Text style={styles.infoText}>{post.amountProduced} {post.unitType} available </Text>
                         </View>
                         <View style={styles.horizontalAlign}>
-                            <View style={{
-                                flex: 1,
-                                alignItems: "center",
-                                flexDirection: 'row',
-                            }} >
-                                <Text><EvilIcons name="location" size={30} color="black" /> </Text>
-                                <Text style={styles.infoText}>3km</Text>
-                            </View>
-                            <Text style={styles.infoText}> 3 Hours ago </Text>
+                            <Text style={styles.infoText}>Posted on:</Text>
+                            <Text style={styles.infoText}>{(new Date(post.postedOn)).toLocaleTimeString()},{(new Date(post.postedOn)).toLocaleDateString()}</Text>
 
                         </View>
                         <View style={{
                             display: "flex",
-                            flexDirection: "row"
+                            flexDirection: "row",
+                            justifyContent: "space-between"
                         }}>
                             <Button onPress={() => {
                                 setMapVisibility(true)
@@ -227,6 +261,17 @@ function PostDetails(props) {
                                 borderRadius: 5,
                                 flex: 1
                             }} title="View location" />
+
+                            <Button onPress={() => {
+                                setRatingWindow(true)
+                            }} style={{
+                                paddingHorizontal: 15,
+                                paddingVertical: 5,
+                                backgroundColor: "#c4c4c4",
+                                borderRadius: 5,
+                                flex: 1
+                            }} title="rate item" />
+
                         </View>
                         <View style={[styles.tags, styles.marginVertical, {
                             padding: 5
@@ -248,6 +293,40 @@ function PostDetails(props) {
                         </View>
                     </View>
 
+                    {!ratingList.length && <View>
+                        <Text>Unrated</Text>
+                    </View>}
+
+                    {ratingList.length > 0 && <View>
+                        {ratingList.map((rating, index) => {
+                            return <TouchableOpacity key={index}>
+                                <View style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: "space-between",
+                                    alignItems: 'center',
+                                    alignContent: "center",
+                                    padding: 15,
+                                    backgroundColor: "#E6E6E6",
+                                    borderRadius: 10,
+                                    margin: 10
+                                }}>
+                                    <Image style={{
+                                        width: 50,
+                                        borderRadius: 50,
+                                        aspectRatio: 1
+                                    }} source={{ uri: rating.getUser.personalInfo.profileImageURL }} />
+                                    <View>
+                                        <Text>{rating.getUser.personalInfo.name}</Text>
+                                        {rating.getUser.id != rootContext.contextObject.currentUser.id && <Text>{rating.rating}⭐</Text>}
+                                        {rating.getUser.id == rootContext.contextObject.currentUser.id && <Text>{currentUserRating}⭐</Text>}
+
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        })}
+                    </View>}
+
 
                     {isOwnPost && <View>
                         <Text style={{
@@ -255,47 +334,51 @@ function PostDetails(props) {
                             fontWeight: 'bold',
                             margin: 10
                         }}>Order list</Text>
-                        {orderList.map((item, index) => {
-                            return (<View key={index} style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                padding: 10,
-                                alignItems: 'center',
-                                alignContent: 'center',
-                                backgroundColor: "#c5d9ec",
-                                borderRadius: 10,
-
-                            }}>
-                                <View style={{
+                        <ScrollView style={{
+                            flex: 1
+                        }}>
+                            {orderList.map((item, index) => {
+                                return (<View key={index} style={{
                                     display: 'flex',
                                     flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    padding: 10,
                                     alignItems: 'center',
                                     alignContent: 'center',
-
+                                    backgroundColor: "#c5d9ec",
+                                    borderRadius: 10,
+                                    margin: 5
                                 }}>
-                                    <Image style={{
-                                        height: 50,
-                                        aspectRatio: 1,
-                                        borderRadius: 50,
-                                        margin: 5
-                                    }} source={{ uri: item.orderDetails.buyer.personalInfo.profileImageURL }} />
                                     <View style={{
-                                        margin: 5
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        alignContent: 'center',
+
                                     }}>
-                                        <Text>{item.orderDetails.buyer.personalInfo.name}</Text>
-                                        <Text>Amount:{item.amount}pcs</Text>
-                                        <Text>{(new Date(item.orderDetails.time)).toLocaleTimeString()}, {(new Date(item.orderDetails.time)).toDateString()} </Text>
+                                        <Image style={{
+                                            height: 50,
+                                            aspectRatio: 1,
+                                            borderRadius: 50,
+                                            margin: 5
+                                        }} source={{ uri: item.orderDetails.buyer.personalInfo.profileImageURL }} />
+                                        <View style={{
+                                            margin: 5
+                                        }}>
+                                            <Text>{item.orderDetails.buyer.personalInfo.name}</Text>
+                                            <Text>Amount:{item.amount}pcs</Text>
+                                            <Text>{(new Date(item.orderDetails.time)).toLocaleTimeString()}, {(new Date(item.orderDetails.time)).toDateString()} </Text>
+                                        </View>
                                     </View>
-                                </View>
-                                <View>
-                                    {item.orderDetails.status == 0 && <Text>Pending</Text>}
-                                    {(item.orderDetails.status == 1 || item.orderDetails.status == 4) && <Text>Accepted</Text>}
-                                    {item.orderDetails.status == 2 && <Text>Rejected</Text>}
-                                    {item.orderDetails.status >= 5 && <Text>Rejected</Text>}
-                                </View>
-                            </View>)
-                        })}
+                                    <View>
+                                        {item.orderDetails.status == 0 && <Text>Pending</Text>}
+                                        {(item.orderDetails.status == 1 || item.orderDetails.status == 4) && <Text>Accepted</Text>}
+                                        {item.orderDetails.status == 2 && <Text>Rejected</Text>}
+                                        {item.orderDetails.status >= 5 && <Text>Rejected</Text>}
+                                    </View>
+                                </View>)
+                            })}
+                        </ScrollView>
                     </View>}
                 </ScrollView>
 
@@ -307,7 +390,7 @@ function PostDetails(props) {
                         }}>
                             <Text style={{
                                 fontSize: 20
-                            }}> Add to cart </Text>
+                            }}>Add to cart </Text>
 
                         </TouchableOpacity>
 
@@ -393,7 +476,52 @@ function PostDetails(props) {
 
             </View>
             }
+            <BottomSheet
+                visible={canShowRatingWindow}
+                onBackButtonPress={() => {
+                    setRatingWindow(false)
+                }}
+                onBackdropPress={() => {
+                    setRatingWindow(false)
+                }}
+            >
+                <View style={[styles.bottomNavigationView]}>
+                    <View style={{
+                        padding: 10,
+                        margin: 10,
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between"
 
+                    }}>
+                        <Text>Your rating:</Text>
+
+                        <View style={{
+                            display: "flex",
+                            flexDirection: "row"
+                        }}>
+                            {[0, 1, 2, 3, 4].map((item, index) => {
+                                return <View key={index}>
+                                    {(item + 1 <= currentUserRating) && <AntDesign onPress={() => { setCurrentUserRating(item + 1); detectChange(true) }} name="star" size={24} color="black" />}
+                                    {(item + 1 > currentUserRating) && <AntDesign onPress={() => { setCurrentUserRating(item + 1); detectChange(true) }} name="staro" size={24} color="black" />}
+
+                                </View>
+                            })}
+                        </View>
+                    </View>
+                    {isRatingChanged && <TouchableOpacity onPress={() => {
+                        rateItem(currentUserRating)
+                    }} style={{
+                        backgroundColor: "#E6E6E6",
+                        padding: 20,
+                        borderRadius: 10
+                    }}>
+                        <Text style={{
+                            fontSize: 15
+                        }}>Update rating</Text>
+                    </TouchableOpacity>}
+                </View>
+            </BottomSheet>
         </View>
     );
 }
@@ -405,7 +533,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%',
         height: Dimensions.get('window').height * 0.33,
-        borderRadius: 10
+        borderRadius: 10,
+        padding: 20
     },
     horizontalAlign: {
         display: "flex",
@@ -413,7 +542,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     infoText: {
-        fontSize: 20,
+        fontSize: 15,
         fontStyle: "italic"
     },
     horizontal_vert_Align: {
