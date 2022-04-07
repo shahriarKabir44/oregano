@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: Dimensions.get('window').height * 0.33,
         borderRadius: 10,
-        padding: 20
+
     },
     horizontalAlign: {
         display: "flex",

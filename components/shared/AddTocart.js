@@ -82,11 +82,11 @@ function AddTocart({ post, togglePopup, addToCart }) {
                     padding: 5
                 }} >
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 20,
                         fontWeight: "bold"
                     }}>Total Charge</Text>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 20,
                         fontWeight: "bold"
                     }}> Tk {itemChosen * post.unitPrice} </Text>
                 </View>
