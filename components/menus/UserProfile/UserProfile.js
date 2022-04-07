@@ -8,6 +8,7 @@ import UserService from '../../../services/UserService';
 import { useIsFocused } from '@react-navigation/native';
 function UserProfile(props) {
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
+    const [isFollowing, setConnection] = React.useState(true)
     const rootContext = React.useContext(RootContext)
     const [UserProfileInfo, setUserInfo] = useState({
         "facebookToken": {
@@ -29,7 +30,7 @@ function UserProfile(props) {
     const [isLoaded, setLoadedStatus] = useState(false)
     const [tagRatingList, setTagRatingList] = React.useState([])
     function getUserTagRatings(userId) {
-        RatingServices.getTagRatings(rootContext.contextObject.currentUser.id)
+        RatingServices.getTagRatings(userId)
             .then(data => {
                 setTagRatingList(data)
             })
@@ -53,7 +54,10 @@ function UserProfile(props) {
             else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
                 setCurrentUserFlag(false)
                 getUserTagRatings(props.route?.params?.id)
-
+                UserService.isFollowing(rootContext.contextObject.currentUser.id, props.route?.params?.id)
+                    .then((data) => {
+                        setConnection(data)
+                    })
                 UserService.findUser(props.route?.params?.id)
                     .then(data => {
                         setUserInfo(data)
@@ -89,6 +93,21 @@ function UserProfile(props) {
 
 
     }, [isFocused])
+    function follow() {
+
+        UserService.follow(props.route?.params?.id, rootContext.contextObject.currentUser.id, rootContext.contextObject.currentUser.facebookToken.name, UserProfileInfo.expoPushToken)
+            .then(() => {
+                setConnection(true)
+            })
+    }
+    function unFollow() {
+
+        UserService.unFollow(props.route?.params?.id, rootContext.contextObject.currentUser.id)
+            .then(() => {
+                setConnection(false)
+            })
+    }
+
 
     return (
         <View style={{
@@ -134,12 +153,24 @@ function UserProfile(props) {
                             <Text>
                                 {UserProfileInfo.facebookToken.address}
                             </Text>
-                            {!isCurrentUser && <TouchableOpacity style={{
+                            {!isCurrentUser && !isFollowing && <TouchableOpacity style={{
                                 padding: 5,
                                 backgroundColor: "#c4c4c4",
                                 borderRadius: 5
+                            }} onPress={() => {
+                                follow()
                             }}>
                                 <Text>Follow</Text>
+                            </TouchableOpacity>}
+
+                            {!isCurrentUser && isFollowing && <TouchableOpacity style={{
+                                padding: 5,
+                                backgroundColor: "#c4c4c4",
+                                borderRadius: 5
+                            }} onPress={() => {
+                                unFollow()
+                            }}>
+                                <Text>Unfollow</Text>
                             </TouchableOpacity>}
                         </View>
                     </View>

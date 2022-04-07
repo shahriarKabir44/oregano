@@ -1,8 +1,51 @@
 import postList from "../components/postList";
-import users from "./users";
 import Global from "./Globals";
 
 export default class UserService {
+    static async unFollow(followeeId, followerId) {
+        let { data } = await fetch(Global.SERVER_URL + '/connection/unFollow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                followerId: followerId,
+                followeeId: followeeId
+            })
+        }).then(response => response.json())
+        return data
+    }
+    static async isFollowing(followerId, followeeId) {
+        let { data } = await fetch(Global.SERVER_URL + '/connection/isFollowing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                followerId: followerId,
+                followeeId: followeeId
+            })
+        }).then(response => response.json())
+        return data
+    }
+    static async follow(followeeId, followerId, followerName, followeeExpoToken) {
+
+        let { data } = await fetch(Global.SERVER_URL + '/connection/follow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                followerId: followerId,
+                followeeId: followeeId,
+                followerName: followerName,
+                followeeExpoToken: followeeExpoToken
+            })
+        }).then(response => response.json())
+        return data
+
+
+    }
     static async findUser(id) {
         let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
@@ -13,6 +56,7 @@ export default class UserService {
                 query: `query{findUser(id:"${id}"){
                     facebookToken
                     id
+                    expoPushToken
                     currentLatitude
                     currentLongitude
                     currentCity
@@ -43,6 +87,7 @@ export default class UserService {
                     getFollowees(followerId:"${id}"){
                         followee{
                         facebookToken
+                        expoPushToken
                         id
                         lastPost{
                           itemName
@@ -76,6 +121,7 @@ export default class UserService {
                     getFollowers(followeeId:"${id}"){
                         follower{
                             facebookToken
+                            expoPushToken
                             id
                             lastPost{
                               itemName
@@ -117,6 +163,7 @@ export default class UserService {
                     getFollowees(followerId:"${id}"){
                         followee{
                             facebookToken
+                            expoPushToken
                             id
                             lastPost{
                                 itemName
