@@ -38,7 +38,8 @@ function DeliveryHistory(props) {
                         display: 'flex',
                         flexDirection: 'row',
                         alignContent: "center",
-                        alignItems: "flex-end"
+                        alignItems: "flex-end",
+                        padding: 5
                     }}>
                         <View>
                             <Text>Pickup from:{item.pickupLocationGeocode}</Text>
@@ -53,9 +54,9 @@ function DeliveryHistory(props) {
 
                             <Text style={{
                                 fontWeight: "bold",
-                                color: item.isPaid ? "green" : "red",
+                                color: item.status == 6 ? "green" : "red",
                                 fontSize: 15
-                            }}>{item.isPaid ? "Paid" : "Unpaid"}</Text>
+                            }}>{item.status == 6 ? "Paid" : "Unpaid"}</Text>
                         </View>
                     </View>
 
