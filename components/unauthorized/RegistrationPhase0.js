@@ -2,9 +2,10 @@ import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { View, Text, Image, TouchableOpacity, SafeAreaView, Alert, Modal, StyleSheet } from 'react-native'
 import * as Facebook from 'expo-facebook'
-import UserService from '../services/UserService';
-import { RootContext } from './contexts/GlobalContext';
-function UnauthorizedView({ setAuthorization }) {
+import UserService from '../../services/UserService';
+import { RootContext } from '../contexts/GlobalContext';
+import LocalStorageService from '../../services/LocalStorageService';
+function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
     const { setCurrentUser, setLoginStatus } = React.useContext(RootContext)
     const [modalVisible, setModalVisible] = React.useState(false)
     const [accountExists, setExistense] = React.useState(false)
@@ -20,21 +21,21 @@ function UnauthorizedView({ setAuthorization }) {
             if (type === 'success') {
                 const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
                 let res = await response.json()
+                LocalStorageService.store('tempUser', res)
                 UserService.isSignedUp(res.id)
                     .then(data => {
+
+                        setModalVisible(true)
                         if (data) {
                             data.facebookToken = JSON.parse(data.facebookToken)
                             data.id = (data._id)
-
                             setCurrentUser(data)
-
                             setExistense(true)
-                            setModalVisible(true)
-
                         }
 
                         else {
-
+                            setCurrentUser(null)
+                            setExistense(false)
                         }
                     })
 
@@ -55,9 +56,7 @@ function UnauthorizedView({ setAuthorization }) {
                 animationType="slide"
                 transparent={1 == 1}
                 visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
+
             >
                 {accountExists && <View style={styles.centeredView}>
                     <View style={styles.modalView}>
@@ -71,6 +70,22 @@ function UnauthorizedView({ setAuthorization }) {
                             setAuthorization(true)
                         }}>
                             <Text>Go to home</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>}
+                {!accountExists && <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Welcome!</Text>
+                        <Text>Please click "next" to continue.</Text>
+                        <TouchableOpacity style={{
+                            backgroundColor: "#D2F9D4",
+                            padding: 10,
+                            margin: 10
+                        }} onPress={() => {
+                            setModalVisible(false);
+                            setRegistrationStep(1)
+                        }}>
+                            <Text>Next</Text>
                         </TouchableOpacity>
                     </View>
                 </View>}
@@ -137,4 +152,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default UnauthorizedView;
+export default RegistrationPhase0;
