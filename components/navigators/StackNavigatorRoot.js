@@ -18,7 +18,6 @@ import AssignedDeliveries from '../shared/AssignedDeliveries';
 import AvailableTagsToSearch from '../routed/searchResult/AvailableTagsToSearch';
 
 function StackNavigatorRoot(props) {
-	const rootContext = React.useContext(RootContext)
 	return <Stack.Navigator>
 		<Stack.Screen name='HomeView' component={DrawerRoot} options={{
 			header: (prop) => {

@@ -35,7 +35,7 @@ function Header(props) {
                 }} >
                     <EvilIcons name="cart" size={40} color="black" />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
+                {contextObject.currentUser && <TouchableOpacity onPress={() => {
                     popupSidebar()
                 }}>
                     <Image style={styles.profilePicture}
@@ -43,7 +43,7 @@ function Header(props) {
                             uri: contextObject.currentUser.facebookToken.profileImageURL
                         }}
                     />
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
         </SafeAreaView>
     );

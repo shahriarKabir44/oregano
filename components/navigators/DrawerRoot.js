@@ -21,7 +21,7 @@ import DeliveryHistory from '../menus/DeliveryHistory';
 import OrderHistory from '../menus/OrderHistory/OrderHistory';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation }) {
-	const { updateContext, contextObject } = React.useContext(RootContext)
+	const { contextObject } = React.useContext(RootContext)
 
 	const stackNavigator = navigation
 	return (
@@ -32,21 +32,21 @@ export default function DrawerRoot({ navigation }) {
 				return <DrawerContentRoot {...props} />
 			}}
 		>
-			<Drawer.Screen options={{
+			{contextObject.currentUser && <Drawer.Screen options={{
 				header: (prop) => {
 					return <Header {...prop} />
 				},
 
 			}} name="Home">
 				{props => (<Home drawerNav={props.navigation} stackNav={stackNavigator} />)}
-			</Drawer.Screen>
-			<Drawer.Screen options={{
+			</Drawer.Screen>}
+			{contextObject.currentUser && <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader goBackOnly={true} name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				}
 			}} name="Profile" >
 				{props => <UserProfile drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>
+			</Drawer.Screen>}
 
 			<Drawer.Screen options={{
 				header: (prop) => {
@@ -56,7 +56,7 @@ export default function DrawerRoot({ navigation }) {
 				{props => <Favourites drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>
 
-			<Drawer.Screen options={{
+			{contextObject.currentUser && <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Assigned Deliveries"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -65,9 +65,9 @@ export default function DrawerRoot({ navigation }) {
 				}
 			}} name="Assigned deliveries" >
 				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>
+			</Drawer.Screen>}
 
-			<Drawer.Screen options={{
+			{contextObject.currentUser && <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Deliveries history"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -76,7 +76,7 @@ export default function DrawerRoot({ navigation }) {
 				}
 			}} name="Deliveries history" >
 				{props => <DeliveryHistory drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>
+			</Drawer.Screen>}
 
 			<Drawer.Screen options={{
 				header: (prop) => {
@@ -102,14 +102,14 @@ function DrawerContentRoot(props) {
 				justifyContent: "space-between",
 				paddingHorizontal: 10
 			}} >
-				<Image style={styles.sideMenuProfileIcon} source={{
+				{contextObject.currentUser && <Image style={styles.sideMenuProfileIcon} source={{
 					uri: contextObject.currentUser.facebookToken.profileImageURL
-				}} />
-				<Text
+				}} />}
+				{contextObject.currentUser && <Text
 					style={{
 						paddingVertical: 15
 					}}
-				> {contextObject.currentUser.facebookToken.name} </Text>
+				> {contextObject.currentUser.facebookToken.name} </Text>}
 			</View>
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />

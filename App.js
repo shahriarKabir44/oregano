@@ -17,7 +17,7 @@ export default function App() {
 	React.useEffect(() => {
 		LocalStorageService.get('isLoggedIn')
 			.then(status => {
-				console.log(status == true);
+
 				setAuthorization(status == true);
 			})
 	}, [])

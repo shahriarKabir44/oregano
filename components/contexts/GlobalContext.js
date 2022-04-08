@@ -48,14 +48,18 @@ let users = [
 
 export default function GlobalContext({ children }) {
     React.useEffect(() => {
-        if (isLoggedIn()) {
-            LocalStorageService.get('currentUser')
-                .then(data => {
-                    console.log((data));
-                    setCurrentUser(data)
-                })
+        (isLoggedIn()).then(status => {
+            if (status) {
+                LocalStorageService.get('currentUser')
+                    .then(data => {
+                        setCurrentUser(data)
+                    })
+            }
+
             //LocalStorageService.clearAll()
-        }
+        })
+
+
     }, [])
     const [globalObject, setGlobalObject] = useState({
         isLoggedIn: false,
@@ -96,8 +100,9 @@ export default function GlobalContext({ children }) {
     }
     async function isLoggedIn() {
         let status = await LocalStorageService.get('isLoggedIn');
-        (status.isLoggedIn) ? setGlobalObject({ ...globalObject, isLoggedIn: true }) : setGlobalObject({ ...globalObject, isLoggedIn: false })
-        return status
+
+        status != null ? setGlobalObject({ ...globalObject, isLoggedIn: true }) : setGlobalObject({ ...globalObject, isLoggedIn: false })
+        return status != null// status != null
     }
     async function setLoginStatus(status) {
         await LocalStorageService.store('isLoggedIn', status)
@@ -119,23 +124,25 @@ export default function GlobalContext({ children }) {
                         if (data.length) {
                             geocode = { ...data[0] }
                         }
-                        locationInfo = {
+                        let locationData = {
                             ...locationInfo,
                             currentLocationGeoCode: geocode
                         }
 
-                        setGlobalObject({ ...globalObject, currentLocation: locationInfo })
-                        return geocode
+                        setGlobalObject({ ...globalObject, currentLocation: locationData })
+                        return locationData
                     })
-                    .then(geocode => {
+                    .then(locationData => {
                         fetch(Global.SERVER_URL + '/updateUserLocation', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                locationInfo: JSON.stringify(geocode),
-                                userId: globalObject.currentUser.id
+                                locationInfo: JSON.stringify(locationData.currentLocationGeoCode),
+                                userId: globalObject.currentUser.id,
+                                currentLatitude: locationData.coords.latitude,
+                                currentLongitude: locationData.coords.longitude
                             })
                         }).then(data => {
 
