@@ -1,6 +1,0 @@
-{
-    orderId:{type:mongoose.Objectid},
-    postId:{type:mongoose.Objectid},
-    amount:{type:Number},
-    
-}

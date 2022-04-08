@@ -1,4 +1,0 @@
-{
-    tagName:{type:String},
-    postId:{type:mongoose.ObjectId},
-}
