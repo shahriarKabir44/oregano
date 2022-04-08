@@ -29,6 +29,7 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
                         if (data) {
                             data.facebookToken = JSON.parse(data.facebookToken)
                             data.id = (data._id)
+                            LocalStorageService.store('currentUser', (data))
                             setCurrentUser(data)
                             setExistense(true)
                         }

@@ -47,6 +47,16 @@ let users = [
 ]
 
 export default function GlobalContext({ children }) {
+    React.useEffect(() => {
+        if (isLoggedIn()) {
+            LocalStorageService.get('currentUser')
+                .then(data => {
+                    console.log((data));
+                    setCurrentUser(data)
+                })
+            //LocalStorageService.clearAll()
+        }
+    }, [])
     const [globalObject, setGlobalObject] = useState({
         isLoggedIn: false,
         headerString: "",
@@ -65,7 +75,7 @@ export default function GlobalContext({ children }) {
     })
 
     function setCurrentUser(user) {
-        console.log(user.isRider)
+
         setGlobalObject({ ...globalObject, currentUser: user })
     }
 
