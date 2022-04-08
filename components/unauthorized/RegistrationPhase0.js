@@ -60,7 +60,7 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
             >
                 {accountExists && <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Account already exiists</Text>
+                        <Text style={styles.modalText}>Account already exists</Text>
                         <TouchableOpacity style={{
                             backgroundColor: "#D2F9D4",
                             padding: 10,

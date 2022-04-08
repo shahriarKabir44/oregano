@@ -65,6 +65,7 @@ export default function GlobalContext({ children }) {
     })
 
     function setCurrentUser(user) {
+        console.log(user.isRider)
         setGlobalObject({ ...globalObject, currentUser: user })
     }
 

@@ -3,8 +3,9 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Modal, StyleSheet, Dim
 import LocalStorageService from '../../services/LocalStorageService';
 import { TextInput } from 'react-native-paper'
 import OTPServices from '../../services/OTPServices';
+import { RootContext } from '../contexts/GlobalContext';
 
-function PhoneVerification(props) {
+function PhoneVerification({ setAuthorization }) {
     const [modalVisible, setModalVisible] = React.useState(false);
     const [waitModalVisible, setWaitModalVisible] = React.useState(false)
     const [tempUser, setTempUser] = React.useState({
@@ -25,7 +26,7 @@ function PhoneVerification(props) {
                 setTempUser({ ...data, profilePicture: (`https://graph.facebook.com/${data.id}/picture?type=large`) })
             })
     }, [])
-
+    const rootContext = React.useContext(RootContext)
     function requestOTP() {
         setWaitModalVisible(true)
         OTPServices.getOTP(phoneNumber)
@@ -42,6 +43,34 @@ function PhoneVerification(props) {
                     setWaitModalVisible(false);
                     setReadability(true)
                     setAvailability(true)
+                }
+            })
+    }
+    function validateOTP() {
+
+        OTPServices.confirmOTP({
+            name: tempUser.name,
+            profileImageURL: tempUser.profilePicture
+        }, phoneNumber, OTP, tempUser.id)
+            .then((data) => {
+                if (!data) {
+                    setErrorMessage(<View>
+                        <Text style={styles.modalText}>Invalid OTP</Text>
+                        <Text style={styles.modalText}>Please provide a valid OTP</Text>
+                    </View>)
+                }
+                else {
+                    (async () => {
+                        data.facebookToken = JSON.parse(data.facebookToken)
+                        data.isRider = 0
+                        rootContext.setCurrentUser(data)
+                    })().then(() => {
+                        rootContext.setLoginStatus(true)
+                        setAuthorization(true)
+                    })
+
+
+                    console.log(data);
                 }
             })
     }
@@ -126,22 +155,7 @@ function PhoneVerification(props) {
                     width: Dimensions.get('window').width * 48 / 100,
                     borderRadius: 10
                 }]} onPress={() => {
-                    OTPServices.confirmOTP({
-                        name: tempUser.name,
-                        profileImageURL: tempUser.profilePicture
-                    }, phoneNumber, OTP, tempUser.id)
-                        .then((data) => {
-                            if (!data) {
-                                setErrorMessage(<View>
-                                    <Text style={styles.modalText}>Invalid OTP</Text>
-                                    <Text style={styles.modalText}>Please provide a valid OTP</Text>
-                                </View>)
-                            }
-                            else {
-                                data.facebookToken = JSON.parse(data.facebookToken)
-
-                            }
-                        })
+                    validateOTP()
                 }}>
                     <View>
                         <Text>Confirm OTP</Text>
