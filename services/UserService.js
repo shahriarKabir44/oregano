@@ -231,4 +231,15 @@ export default class UserService {
 
         return data.data.getCreatedPosts
     }
+
+    static async isSignedUp(facebookId) {
+        let { data } = await fetch(Global.SERVER_URL + '/user/isRegistered', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ facebookId: facebookId })
+        }).then(res => res.json())
+        return data
+    }
 }

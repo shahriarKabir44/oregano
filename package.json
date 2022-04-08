@@ -22,7 +22,7 @@
     "@react-navigation/stack": "^6.0.6",
     "expo": "~43.0.2",
     "expo-device": "^4.1.1",
-    "expo-facebook": "~12.0.3",
+    "expo-facebook": "^12.1.1",
     "expo-image-picker": "~11.0.3",
     "expo-location": "~13.0.4",
     "expo-notifications": "^0.14.1",

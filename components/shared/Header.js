@@ -16,12 +16,12 @@ function Header(props) {
             alignContent: "center",
             alignItems: "center"
         }]}>
-            <Text style={{
 
+            <Text style={{
                 paddingTop: 25,
-                fontFamily: "sans-serif",
+                fontFamily: "sans-serif-thin",
                 fontSize: 30
-            }}> Oregano🎂 </Text>
+            }}>Oregano🍽️</Text>
             <View style={styles.horizontal_vert_Align} >
 
                 <EvilIcons onPress={() => {
