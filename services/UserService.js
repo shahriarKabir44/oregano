@@ -152,6 +152,7 @@ export default class UserService {
         return result
     }
     static async getFolloweesPosts(id) {
+        console.log(id)
 
         let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',

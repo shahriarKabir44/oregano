@@ -10,14 +10,14 @@ import UnauthorizedView from './components/UnauthorizedView';
 
 
 export default function App() {
-
+	const [isAuthorized, setAuthorization] = React.useState(false)
 
 	return (
 		<GlobalContext>
-			{/* <NavigationContainer>
-				<StackNavigatorRoot />
-			</NavigationContainer> */}
-			<UnauthorizedView />
+			{isAuthorized && <NavigationContainer>
+				<StackNavigatorRoot setAuthorization={setAuthorization} />
+			</NavigationContainer>}
+			{!isAuthorized && <UnauthorizedView setAuthorization={setAuthorization} />}
 		</GlobalContext>
 	);
 }

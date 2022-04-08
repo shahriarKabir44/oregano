@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Global from '../../services/Globals';
 import LocationService from '../../services/LocationService';
 export const RootContext = React.createContext()
+import LocalStorageService from '../../services/LocalStorageService'
 let users = [
     {
         id: ("6236374dcf2e2a30d240b3c6"),
@@ -47,6 +48,7 @@ let users = [
 
 export default function GlobalContext({ children }) {
     const [globalObject, setGlobalObject] = useState({
+        isLoggedIn: false,
         headerString: "",
         tagList: [],
         currentUser: users[2],
@@ -62,6 +64,10 @@ export default function GlobalContext({ children }) {
         expoPushToken: ""
     })
 
+    function setCurrentUser(user) {
+        setGlobalObject({ ...globalObject, currentUser: user })
+    }
+
     function updatePushToken(token) {
         fetch(Global.SERVER_URL + '/updatePushToken', {
             method: 'POST',
@@ -76,6 +82,15 @@ export default function GlobalContext({ children }) {
     }
     function setHeaderString(title) {
         setGlobalObject({ ...globalObject, headerString: title })
+    }
+    async function isLoggedIn() {
+        let status = await LocalStorageService.get('isLoggedIn');
+        (status.isLoggedIn) ? setGlobalObject({ ...globalObject, isLoggedIn: true }) : setGlobalObject({ ...globalObject, isLoggedIn: false })
+        return status
+    }
+    async function setLoginStatus(status) {
+        await LocalStorageService.store('isLoggedIn', status)
+        setGlobalObject({ ...globalObject, isLoggedIn: status })
     }
     function updateCurrentLocationInfo() {
         LocationService.getCurrentLocation()
@@ -124,7 +139,10 @@ export default function GlobalContext({ children }) {
             updateContext: setGlobalObject,
             updateCurrentLocationInfo: updateCurrentLocationInfo,
             setHeaderString: setHeaderString,
-            updatePushToken: updatePushToken
+            updatePushToken: updatePushToken,
+            setCurrentUser: setCurrentUser,
+            setLoginStatus: setLoginStatus,
+            isLoggedIn: isLoggedIn
         }}>
             {children}
         </RootContext.Provider>

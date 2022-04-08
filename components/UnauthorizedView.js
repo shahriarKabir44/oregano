@@ -1,9 +1,13 @@
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { View, Text, Image, TouchableOpacity, SafeAreaView, Alert } from 'react-native'
+import { View, Text, Image, TouchableOpacity, SafeAreaView, Alert, Modal, StyleSheet } from 'react-native'
 import * as Facebook from 'expo-facebook'
 import UserService from '../services/UserService';
-function UnauthorizedView(props) {
+import { RootContext } from './contexts/GlobalContext';
+function UnauthorizedView({ setAuthorization }) {
+    const { setCurrentUser, setLoginStatus } = React.useContext(RootContext)
+    const [modalVisible, setModalVisible] = React.useState(false)
+    const [accountExists, setExistense] = React.useState(false)
     async function logIn() {
         try {
             await Facebook.initializeAsync({
@@ -11,7 +15,7 @@ function UnauthorizedView(props) {
             });
             const { type, token, expirationDate, permissions, declinedPermissions } =
                 await Facebook.logInWithReadPermissionsAsync({
-                    permissions: ['public_profile'],
+                    permissions: ['public_profile', 'email'],
                 });
             if (type === 'success') {
                 const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
@@ -19,7 +23,13 @@ function UnauthorizedView(props) {
                 UserService.isSignedUp(res.id)
                     .then(data => {
                         if (data) {
-                            Alert.alert(`Hi ${res.name}!`, `Welcome back to Oregano!`);
+                            data.facebookToken = JSON.parse(data.facebookToken)
+                            data.id = (data._id)
+
+                            setCurrentUser(data)
+
+                            setExistense(true)
+                            setModalVisible(true)
 
                         }
 
@@ -41,6 +51,30 @@ function UnauthorizedView(props) {
             justifyContent: 'center',
             backgroundColor: "#c2ec7c"
         }}>
+            <Modal
+                animationType="slide"
+                transparent={1 == 1}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                {accountExists && <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Account already exiists</Text>
+                        <TouchableOpacity style={{
+                            backgroundColor: "#D2F9D4",
+                            padding: 10,
+                            margin: 10
+                        }} onPress={() => {
+                            setLoginStatus(true)
+                            setAuthorization(true)
+                        }}>
+                            <Text>Go to home</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>}
+            </Modal>
             <View style={{
                 padding: 10,
                 backgroundColor: "#ADE550",
@@ -78,5 +112,29 @@ function UnauthorizedView(props) {
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+})
 
 export default UnauthorizedView;

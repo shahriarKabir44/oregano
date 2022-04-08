@@ -51,9 +51,11 @@ function Home(props) {
 
     async function loadPosts() {
         setRefreshing(true)
+
         return Promise.all([
             UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
                 .then(data => {
+
                     setSubscribedPosts(data)
                     setIsLoaded(true)
                 }),
