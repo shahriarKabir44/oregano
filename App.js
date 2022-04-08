@@ -14,27 +14,40 @@ import LocalStorageService from './services/LocalStorageService';
 export default function App() {
 	const [isAuthorized, setAuthorization] = React.useState(false)
 	const [registrationStep, setRegistrationStep] = React.useState(0)
+	const [loadWhiteScreen, setWhiteScreen] = React.useState(true)
+	function setAuthorizationValue(status) {
+		setTimeout(() => {
+			setWhiteScreen(false);
+			setAuthorization(status == true);
+		}, 10)
+	}
 	React.useEffect(() => {
 		LocalStorageService.get('isLoggedIn')
 			.then(status => {
 
-				setAuthorization(status == true);
+				setTimeout(() => {
+					setWhiteScreen(false);
+					setAuthorization(status == true);
+				}, 10)
 			})
 	}, [])
 	return (
 		<GlobalContext>
 
-			{!isAuthorized && registrationStep == 0 && <RegistrationPhase0 setRegistrationStep={setRegistrationStep} setAuthorization={setAuthorization} />}
-			{!isAuthorized && registrationStep == 1 && <PhoneVerification setRegistrationStep={setRegistrationStep} setAuthorization={setAuthorization} />}
-			{isAuthorized && <NavigationContainer>
-				<StackNavigatorRoot setAuthorization={setAuthorization} />
+			{!isAuthorized && !loadWhiteScreen && registrationStep == 0 && <RegistrationPhase0 setRegistrationStep={setRegistrationStep} setAuthorization={setAuthorizationValue} />}
+			{!isAuthorized && !loadWhiteScreen && registrationStep == 1 && <PhoneVerification setRegistrationStep={setRegistrationStep} setAuthorization={setAuthorizationValue} />}
+			{isAuthorized && !loadWhiteScreen && <NavigationContainer>
+				<StackNavigatorRoot setAuthorization={setAuthorizationValue} />
 			</NavigationContainer>}
+			{loadWhiteScreen && <WhiteScreen />}
 		</GlobalContext>
 	);
 }
 
 
-
+function WhiteScreen(props) {
+	return (<View></View>)
+}
 
 const styles = StyleSheet.create({
 

@@ -52,20 +52,21 @@ export default function GlobalContext({ children }) {
             if (status) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
+                        console.log(data);
                         setCurrentUser(data)
                     })
             }
-
             //LocalStorageService.clearAll()
         })
 
 
     }, [])
+    const [currentUser, setUser] = React.useState(null)
     const [globalObject, setGlobalObject] = useState({
         isLoggedIn: false,
         headerString: "",
         tagList: [],
-        currentUser: users[2],
+        currentUser: null,
         currentLocation: {
             coords: {
                 latitude: 0,

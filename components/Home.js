@@ -12,6 +12,7 @@ import PostService from '../services/PostService';
 import UserService from '../services/UserService';
 import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
+import LocalStorageService from '../services/LocalStorageService';
 
 
 Notifications.setNotificationHandler({
@@ -48,7 +49,7 @@ function Home(props) {
     const [subscribedPosts, setSubscribedPosts] = useState([])
     const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
-
+    const [currentUser, setCurrentUser] = React.useState(null)
     async function loadPosts() {
         setRefreshing(true)
 
@@ -74,7 +75,9 @@ function Home(props) {
         loadPosts().then(() => setRefreshing(false));
     }, []);
     useEffect(() => {
+        LocalStorageService.get('currentUser').then((data) => {
 
+        })
         registerForPushNotificationsAsync().then(token => {
             rootContext.updatePushToken(token)
             setExpoPushToken(token)
