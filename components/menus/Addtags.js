@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper'
 import { Entypo } from '@expo/vector-icons';
 
-import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Button, ScrollView, FlatList } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import RemovableTag from '../shared/RemovableTag';
+import Global from '../../services/Globals';
 
 
 function Addtags(props) {
@@ -17,8 +18,8 @@ function Addtags(props) {
 
     const [tags, setAvailableTags] = useState([])
     useEffect(() => {
-        setSelected(props.route.params.selectedNames)
-        fetch('http://192.168.43.90:3000/getAvailableTags')
+        setSelected(props.selectedNames)
+        fetch(Global.SERVER_URL + '/getAvailableTags')
             .then(response => response.json())
             .then(({ data }) => {
                 setAvailableTagList(data)
@@ -26,7 +27,7 @@ function Addtags(props) {
             })
             .then((data) => {
                 let tempAvailable = data
-                for (let tag of props.route.params.selectedNames) {
+                for (let tag of props.selectedNames) {
                     tempAvailable = tempAvailable.filter(tagName => tagName != tag)
                 }
                 setAvailableTags(tempAvailable)
@@ -74,33 +75,42 @@ function Addtags(props) {
             flex: 1,
             padding: 10
         }}>
-            <ScrollView>
-                <TextInput
-                    label="Tag name"
-                    value={searchText}
-                    onChangeText={text => search(text)}
-                />
-                {selected.length > 0 && <View style={{
-                    margin: 10
-                }}>
-                    <Text style={{
-                        fontSize: 20
-                    }}> Selected </Text>
-                    <View style={{
-                        display: "flex",
-                        flexDirection: 'row',
-
-                    }} >
-
-                        {selected.map((name, index) => <RemovableTag key={index} name={name} removeTag={() => {
-                            removeTag(name)
-                        }} />)}
-                    </View>
-                </View>}
+            <TextInput
+                label="Tag name"
+                value={searchText}
+                onChangeText={text => search(text)}
+            />
+            {selected.length > 0 && <View style={{
+                margin: 10
+            }}>
                 <Text style={{
-                    padding: 5,
-                    fontSize: 25
-                }}>Available tags:</Text>
+                    fontSize: 20
+                }}> Selected </Text>
+                <View style={{
+
+                }} >
+
+                    <FlatList
+                        horizontal={true}
+                        data={selected}
+                        keyExtractor={tag => tag}
+                        renderItem={(tag) => {
+                            return <RemovableTag name={tag.item} removeTag={() => {
+                                removeTag(tag.item)
+                            }} />
+
+                        }}
+                    />
+
+
+                </View>
+            </View>}
+            <Text style={{
+                padding: 5,
+                fontSize: 25
+            }}>Available tags:</Text>
+            <ScrollView>
+
                 {!doesSearchExist && <View>
                     <TouchableOpacity style={[styles.alighnHorizontal, {
                         paddingHorizontal: 10
@@ -132,14 +142,14 @@ function Addtags(props) {
                     })}
                 </View>}
             </ScrollView>
+
+
             <TouchableOpacity onPress={() => {
-                props.navigation.navigate('Create post', {
-                    tags: selected
-                })
+                props.setSelectedTags(selected)
             }}>
                 <View style={{
                     backgroundColor: "#FFA500",
-                    height: 60,
+                    height: 40,
                     justifyContent: "center",
                     alignItems: "center"
                 }}>

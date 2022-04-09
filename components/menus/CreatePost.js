@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, FlatList, StyleSheet, Image, Button, TouchableOpacity, ToastAndroid, Modal } from 'react-native';
+import { View, Text, ScrollView, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, ToastAndroid, Modal } from 'react-native';
 import { TextInput } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -11,6 +11,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { RootContext } from '../contexts/GlobalContext'
 import LocationService from '../../services/LocationService';
 import PostService from '../../services/PostService';
+import Addtags from './Addtags';
 
 function CreatePost(props) {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -37,6 +38,7 @@ function CreatePost(props) {
 		district: "",
 		city: "",
 	})
+	const [tagSelectionModal, setTagSelectionModalVisibility] = React.useState(false)
 	async function setGeoInfo() {
 		let coords = await LocationService.getCurrentLocation()
 		setCurrentLocation({
@@ -116,6 +118,24 @@ function CreatePost(props) {
 					</View>
 				</View>
 			</Modal>
+			<Modal
+				animationType="slide"
+				transparent={1 == 1}
+				visible={tagSelectionModal}
+				onRequestClose={() => {
+					setTagSelectionModalVisibility(!tagSelectionModal);
+				}}
+			>
+				<View style={styles.centeredView1}>
+					<View style={styles.modalView1}>
+						<Addtags {...props} setSelectedTags={(tagList) => {
+							console.log(tagList)
+							setItemProperty({ ...item, tags: tagList })
+							setTagSelectionModalVisibility(!tagSelectionModal);
+						}} selectedNames={item.tags} />
+					</View>
+				</View>
+			</Modal>
 			<ScrollView style={{
 
 				backgroundColor: "white",
@@ -171,10 +191,11 @@ function CreatePost(props) {
 						}}
 					/>
 					<Button title='+ Add tags' onPress={() => {
-						TagsSelectionService.setTagList(item.tags)
-						props.navigation.push('Add tags', {
-							selectedNames: item.tags
-						})
+						// TagsSelectionService.setTagList(item.tags)
+						// props.navigation.push('Add tags', {
+						// 	selectedNames: item.tags
+						// })
+						setTagSelectionModalVisibility(1 == 1)
 					}} />
 					{item.tags.length > 0 && <View style={{
 						margin: 10
@@ -285,6 +306,31 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 		padding: 35,
 		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5
+	},
+	centeredView1: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 22,
+		width: Dimensions.get('window').width,
+		height: Dimensions.get('window').height,
+	},
+	modalView1: {
+		width: Dimensions.get('window').width * .8,
+		height: Dimensions.get('window').height * .8,
+
+		backgroundColor: "white",
+		borderRadius: 20,
+
+
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
