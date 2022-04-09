@@ -83,8 +83,11 @@ export default function GlobalContext({ children }) {
     })
 
     function setCurrentUser(user) {
+        LocalStorageService.store('currentUser', user)
+            .then(() => {
+                setGlobalObject({ ...globalObject, currentUser: user })
 
-        setGlobalObject({ ...globalObject, currentUser: user })
+            })
     }
 
     function updatePushToken(token) {

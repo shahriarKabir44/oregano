@@ -3,9 +3,10 @@ import { View, Image, StyleSheet, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { RootContext } from '../contexts/GlobalContext';
 import { RadioButton, TextInput } from 'react-native-paper';
+import UserService from '../../services/UserService';
 
 function RegisterRider(props) {
-    const { contextObject, updateContext, setHeaderString } = React.useContext(RootContext)
+    const { setCurrentUser, setHeaderString, getCurrentuser } = React.useContext(RootContext)
     React.useEffect(() => {
         setHeaderString("Become a rider")
     }, [])
@@ -47,8 +48,46 @@ function RegisterRider(props) {
                     flexWrap: "wrap"
                 }}>I accept the terms and conditions</Text>
             </View>
+            <TouchableOpacity onPress={() => {
+                if (!isAccepted) {
+                    UserService.registerRider(getCurrentuser().id)
+                        .then(() => {
+                            setCurrentUser({
+                                ...getCurrentuser(),
+                                isRider: 1
+                            })
+                            return 1
+                        })
+                        .then(() => {
+                            props.drawerNav.navigate("Home")
+                        })
+                }
+
+            }}>
+                <View style={[styles.footer, {
+                    backgroundColor: isAccepted ? "#c4c4c4" : "#FFA500",
+                }]}>
+                    <Text>Register</Text>
+                </View>
+            </TouchableOpacity>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+
+    footer: {
+
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    bottomNavigationView: {
+        backgroundColor: '#fff',
+        width: '100%',
+        height: Dimensions.get('window').height * 0.33,
+        borderRadius: 10
+    },
+})
 
 export default RegisterRider;
