@@ -1,12 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Dimensions, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Dimensions, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
 import RatingServices from '../../../services/RatingServices'
 import { RootContext } from '../../contexts/GlobalContext';
-
+import { Entypo } from '@expo/vector-icons';
 import PostCardRootProfile from './PostCardRootProfile';
 import UserService from '../../../services/UserService';
 import { useIsFocused } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import { BottomSheet } from 'react-native-btr';
+import LocalStorageService from '../../../services/LocalStorageService';
+
+
 function UserProfile(props) {
+    const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
+    async function handleUpload() {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [16, 9],
+            quality: 1,
+            base64: true
+        })
+        if (result) {
+            if (!result.cancelled) {
+                let imageUriSplit = result.uri.split(".")
+                let newImage = {
+                    body: result.uri,
+
+                    base64: `data:image/${imageUriSplit[imageUriSplit.length - 1]};base64,${result.base64}`,
+                    type: imageUriSplit[imageUriSplit.length - 1],
+                }
+                setTempCoverPhoto(newImage)
+                setImageUploadBottomSheetVisibility(true)
+
+            }
+        }
+    }
+
+
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
     const [isFollowing, setConnection] = React.useState(true)
     const rootContext = React.useContext(RootContext)
@@ -25,6 +56,7 @@ function UserProfile(props) {
         totalItemsDelivered: 0,
 
     })
+    const [imageUploadBottomSheet, setImageUploadBottomSheetVisibility] = React.useState(false)
     const isFocused = useIsFocused()
     const [userPosts, setPostList] = useState([])
     const [isLoaded, setLoadedStatus] = useState(false)
@@ -113,6 +145,13 @@ function UserProfile(props) {
         <View style={{
             flex: 1
         }}>
+            <CoverPhotoBottomSheet onUploadComplete={(imageURL) => {
+                let newFacebookToken = {
+                    ...UserProfileInfo.facebookToken,
+                    coverPhotoURL: imageURL
+                }
+                setUserInfo({ ...UserProfileInfo, facebookToken: newFacebookToken })
+            }} tempImage={tempCoverPhoto} popupBottomSheet={setImageUploadBottomSheetVisibility} bottomSheetVisibility={imageUploadBottomSheet} />
             {isLoaded && <View>
                 <ScrollView>
                     <View>
@@ -125,6 +164,9 @@ function UserProfile(props) {
                             }} source={{
                                 uri: UserProfileInfo.facebookToken.coverPhotoURL
                             }} />
+                            {isCurrentUser && <Entypo name="camera" onPress={() => {
+                                handleUpload()
+                            }} size={24} color="black" />}
                             <Image style={{
                                 width: '40%',
                                 aspectRatio: 1,
@@ -221,11 +263,95 @@ function UserProfile(props) {
         </View>
     );
 }
+
+
+
+function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempImage, onUploadComplete }) {
+    const { contextObject, setCurrentUser } = React.useContext(RootContext)
+    return (<View>
+        <BottomSheet visible={bottomSheetVisibility}
+            onBackButtonPress={() => {
+
+            }}
+            onBackdropPress={() => {
+
+            }}
+        >
+            <View style={styles.bottomNavigationView}>
+                {tempImage && <View style={[{
+                    flex: 1
+                }]}>
+                    <ScrollView>
+                        <Image style={{
+                            width: '100%',
+                            aspectRatio: 4 / 3,
+                            borderWidth: 1,
+                            borderColor: "black"
+                        }} source={{ uri: tempImage.body }} />
+                    </ScrollView>
+                    <View style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}>
+                        <TouchableOpacity onPress={() => {
+                            UserService.updateCoverPhoto(contextObject.currentUser.id, contextObject.currentUser.facebookToken, tempImage)
+                                .then(data => {
+                                    const newUser = {
+                                        ...contextObject.currentUser,
+                                        facebookToken: data
+                                    }
+
+                                    LocalStorageService.store('currentUser', newUser)
+                                        .then(() => {
+                                            setCurrentUser(newUser)
+                                            popupBottomSheet(false)
+                                            onUploadComplete(newUser.facebookToken.coverPhotoURL)
+                                            ToastAndroid.showWithGravity(
+                                                "Image uploaded succesfully!",
+                                                ToastAndroid.SHORT,
+                                                ToastAndroid.BOTTOM
+                                            )
+                                        })
+
+                                })
+                        }} style={{
+                            padding: 10,
+                            backgroundColor: "#c4c4c4",
+                            borderRadius: 5
+                        }}>
+                            <Text>Set as cover photo</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            popupBottomSheet(false)
+                        }} style={{
+                            padding: 10,
+                            backgroundColor: "#c4c4c4",
+                            borderRadius: 5
+                        }}>
+                            <Text>Discard</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>}
+            </View>
+        </BottomSheet>
+    </View>)
+}
+
+
 const styles = StyleSheet.create({
     horizontalAlign: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: "space-between"
+    },
+    bottomNavigationView: {
+        backgroundColor: '#fff',
+        width: '100%',
+        height: Dimensions.get('window').height * 0.5,
+        borderRadius: 10,
+        padding: 10,
+
     }
 })
 export default UserProfile;
