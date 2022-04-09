@@ -269,6 +269,7 @@ export default class UserService {
         return data
     }
     static async getLocalUsers(region, userId) {
+        console.log(region, userId);
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
@@ -289,7 +290,30 @@ export default class UserService {
         }).then(res => res.json())
         return data.findLocalUsers
     }
-    static async searchUser(name, phone) {
-
+    static async searchUser(query) {
+        let { data } = await fetch(Global.searchServerURL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    searchUser(query: "${query}") {
+                      name
+                      id
+                      personalInfo{
+                        profileImageURL
+                      }
+                      locationInfoJson{
+                        city
+                        region
+                        district
+                      }
+                    }
+                  }
+                  `
+            })
+        }).then(res => res.json())
+        return data.searchUser
     }
 }

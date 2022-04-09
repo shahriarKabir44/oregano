@@ -112,8 +112,8 @@ export default function GlobalContext({ children }) {
         await LocalStorageService.store('isLoggedIn', status)
         setGlobalObject({ ...globalObject, isLoggedIn: status })
     }
-    function updateCurrentLocationInfo() {
-        LocationService.getCurrentLocation()
+    async function updateCurrentLocationInfo() {
+        return LocationService.getCurrentLocation()
             .then(coords => {
                 let locationInfo = {
                     coords: {

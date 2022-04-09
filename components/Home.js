@@ -12,6 +12,7 @@ import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
 import LocalStorageService from '../services/LocalStorageService';
 import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
+import SearchBottomSheet from './shared/SearchBottomSheet';
 
 
 Notifications.setNotificationHandler({
@@ -50,39 +51,54 @@ function Home(props) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null)
     const [localUsers, setLocalUsers] = React.useState([])
-    async function loadPosts() {
+    async function loadLocalDatas() {
+        return Promise.all([
+            UserService.getLocalUsers(rootContext.getCurrentLocationGeocode().region, rootContext.getCurrentuser().id)
+                .then(data => {
+                    setLocalUsers(data);
+                }),
+            PostService.findLocalPosts()
+                .then(data => {
+                    setIsLocalPostsLoaded(1 == 1)
+                    setlocalPostList(data)
+                }),
+        ])
+    }
+
+    async function loadData() {
         setRefreshing(true)
 
+        loadPosts()
+            .then(() => {
+                rootContext.updateCurrentLocationInfo()
+                    .then(() => {
+                        loadLocalDatas()
+                            .then(() => setRefreshing(false));
+                    })
+
+            })
+    }
+    async function loadPosts() {
         return Promise.all([
             UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
                 .then(data => {
 
                     setSubscribedPosts(data)
                     setIsLoaded(true)
-                }),
-
-            PostService.findLocalPosts()
-                .then(data => {
-                    setIsLocalPostsLoaded(1 == 1)
-                    setlocalPostList(data)
-                }),
-            UserService.getLocalUsers(rootContext.getCurrentLocationGeocode().region, rootContext.getCurrentuser().id)
-                .then(data => {
-
-                    setLocalUsers(data);
                 })
+
         ]).then(() => {
-            setRefreshing(false)
+
         })
 
     }
     const onRefresh = React.useCallback(() => {
-        loadPosts().then(() => setRefreshing(false));
-    }, []);
-    useEffect(() => {
-        LocalStorageService.get('currentUser').then((data) => {
+        loadData()
 
-        })
+    }, []);
+    const [searchBottomSheet, setBottomsheetVisible] = React.useState(false)
+    useEffect(() => {
+
         registerForPushNotificationsAsync().then(token => {
             rootContext.updatePushToken(token)
             setExpoPushToken(token)
@@ -95,9 +111,10 @@ function Home(props) {
         });
 
 
-        loadPosts()
+        loadData()
 
-        rootContext.updateCurrentLocationInfo()
+
+
 
 
         return () => {
@@ -109,6 +126,7 @@ function Home(props) {
         <SafeAreaView style={{
             flex: 1
         }}>
+            <SearchBottomSheet {...props} popupBottomSheet={setBottomsheetVisible} bottomSheetVisibility={searchBottomSheet} />
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 style={{
@@ -162,7 +180,9 @@ function Home(props) {
                                 paddingLeft: 5
                             }}
                         >People near you</Text>
-                        <AntDesign style={{
+                        <AntDesign onPress={() => {
+                            setBottomsheetVisible(true)
+                        }} style={{
                             marginLeft: 20
                         }} name="search1" size={24} color="black" />
                     </View>
