@@ -58,8 +58,7 @@ function CreatePost(props) {
 		if (isFocused) {
 
 			setItemProperty({ ...item, postedBy: rootContext.contextObject.currentUser.id })
-			rootContext.updateContext({ ...rootContext.contextObject, headerString: "Create a post" })
-			setItemProperty({ ...item, tags: props.route.params ? [...props.route.params.tags] : [] })
+			setItemProperty({ ...item, tags: [] })
 		}
 
 	}, [isFocused])
@@ -270,7 +269,8 @@ function CreatePost(props) {
 											ToastAndroid.SHORT,
 											ToastAndroid.BOTTOM
 										)
-										props.navigation.navigate('HomeView')
+										props.popupBottomSheet(false)
+										if (props.onComplete) props.onComplete()
 									})
 							})
 					})

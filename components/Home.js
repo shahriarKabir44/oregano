@@ -13,6 +13,7 @@ import PostCard from './shared/PostCard';
 import LocalStorageService from '../services/LocalStorageService';
 import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 import SearchBottomSheet from './shared/SearchBottomSheet';
+import CreatePostBottomSheet from './shared/CreatePostBottomSheet';
 
 
 Notifications.setNotificationHandler({
@@ -96,6 +97,7 @@ function Home(props) {
         loadData()
 
     }, []);
+    const [createPostBottomSheetVisibility, popupCreatePostBottomSheet] = React.useState(false)
     const [searchBottomSheet, setBottomsheetVisible] = React.useState(false)
     useEffect(() => {
 
@@ -126,6 +128,7 @@ function Home(props) {
         <SafeAreaView style={{
             flex: 1
         }}>
+            <CreatePostBottomSheet {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
             <SearchBottomSheet {...props} popupBottomSheet={setBottomsheetVisible} bottomSheetVisibility={searchBottomSheet} />
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -205,8 +208,8 @@ function Home(props) {
 
             }} >
                 <TouchableOpacity onPress={() => {
-                    rootContext.updateContext({ ...rootContext.contextObject, headerString: 'Create a post!' })
-                    props.stackNav.push("Create post")
+
+                    popupCreatePostBottomSheet(true)
                 }}>
                     <Text style={{
                         color: "white",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Dimensions, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid } from 'react-native';
 import RatingServices from '../../../services/RatingServices'
 import { RootContext } from '../../contexts/GlobalContext';
 import { Entypo } from '@expo/vector-icons';
@@ -9,7 +9,8 @@ import { useIsFocused } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { BottomSheet } from 'react-native-btr';
 import LocalStorageService from '../../../services/LocalStorageService';
-
+import { Ionicons } from '@expo/vector-icons';
+import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
 
 function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
@@ -61,35 +62,34 @@ function UserProfile(props) {
     const [userPosts, setPostList] = useState([])
     const [isLoaded, setLoadedStatus] = useState(false)
     const [tagRatingList, setTagRatingList] = React.useState([])
-    function getUserTagRatings(userId) {
-        RatingServices.getTagRatings(userId)
-            .then(data => {
-                setTagRatingList(data)
-            })
-    }
-    useEffect(() => {
-        if (isFocused) {
-            if (!props.route?.params?.id) {
-                setCurrentUserFlag(true)
-                setUserInfo(rootContext.contextObject.currentUser)
-                rootContext.setHeaderString('Your profile')
-                UserService.getPosts(rootContext.contextObject.currentUser.id)
-                    .then(posts => {
-                        setPostList(posts)
+    const [createPostBottomSheetVisibility, popupCreatePostBottomSheet] = React.useState(false)
+    const [refreshing, setRefreshing] = React.useState(false);
 
-                    })
-                    .then(() => {
-                        setLoadedStatus(true)
-                    })
-                getUserTagRatings(rootContext.contextObject.currentUser.id)
-            }
-            else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
-                setCurrentUserFlag(false)
-                getUserTagRatings(props.route?.params?.id)
+    async function loadData() {
+        setRefreshing(true)
+        if (!props.route?.params?.id) {
+            setCurrentUserFlag(true)
+            setUserInfo(rootContext.contextObject.currentUser)
+            rootContext.setHeaderString('Your profile')
+            getUserTagRatings(rootContext.contextObject.currentUser.id)
+            return UserService.getPosts(rootContext.contextObject.currentUser.id)
+                .then(posts => {
+                    setPostList(posts)
+
+                })
+                .then(() => {
+                    setLoadedStatus(true)
+                })
+
+        }
+        else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
+            setCurrentUserFlag(false)
+            getUserTagRatings(props.route?.params?.id)
+            return Promise.all([
                 UserService.isFollowing(rootContext.contextObject.currentUser.id, props.route?.params?.id)
                     .then((data) => {
                         setConnection(data)
-                    })
+                    }),
                 UserService.findUser(props.route?.params?.id)
                     .then(data => {
                         setUserInfo(data)
@@ -105,23 +105,37 @@ function UserProfile(props) {
                                 setLoadedStatus(true)
                             })
                     })
-            }
-            else if (rootContext.contextObject.currentUser.id == props.route?.params?.id) {
-                getUserTagRatings(props.route?.params?.id)
+            ])
 
-                setCurrentUserFlag(true)
-                setUserInfo(rootContext.contextObject.currentUser)
-                rootContext.setHeaderString('Your profile')
-                UserService.getPosts(rootContext.contextObject.currentUser.id)
-                    .then(posts => {
-                        setPostList(posts)
 
-                    })
-                    .then(() => {
-                        setLoadedStatus(true)
-                    })
-            }
         }
+        else if (rootContext.contextObject.currentUser.id == props.route?.params?.id) {
+            getUserTagRatings(props.route?.params?.id)
+
+            setCurrentUserFlag(true)
+            setUserInfo(rootContext.contextObject.currentUser)
+            rootContext.setHeaderString('Your profile')
+            return UserService.getPosts(rootContext.contextObject.currentUser.id)
+                .then(posts => {
+                    setPostList(posts)
+
+                })
+                .then(() => {
+                    setLoadedStatus(true)
+                })
+        }
+    }
+
+    function getUserTagRatings(userId) {
+        RatingServices.getTagRatings(userId)
+            .then(data => {
+                setTagRatingList(data)
+            })
+    }
+    useEffect(() => {
+        loadData().then(() => {
+            setRefreshing(1 == 0)
+        })
 
 
     }, [isFocused])
@@ -140,11 +154,17 @@ function UserProfile(props) {
             })
     }
 
-
+    const onRefresh = React.useCallback(() => {
+        loadData()
+            .then(() => {
+                setRefreshing(1 == 0)
+            })
+    }, []);
     return (
         <View style={{
             flex: 1
         }}>
+            <CreatePostBottomSheet {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
             <CoverPhotoBottomSheet onUploadComplete={(imageURL) => {
                 let newFacebookToken = {
                     ...UserProfileInfo.facebookToken,
@@ -153,7 +173,10 @@ function UserProfile(props) {
                 setUserInfo({ ...UserProfileInfo, facebookToken: newFacebookToken })
             }} tempImage={tempCoverPhoto} popupBottomSheet={setImageUploadBottomSheetVisibility} bottomSheetVisibility={imageUploadBottomSheet} />
             {isLoaded && <View>
-                <ScrollView>
+                <ScrollView
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+
+                >
                     <View>
                         <View style={{
                             height: Dimensions.get('window').width * 9 / 16 + Dimensions.get('window').width * .2
@@ -249,10 +272,21 @@ function UserProfile(props) {
                         </View>
 
                     </View>
-                    <Text style={{
-                        fontSize: 20,
-                        padding: 10
-                    }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} Posts </Text>
+                    <View style={[styles.horizontalAlign, {
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        alignContent: "center",
+                    }]}>
+                        <Text style={{
+                            fontSize: 20,
+                            padding: 10
+                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} Posts </Text>
+                        <Ionicons onComlete={() => {
+                            onRefresh()
+                        }} onPress={() => {
+                            popupCreatePostBottomSheet(1 == 1)
+                        }} name="add-circle-outline" size={24} color="black" />
+                    </View>
                     <View style={{
                         padding: 10
                     }}>
