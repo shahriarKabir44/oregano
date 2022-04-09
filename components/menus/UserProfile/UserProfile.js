@@ -164,7 +164,9 @@ function UserProfile(props) {
         <View style={{
             flex: 1
         }}>
-            <CreatePostBottomSheet {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
+            <CreatePostBottomSheet onComlete={() => {
+                onRefresh()
+            }}  {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
             <CoverPhotoBottomSheet onUploadComplete={(imageURL) => {
                 let newFacebookToken = {
                     ...UserProfileInfo.facebookToken,
@@ -281,9 +283,7 @@ function UserProfile(props) {
                             fontSize: 20,
                             padding: 10
                         }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} Posts </Text>
-                        <Ionicons onComlete={() => {
-                            onRefresh()
-                        }} onPress={() => {
+                        <Ionicons onPress={() => {
                             popupCreatePostBottomSheet(1 == 1)
                         }} name="add-circle-outline" size={24} color="black" />
                     </View>
