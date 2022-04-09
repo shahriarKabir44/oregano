@@ -19,6 +19,7 @@ import { RootContext } from '../contexts/GlobalContext';
 import AssignedDeliveries from '../shared/AssignedDeliveries';
 import DeliveryHistory from '../menus/DeliveryHistory';
 import OrderHistory from '../menus/OrderHistory/OrderHistory';
+import RegisterRider from '../menus/RegisterRider';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation }) {
 	const { contextObject } = React.useContext(RootContext)
@@ -65,6 +66,17 @@ export default function DrawerRoot({ navigation }) {
 				}
 			}} name="Assigned deliveries" >
 				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
+			</Drawer.Screen>}
+
+			{contextObject.currentUser && <Drawer.Screen options={{
+				header: (prop) => {
+					return <CustomHeader name={"Become a rider"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				},
+				drawerItemStyle: {
+					display: !contextObject.currentUser.isRider ? 'flex' : 'none'
+				}
+			}} name="Become a rider" >
+				{props => <RegisterRider drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}
 
 			{contextObject.currentUser && <Drawer.Screen options={{

@@ -5,7 +5,7 @@ import * as Facebook from 'expo-facebook'
 import UserService from '../../services/UserService';
 import { RootContext } from '../contexts/GlobalContext';
 import LocalStorageService from '../../services/LocalStorageService';
-import Environment from '../../environment';
+import Environment from '../../Environment';
 function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
     const { setCurrentUser, setLoginStatus } = React.useContext(RootContext)
     const [modalVisible, setModalVisible] = React.useState(false)
