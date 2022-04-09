@@ -152,7 +152,6 @@ export default class UserService {
         return result
     }
     static async getFolloweesPosts(id) {
-        console.log(id)
 
         let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
@@ -251,7 +250,6 @@ export default class UserService {
     }
 
     static async updateCoverPhoto(userId, facebookToken, image) {
-        console.log(userId);
         let imageURL = await UserService.uploadCoverPhoto(userId, image)
         let newFacebookToken = {
             ...facebookToken,
@@ -269,5 +267,29 @@ export default class UserService {
             body: JSON.stringify({ facebookId: facebookId })
         }).then(res => res.json())
         return data
+    }
+    static async getLocalUsers(region, userId) {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    findLocalUsers(region:"${region}",userId:"${userId}"){
+                      name 
+                      id
+                      phone
+                      personalInfo{
+                        profileImageURL
+                      }
+                    }
+                  }`
+            })
+        }).then(res => res.json())
+        return data.findLocalUsers
+    }
+    static async searchUser(name, phone) {
+
     }
 }

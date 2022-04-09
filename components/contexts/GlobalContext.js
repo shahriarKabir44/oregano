@@ -62,6 +62,9 @@ export default function GlobalContext({ children }) {
 
     }, [])
     const [currentUser, setUser] = React.useState(null)
+    function getCurrentLocationGeocode() {
+        return globalObject.currentLocation.currentLocationGeoCode
+    }
     const [globalObject, setGlobalObject] = useState({
         isLoggedIn: false,
         headerString: "",
@@ -127,7 +130,8 @@ export default function GlobalContext({ children }) {
                         }
                         let locationData = {
                             ...locationInfo,
-                            currentLocationGeoCode: geocode
+                            currentLocationGeoCode: geocode,
+                            region: geocode.region
                         }
 
                         setGlobalObject({ ...globalObject, currentLocation: locationData })
@@ -140,6 +144,7 @@ export default function GlobalContext({ children }) {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
+                                region: locationData.region,
                                 locationInfo: JSON.stringify(locationData.currentLocationGeoCode),
                                 userId: globalObject.currentUser.id,
                                 currentLatitude: locationData.coords.latitude,
@@ -161,7 +166,11 @@ export default function GlobalContext({ children }) {
             updatePushToken: updatePushToken,
             setCurrentUser: setCurrentUser,
             setLoginStatus: setLoginStatus,
-            isLoggedIn: isLoggedIn
+            isLoggedIn: isLoggedIn,
+            getCurrentLocationGeocode: getCurrentLocationGeocode,
+            getCurrentuser: () => {
+                return globalObject.currentUser
+            }
         }}>
             {children}
         </RootContext.Provider>

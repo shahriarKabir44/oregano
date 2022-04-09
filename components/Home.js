@@ -4,15 +4,14 @@ import { SafeAreaView, ScrollView, RefreshControl, Text, View } from 'react-nati
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-
-
-
+import { AntDesign } from '@expo/vector-icons';
 import { RootContext } from './contexts/GlobalContext'
 import PostService from '../services/PostService';
 import UserService from '../services/UserService';
 import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
 import LocalStorageService from '../services/LocalStorageService';
+import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 
 
 Notifications.setNotificationHandler({
@@ -50,6 +49,7 @@ function Home(props) {
     const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null)
+    const [localUsers, setLocalUsers] = React.useState([])
     async function loadPosts() {
         setRefreshing(true)
 
@@ -65,6 +65,11 @@ function Home(props) {
                 .then(data => {
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
+                }),
+            UserService.getLocalUsers(rootContext.getCurrentLocationGeocode().region, rootContext.getCurrentuser().id)
+                .then(data => {
+
+                    setLocalUsers(data);
                 })
         ]).then(() => {
             setRefreshing(false)
@@ -141,6 +146,28 @@ function Home(props) {
                     >Posts from your area</Text>
                     {!isLocalPostsLoaded && <PostCard post={initialPost} />}
                     {isLocalPostsLoaded && <PostCardRoot {...props} postList={localPostList.filter(post => post.owner.id != rootContext.contextObject.currentUser.id)} />}
+
+                    <View style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+
+                        alignItems: 'center',
+                        alignContent: "center",
+                        padding: 10
+                    }}>
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                marginVertical: 5,
+                                paddingLeft: 5
+                            }}
+                        >People near you</Text>
+                        <AntDesign style={{
+                            marginLeft: 20
+                        }} name="search1" size={24} color="black" />
+                    </View>
+                    <LocalUsersRoot {...props} users={localUsers} />
+
                 </View>
             </ScrollView>
 
@@ -172,6 +199,8 @@ function Home(props) {
         </SafeAreaView>
     );
 }
+
+
 
 
 async function registerForPushNotificationsAsync() {
