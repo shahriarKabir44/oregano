@@ -236,7 +236,7 @@ function DrawerContentRoot(props) {
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />
 			</DrawerContentScrollView>
-			{getCurrentuser().isRider == 1 && <View style={{
+			{getCurrentuser() && getCurrentuser().isRider == 1 && <View style={{
 
 				padding: 10,
 				backgroundColor: "#FFF4F3",
