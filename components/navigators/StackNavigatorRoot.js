@@ -18,21 +18,25 @@ import AssignedDeliveries from '../shared/AssignedDeliveries';
 import AvailableTagsToSearch from '../routed/searchResult/AvailableTagsToSearch';
 
 function StackNavigatorRoot(props) {
+
 	return <Stack.Navigator>
-		<Stack.Screen name='HomeView' component={DrawerRoot} options={{
+		<Stack.Screen name='HomeView' options={{
 			header: (prop) => {
 
 				return <View></View>
 			}
-		}} />
+		}} >
+			{(childProps) => <DrawerRoot {...childProps} setAuthorizationValue={props.setAuthorizationValue} />}
+		</Stack.Screen>
+
+
 		<Stack.Screen name='Post details' options={{
 			header: (prop) => {
 				return <CustomHeader goBackOnly={true} stackNavigation={prop.navigation} name={"Post details"} />
 			}
 		}} component={PostDetails} />
-		<Stack.Screen name='Create post' options={{
-			header: props => <CustomHeader goBackOnly={true} stackNavigation={props.navigation} name={"Create Post"} />
-		}} component={CreatePost} />
+
+
 		<Stack.Screen name='Add tags' component={Addtags} />
 		<Stack.Screen name='Cart'
 			options={{

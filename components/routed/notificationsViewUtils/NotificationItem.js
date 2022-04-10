@@ -34,7 +34,7 @@ function NotificationItem({ notificationItem, navigator }) {
                                     break;
                                 case 9:
                                     navigator.push('profile', {
-                                        id: post.owner.id
+                                        id: notificationItem.relatedSchemaId
                                     })
                                     break;
                             }

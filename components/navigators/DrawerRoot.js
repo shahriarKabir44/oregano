@@ -11,8 +11,7 @@ import Header from '../shared/Header';
 
 import UserProfile from '../menus/UserProfile/UserProfile'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Image, StyleSheet, Text } from 'react-native';
-import CreatePost from '../menus/CreatePost';
+import { View, Image, StyleSheet, Text, TouchableOpacity, Modal, ToastAndroid } from 'react-native';
 import Favourites from '../menus/Favourites'
 import CustomHeader from '../shared/CustomHeader';
 import { RootContext } from '../contexts/GlobalContext';
@@ -20,8 +19,10 @@ import AssignedDeliveries from '../shared/AssignedDeliveries';
 import DeliveryHistory from '../menus/DeliveryHistory';
 import OrderHistory from '../menus/OrderHistory/OrderHistory';
 import RegisterRider from '../menus/RegisterRider';
+import { } from 'react-native-gesture-handler';
+import UserService from '../../services/UserService';
 const Drawer = createDrawerNavigator();
-export default function DrawerRoot({ navigation }) {
+export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 	const { contextObject } = React.useContext(RootContext)
 
 	const stackNavigator = navigation
@@ -30,7 +31,7 @@ export default function DrawerRoot({ navigation }) {
 			initialRouteName='Home'
 
 			drawerContent={(props) => {
-				return <DrawerContentRoot {...props} />
+				return <DrawerContentRoot {...props} setAuthorizationValue={setAuthorizationValue} />
 			}}
 		>
 			{contextObject.currentUser && <Drawer.Screen options={{
@@ -104,29 +105,95 @@ export default function DrawerRoot({ navigation }) {
 }
 
 function DrawerContentRoot(props) {
-	const { updateContext, contextObject } = React.useContext(RootContext)
-	const cookImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4QfHXtZSr7Y9IoJWng-WknDoAHZxbxPC6QQ&usqp=CAU"
+	const { getCurrentuser } = React.useContext(RootContext)
+	const [modalVisible, setModalVisible] = React.useState(false)
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+
+			<Modal
+				animationType="slide"
+				transparent={1 == 1}
+				visible={modalVisible}
+				onRequestClose={() => {
+					setModalVisible(!modalVisible);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View style={styles.modalView}>
+						<Text style={styles.modalText}>Are you sure?</Text>
+						<View style={{
+							display: 'flex',
+							flexDirection: "row",
+							justifyContent: "space-between"
+						}}>
+							<TouchableOpacity onPress={() => {
+								setModalVisible(!modalVisible);
+								UserService.logout(getCurrentuser().id)
+									.then(data => {
+										props.setAuthorizationValue(false)
+										ToastAndroid.showWithGravity(
+											"Hoping to see you again!",
+											ToastAndroid.SHORT,
+											ToastAndroid.BOTTOM
+										)
+									})
+
+							}} style={{
+								padding: 10,
+								borderRadius: 10,
+								margin: 10,
+								backgroundColor: "#FED6D2"
+							}}>
+								<Text>Yes</Text>
+							</TouchableOpacity>
+							<TouchableOpacity style={{
+								padding: 10,
+								borderRadius: 10,
+								margin: 10,
+								backgroundColor: "#90FCA9"
+							}} onPress={() => {
+								setModalVisible(!modalVisible);
+							}}>
+								<Text>No</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</Modal>
+
+
 			<View style={{
 				display: "flex",
 				flexDirection: "row",
 				justifyContent: "space-between",
 				paddingHorizontal: 10
 			}} >
-				{contextObject.currentUser && <Image style={styles.sideMenuProfileIcon} source={{
-					uri: contextObject.currentUser.facebookToken.profileImageURL
+				{getCurrentuser() && <Image style={styles.sideMenuProfileIcon} source={{
+					uri: getCurrentuser().facebookToken.profileImageURL
 				}} />}
-				{contextObject.currentUser && <Text
+				{getCurrentuser() && <Text
 					style={{
 						paddingVertical: 15
 					}}
-				> {contextObject.currentUser.facebookToken.name} </Text>}
+				> {getCurrentuser().facebookToken.name} </Text>}
 			</View>
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />
 			</DrawerContentScrollView>
-
+			<View style={{
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-between",
+				padding: 10,
+				backgroundColor: "#FFF4F3",
+				margin: 20
+			}} >
+				<TouchableOpacity onPress={() => {
+					setModalVisible(true);
+				}}>
+					<Text>Log out</Text>
+				</TouchableOpacity>
+			</View>
 		</SafeAreaView>
 	)
 }
@@ -138,5 +205,26 @@ const styles = StyleSheet.create({
 		width: 50,
 		height: 50,
 		borderRadius: 100 / 2
-	}
+	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 22
+	},
+	modalView: {
+		margin: 20,
+		backgroundColor: "white",
+		borderRadius: 20,
+		padding: 35,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5
+	},
 })
