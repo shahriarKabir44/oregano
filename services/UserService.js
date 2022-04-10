@@ -2,6 +2,19 @@ import postList from "../components/postList";
 import Global from "./Globals";
 
 export default class UserService {
+    static async logout(userId) {
+        let { data } = await fetch(Global.SERVER_URL + '/user/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+
+            })
+        }).then(response => response.json())
+        return data
+    }
     static async unFollow(followeeId, followerId) {
         let { data } = await fetch(Global.SERVER_URL + '/connection/unFollow', {
             method: 'POST',

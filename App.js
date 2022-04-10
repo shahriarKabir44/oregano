@@ -19,16 +19,17 @@ export default function App() {
 		setTimeout(() => {
 			setWhiteScreen(false);
 			setAuthorization(status == true);
+			if (!(status == true)) {
+				LocalStorageService.clearAll()
+
+			}
 		}, 100)
 	}
 	React.useEffect(() => {
 		LocalStorageService.get('isLoggedIn')
 			.then(status => {
 
-				setTimeout(() => {
-					setWhiteScreen(false);
-					setAuthorization(status == true);
-				}, 100)
+				setAuthorizationValue(status)
 			})
 	}, [])
 	return (
@@ -37,7 +38,7 @@ export default function App() {
 			{!isAuthorized && !loadWhiteScreen && registrationStep == 0 && <RegistrationPhase0 setRegistrationStep={setRegistrationStep} setAuthorization={setAuthorizationValue} />}
 			{!isAuthorized && !loadWhiteScreen && registrationStep == 1 && <PhoneVerification setRegistrationStep={setRegistrationStep} setAuthorization={setAuthorizationValue} />}
 			{isAuthorized && !loadWhiteScreen && <NavigationContainer>
-				<StackNavigatorRoot setAuthorization={setAuthorizationValue} />
+				<StackNavigatorRoot setAuthorizationValue={setAuthorizationValue} />
 			</NavigationContainer>}
 			{loadWhiteScreen && <WhiteScreen />}
 		</GlobalContext>
