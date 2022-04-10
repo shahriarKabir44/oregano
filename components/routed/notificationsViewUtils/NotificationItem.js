@@ -32,6 +32,11 @@ function NotificationItem({ notificationItem, navigator }) {
                                         postId: notificationItem.relatedSchemaId,
                                     })
                                     break;
+                                case 9:
+                                    navigator.push('profile', {
+                                        id: post.owner.id
+                                    })
+                                    break;
                             }
 
 

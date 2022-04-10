@@ -283,9 +283,9 @@ function UserProfile(props) {
                             fontSize: 20,
                             padding: 10
                         }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} Posts </Text>
-                        <Ionicons onPress={() => {
+                        {isCurrentUser && <Ionicons onPress={() => {
                             popupCreatePostBottomSheet(1 == 1)
-                        }} name="add-circle-outline" size={24} color="black" />
+                        }} name="add-circle-outline" size={24} color="black" />}
                     </View>
                     <View style={{
                         padding: 10

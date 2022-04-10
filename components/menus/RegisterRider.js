@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { RootContext } from '../contexts/GlobalContext';
 import { RadioButton, TextInput } from 'react-native-paper';

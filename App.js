@@ -19,7 +19,7 @@ export default function App() {
 		setTimeout(() => {
 			setWhiteScreen(false);
 			setAuthorization(status == true);
-		}, 10)
+		}, 100)
 	}
 	React.useEffect(() => {
 		LocalStorageService.get('isLoggedIn')
@@ -28,7 +28,7 @@ export default function App() {
 				setTimeout(() => {
 					setWhiteScreen(false);
 					setAuthorization(status == true);
-				}, 10)
+				}, 100)
 			})
 	}, [])
 	return (

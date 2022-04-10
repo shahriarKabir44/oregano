@@ -56,10 +56,12 @@ function Home(props) {
         return Promise.all([
             UserService.getLocalUsers(rootContext.getCurrentLocationGeocode().region, rootContext.getCurrentuser().id)
                 .then(data => {
+                    console.log(data)
                     setLocalUsers(data);
                 }),
             PostService.findLocalPosts()
                 .then(data => {
+
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
                 }),

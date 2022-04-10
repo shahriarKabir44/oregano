@@ -131,6 +131,7 @@ export default function GlobalContext({ children }) {
                         if (data.length) {
                             geocode = { ...data[0] }
                         }
+                        console.log(geocode)
                         let locationData = {
                             ...locationInfo,
                             currentLocationGeoCode: geocode,

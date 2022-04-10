@@ -326,4 +326,14 @@ export default class UserService {
         }).then(res => res.json())
         return data
     }
+    static async unRegisterRider(userId) {
+        let { data } = await fetch(Global.SERVER_URL + '/user/unRegisterRider', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId: userId })
+        }).then(res => res.json())
+        return data
+    }
 }
