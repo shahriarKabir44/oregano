@@ -116,7 +116,7 @@ export default function GlobalContext({ children }) {
         setGlobalObject({ ...globalObject, isLoggedIn: status })
     }
     async function updateCurrentLocationInfo() {
-        return LocationService.getCurrentLocation()
+        let locationInfo = await LocationService.getCurrentLocation()
             .then(coords => {
                 let locationInfo = {
                     coords: {
@@ -124,42 +124,38 @@ export default function GlobalContext({ children }) {
                     }
                 }
                 return locationInfo
-            }).then(locationInfo => {
-                LocationService.getLocationGeocode(locationInfo.coords)
-                    .then(data => {
-                        let geocode = {}
-                        if (data.length) {
-                            geocode = { ...data[0] }
-                        }
-                        console.log(geocode)
-                        let locationData = {
-                            ...locationInfo,
-                            currentLocationGeoCode: geocode,
-                            region: geocode.region
-                        }
-
-                        setGlobalObject({ ...globalObject, currentLocation: locationData })
-                        return locationData
-                    })
-                    .then(locationData => {
-                        fetch(Global.SERVER_URL + '/updateUserLocation', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                region: locationData.region,
-                                locationInfo: JSON.stringify(locationData.currentLocationGeoCode),
-                                userId: globalObject.currentUser.id,
-                                currentLatitude: locationData.coords.latitude,
-                                currentLongitude: locationData.coords.longitude
-                            })
-                        }).then(data => {
-
-                        })
-                    })
-
             })
+        let geocodeData = await LocationService.getLocationGeocode(locationInfo.coords)
+
+        let geocode = {}
+        if (geocodeData.length) {
+            geocode = { ...geocodeData[0] }
+        }
+
+        let locationData = {
+            ...locationInfo,
+            currentLocationGeoCode: geocode,
+            region: geocode.region
+        }
+
+        setGlobalObject({ ...globalObject, currentLocation: locationData })
+        await fetch(Global.SERVER_URL + '/updateUserLocation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                region: locationData.region,
+                locationInfo: JSON.stringify(locationData.currentLocationGeoCode),
+                userId: globalObject.currentUser.id,
+                currentLatitude: locationData.coords.latitude,
+                currentLongitude: locationData.coords.longitude
+            })
+        }).then(res => res.json())
+
+        return locationData.currentLocationGeoCode
+
+
     }
     return (
         <RootContext.Provider value={{

@@ -295,7 +295,6 @@ export default class UserService {
         return data
     }
     static async getLocalUsers(region, userId) {
-        console.log(region, userId);
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {

@@ -52,11 +52,11 @@ function Home(props) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null)
     const [localUsers, setLocalUsers] = React.useState([])
-    async function loadLocalDatas() {
+    async function loadLocalDatas(region) {
         return Promise.all([
-            UserService.getLocalUsers(rootContext.getCurrentLocationGeocode().region, rootContext.getCurrentuser().id)
+            UserService.getLocalUsers(region, rootContext.getCurrentuser().id)
                 .then(data => {
-                    console.log(data)
+
                     setLocalUsers(data);
                 }),
             PostService.findLocalPosts()
@@ -74,8 +74,9 @@ function Home(props) {
         loadPosts()
             .then(() => {
                 rootContext.updateCurrentLocationInfo()
-                    .then(() => {
-                        loadLocalDatas()
+                    .then((data) => {
+                        console.log(data);
+                        loadLocalDatas(data.region)
                             .then(() => setRefreshing(false));
                     })
 
