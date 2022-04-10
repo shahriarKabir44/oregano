@@ -105,8 +105,9 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 }
 
 function DrawerContentRoot(props) {
-	const { getCurrentuser } = React.useContext(RootContext)
+	const { getCurrentuser, setCurrentUser } = React.useContext(RootContext)
 	const [modalVisible, setModalVisible] = React.useState(false)
+	const [unRegisterModal, toggleUnregisterModal] = React.useState(false)
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 
@@ -162,6 +163,61 @@ function DrawerContentRoot(props) {
 			</Modal>
 
 
+			<Modal
+				animationType="slide"
+				transparent={1 == 1}
+				visible={unRegisterModal}
+				onRequestClose={() => {
+					toggleUnregisterModal(!unRegisterModal);
+				}}
+			>
+				<View style={styles.centeredView}>
+					<View style={styles.modalView}>
+						<Text style={styles.modalText}>Are you sure?</Text>
+						<View style={{
+							display: 'flex',
+							flexDirection: "row",
+							justifyContent: "space-between"
+						}}>
+							<TouchableOpacity onPress={() => {
+								toggleUnregisterModal(false);
+								UserService.unRegister(getCurrentuser().id)
+									.then(data => {
+										setCurrentUser({
+											...getCurrentuser(),
+											isRider: 2
+										})
+
+										ToastAndroid.showWithGravity(
+											"You are no longer a rider",
+											ToastAndroid.SHORT,
+											ToastAndroid.BOTTOM
+										)
+									})
+
+							}} style={{
+								padding: 10,
+								borderRadius: 10,
+								margin: 10,
+								backgroundColor: "#FED6D2"
+							}}>
+								<Text>Yes</Text>
+							</TouchableOpacity>
+							<TouchableOpacity style={{
+								padding: 10,
+								borderRadius: 10,
+								margin: 10,
+								backgroundColor: "#90FCA9"
+							}} onPress={() => {
+								toggleUnregisterModal(!unRegisterModal);
+							}}>
+								<Text>No</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+			</Modal>
+
 			<View style={{
 				display: "flex",
 				flexDirection: "row",
@@ -180,13 +236,27 @@ function DrawerContentRoot(props) {
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />
 			</DrawerContentScrollView>
-			<View style={{
-				display: "flex",
-				flexDirection: "row",
-				justifyContent: "space-between",
+			{getCurrentuser().isRider == 1 && <View style={{
+
 				padding: 10,
 				backgroundColor: "#FFF4F3",
-				margin: 20
+				marginHorizontal: 20,
+				marginBottom: 10
+			}} >
+				<TouchableOpacity onPress={() => {
+					toggleUnregisterModal(true);
+				}}>
+					<Text>Unregister rider</Text>
+				</TouchableOpacity>
+			</View>}
+
+
+			<View style={{
+
+				padding: 10,
+				backgroundColor: "#FFF4F3",
+				marginHorizontal: 20,
+				marginBottom: 20
 			}} >
 				<TouchableOpacity onPress={() => {
 					setModalVisible(true);

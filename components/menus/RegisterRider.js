@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Text, Dimensions, TouchableOpacity, ToastAndroid } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { RootContext } from '../contexts/GlobalContext';
 import { RadioButton, TextInput } from 'react-native-paper';
@@ -49,7 +49,7 @@ function RegisterRider(props) {
                 }}>I accept the terms and conditions</Text>
             </View>
             <TouchableOpacity onPress={() => {
-                if (!isAccepted) {
+                if (isAccepted) {
                     UserService.registerRider(getCurrentuser().id)
                         .then(() => {
                             setCurrentUser({
@@ -59,13 +59,18 @@ function RegisterRider(props) {
                             return 1
                         })
                         .then(() => {
+                            ToastAndroid.showWithGravity(
+                                "You are now a rider",
+                                ToastAndroid.SHORT,
+                                ToastAndroid.BOTTOM
+                            )
                             props.drawerNav.navigate("Home")
                         })
                 }
 
             }}>
                 <View style={[styles.footer, {
-                    backgroundColor: isAccepted ? "#c4c4c4" : "#FFA500",
+                    backgroundColor: !isAccepted ? "#c4c4c4" : "#FFA500",
                 }]}>
                     <Text>Register</Text>
                 </View>
