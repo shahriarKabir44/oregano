@@ -61,10 +61,14 @@ function PhoneVerification({ setAuthorization }) {
                 else {
                     data.facebookToken = JSON.parse(data.facebookToken)
                     data.isRider = 0
+
                     LocalStorageService.store('currentUser', (data))
                         .then(async () => {
-                            await rootContext.setCurrentUser(data)
-                            await rootContext.setLoginStatus(true)
+
+                            rootContext.setLoginStatus(true)
+                                .then(() => {
+                                    rootContext.setCurrentUser(data)
+                                })
                         })
                         .then(() => {
                             setTimeout(() => {
