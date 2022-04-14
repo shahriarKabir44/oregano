@@ -19,7 +19,7 @@ import AvailableTagsToSearch from '../routed/searchResult/AvailableTagsToSearch'
 
 function StackNavigatorRoot(props) {
 
-	return <Stack.Navigator>
+	return <Stack.Navigator initialRouteName='HomeView'>
 		<Stack.Screen name='HomeView' options={{
 			header: (prop) => {
 

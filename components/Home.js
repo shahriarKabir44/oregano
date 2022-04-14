@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import PostCardRoot from './shared/PostCardRoot';
-import { SafeAreaView, ScrollView, RefreshControl, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaView, ScrollView, RefreshControl, Text, View, StyleSheet, LogBox, TouchableOpacity } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { AntDesign } from '@expo/vector-icons';
@@ -10,12 +9,11 @@ import PostService from '../services/PostService';
 import UserService from '../services/UserService';
 import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
-import LocalStorageService from '../services/LocalStorageService';
+import ActionButton from 'react-native-action-button';
 import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 import SearchBottomSheet from './shared/SearchBottomSheet';
 import CreatePostBottomSheet from './shared/CreatePostBottomSheet';
-
-
+import Icon from 'react-native-vector-icons/Ionicons';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -26,6 +24,7 @@ Notifications.setNotificationHandler({
 
 
 function Home(props) {
+
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -103,7 +102,7 @@ function Home(props) {
     const [createPostBottomSheetVisibility, popupCreatePostBottomSheet] = React.useState(false)
     const [searchBottomSheet, setBottomsheetVisible] = React.useState(false)
     useEffect(() => {
-
+        LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
         registerForPushNotificationsAsync().then(token => {
             rootContext.updatePushToken(token)
             setExpoPushToken(token)
@@ -153,14 +152,7 @@ function Home(props) {
                     </View>
                     {!isLoaded && <PostCard post={initialPost} />}
                     {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            marginVertical: 5,
-                            paddingLeft: 5
-                        }}
-                    >Available food items</Text>
-                    <AvailableTags navigator={props.stackNav} />
+
                     <Text
                         style={{
                             fontSize: 20,
@@ -197,7 +189,30 @@ function Home(props) {
                 </View>
             </ScrollView>
 
-            <View style={{
+            <ActionButton buttonColor="rgba(231,76,60,1)">
+
+                <ActionButton.Item
+                    buttonColor="#9b59b6"
+                    title="Post what you've cooked"
+                    onPress={() => alert('Added to watch later')}>
+                    <Icon
+                        name="md-camera"
+                        style={styles.actionButtonIcon}
+                    />
+                </ActionButton.Item>
+                <ActionButton.Item
+                    buttonColor="#3498db"
+                    title="Mark Today's available items"
+                    onPress={() => alert('Added to favourite')}>
+                    <Icon
+                        name="md-star"
+                        style={styles.actionButtonIcon}
+                    />
+                </ActionButton.Item>
+
+            </ActionButton>
+
+            {/* <View style={{
                 position: "absolute",
                 borderRadius: 50,
                 height: 60,
@@ -220,7 +235,7 @@ function Home(props) {
                     }}
                     >+</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
 
         </SafeAreaView>
     );
@@ -259,5 +274,30 @@ async function registerForPushNotificationsAsync() {
 
     return token;
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        padding: 10,
+    },
+    titleStyle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        padding: 10,
+    },
+    textStyle: {
+        fontSize: 16,
+        textAlign: 'center',
+        padding: 10,
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
+})
 
 export default Home;

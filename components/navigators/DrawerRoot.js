@@ -21,6 +21,7 @@ import OrderHistory from '../menus/OrderHistory/OrderHistory';
 import RegisterRider from '../menus/RegisterRider';
 import { } from 'react-native-gesture-handler';
 import UserService from '../../services/UserService';
+import TabNavigator from './TabNavigator';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 	const { contextObject } = React.useContext(RootContext)
@@ -40,7 +41,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				},
 
 			}} name="Home">
-				{props => (<Home drawerNav={props.navigation} stackNav={stackNavigator} />)}
+				{props => (<TabNavigator drawerNav={props.navigation} stackNav={stackNavigator} />)}
 			</Drawer.Screen>}
 			{contextObject.currentUser && <Drawer.Screen options={{
 				header: (prop) => {
