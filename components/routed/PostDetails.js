@@ -405,7 +405,7 @@ function PostDetails(props) {
                         }}>
                             <Text style={{
                                 fontSize: 20
-                            }}>Add to cart </Text>
+                            }}>Order now!</Text>
 
                         </TouchableOpacity>
 

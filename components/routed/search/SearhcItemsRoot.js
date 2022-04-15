@@ -52,7 +52,8 @@ function SearhcItemsRoot(props) {
                                         .then(() => {
                                             popupBottomSheet(true)
                                         })
-                                    //   LocalStorageService.removeItem('carts')
+                                    // LocalStorageService.removeItem('storedCooks')
+                                    // LocalStorageService.removeItem('storedItems')
                                 })
 
                         }} style={[styles.horizontalAlign, {

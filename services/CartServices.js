@@ -32,54 +32,42 @@ const CartServices = {
 
     },
     isAddedToCart: async function (cookId, itemName) {
-        let addedItems = await LocalStorageService.get("carts")
-
-        if (!addedItems) return null
-        for (let foodItem of addedItems) {
-
-            if (foodItem.cookId === cookId) {
-                let foodItems = foodItem.items
-                for (let food of foodItems) {
-                    if (food.name === itemName) {
-                        return food
-                    }
-                }
+        let storedCooks = await LocalStorageService.get('storedCooks')
+        let st = new Set(storedCooks)
+        if (!st.has(cookId)) { return null }
+        let items = await LocalStorageService.get('storedItems')
+        for (let item of items) {
+            if (item.cookId == cookId && item.name == itemName) {
+                console.log(item)
+                return item
             }
         }
         return null
     },
     addItem: async function (cookId, item) {
-        let addedItems = await LocalStorageService.get("carts");
-        if (!addedItems) addedItems = []
-        let items = []
-        for (let foodItem of addedItems) {
-            if (foodItem.cookId == cookId) {
-                items = foodItem.items
-            }
+        let storedCooks = await LocalStorageService.get('storedCooks')
+        if (!storedCooks) {
+            storedCooks = []
         }
-
-        items = [...items, item]
-        console.log([...addedItems, {
+        storedCooks = [...new Set([...storedCooks, cookId])]
+        let storedItems = await LocalStorageService.get('storedItems') ? await LocalStorageService.get('storedItems') : []
+        storedItems.push({
+            ...item,
             cookId: cookId,
-            items: items
-        }]);
-        await LocalStorageService.store("carts", [...addedItems, {
-            cookId: cookId,
-            items: items
-        }])
+        })
+        await LocalStorageService.store('storedItems', storedItems)
+        await LocalStorageService.store('storedCooks', storedCooks)
     },
     delete: async function (cookId, itemName) {
-        let addedItems = await LocalStorageService.get("carts")
-
-        if (!addedItems) return null
-        for (let foodItem of addedItems) {
-
-            if (foodItem.cookId === cookId) {
-                foodItem.items = foodItem.items.filter(food => food.name != itemName)
-
-            }
+        let storedItems = await LocalStorageService.get("storedItems")
+        storedItems = storedItems.filter(item => !(item.name == itemName && item.cookId == cookId))
+        await LocalStorageService.store('storedItems', storedItems)
+        let storedCooks = await LocalStorageService.get('storedCooks')
+        for (let item of storedItems) {
+            if (item.cookId == cookId) return
         }
-        await LocalStorageService.store("carts", addedItems)
+        storedCooks = storedCooks.filter(item => !(item.cookId == cookId))
+        await LocalStorageService.store('storedItems', storedItems)
     },
     getcartItems: async function () {
         return await LocalStorageService.get("carts")

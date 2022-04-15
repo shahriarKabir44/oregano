@@ -5,6 +5,9 @@ import LocationView from '../../shared/LocationView'
 import { Ionicons } from '@expo/vector-icons';
 import Collapsible from 'react-native-collapsible';
 import LocationService from '../../../services/LocationService'
+import CartServices from '../../../services/CartServices'
+import { FontAwesome5 } from '@expo/vector-icons';
+
 function ResultBottomSheet(props) {
 
 
@@ -43,7 +46,7 @@ function SearchDetails(props) {
                 console.log(data)
                 setCurrentLocationName(data)
             })
-    })
+    }, [])
     return (
         <View style={{
             flex: 1
@@ -123,20 +126,35 @@ function SearchDetails(props) {
                 }]}>
 
 
-                    {!collapsibleVisibility && <TouchableOpacity style={{
+                    {!props.selectedSearchResult.cartInfo && <TouchableOpacity style={{
                         paddingVertical: 10,
                         paddingHorizontal: 60,
                         backgroundColor: "#77cf8e",
                         borderRadius: 10,
                         marginHorizontal: 10
                     }} onPress={() => {
-                        setCollapsibleVisibility(true)
+                        CartServices.addItem(props.selectedSearchResult.vendor.Id, {
+                            name: props.selectedSearchResult.itemName,
+                            amount: amount
+                        })
+                            .then(() => {
+                                props.setSearchResultItem({
+                                    ...props.selectedSearchResult, cartInfo: {
+                                        name: props.selectedSearchResult.itemName,
+                                        amount: amount
+                                    }
+                                })
+                                return
+                            })
+                            .then(() => {
+                                // add toastAndroid
+                            })
 
                     }} >
-                        <Text>Order now!</Text>
+                        <Text>Add to cart</Text>
                     </TouchableOpacity>}
 
-                    {!collapsibleVisibility && <View style={[styles.alighnHorizontal, {
+                    {!props.selectedSearchResult.cartInfo && <View style={[styles.alighnHorizontal, {
                         marginHorizontal: 10,
                         justifyContent: "space-between"
                     }]}>
@@ -170,39 +188,33 @@ function SearchDetails(props) {
                         </TouchableOpacity>
                     </View>}
 
-                    {collapsibleVisibility && <View style={[styles.alighnHorizontal, {
+                    {props.selectedSearchResult.cartInfo && <View style={[styles.alighnHorizontal, {
                         justifyContent: "space-between",
                         width: "100%"
                     }]}>
-                        <Text>Amount:{amount}</Text>
-                        <Text>Tk.{amount * props.selectedSearchResult.price}</Text>
-                        <TouchableOpacity style={{
-                            backgroundColor: "green",
-                            padding: 10,
-                            borderRadius: 5,
-                        }}>
-                            <Text>Confirm</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            setCollapsibleVisibility(false)
-                        }} style={{
-                            backgroundColor: "red",
-                            padding: 10,
-                            borderRadius: 5,
-                        }}>
-                            <Text>Cancel</Text>
-                        </TouchableOpacity>
+                        <View>
+                            <Text>Amount:{props.selectedSearchResult.cartInfo.amount}</Text>
+                            <Text>Tk.{props.selectedSearchResult.cartInfo.amount * props.selectedSearchResult.price}</Text>
+                        </View>
+
+                        <FontAwesome5 onPress={() => {
+                            CartServices.delete(props.selectedSearchResult.vendor.Id, props.selectedSearchResult.itemName)
+                                .then(() => {
+                                    props.setSearchResultItem({
+                                        ...props.selectedSearchResult, cartInfo: null
+                                    })
+                                    return
+                                })
+                                .then(() => {
+                                    // add toastAndroid
+                                })
+                        }} name="trash" size={24} color="black" />
+
+
                     </View>}
 
                 </View>
-                <Collapsible collapsed={!collapsibleVisibility} align="center">
-                    <View style={{
-                        padding: 10,
-                    }} >
-                        <Text>Location:{currentLocationName}</Text>
-                    </View>
 
-                </Collapsible>
             </View>
         </View>
     )
