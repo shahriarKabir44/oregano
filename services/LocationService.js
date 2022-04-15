@@ -17,7 +17,7 @@ export default class LocationService {
         let currentLocation = await LocationService.getCurrentLocation()
 
         let data = await LocationService.getLocationGeocode(currentLocation)
-        return `${data[0].city},${data[0].district},${data[0].subregion},${data[0].region} `
+        return `${data[0]?.city},${data[0]?.district},${data[0]?.subregion},${data[0]?.region} `
     }
     static async getLocationGeocode(location) {
         let { status } = await Location.requestForegroundPermissionsAsync();

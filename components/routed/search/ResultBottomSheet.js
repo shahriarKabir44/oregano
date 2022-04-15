@@ -33,20 +33,13 @@ function ResultBottomSheet(props) {
 
 
 function SearchDetails(props) {
+    const [selectedSearchResult, setSearchResultItem] = React.useState(props.selectedSearchResult)
     const [amount, setAmount] = React.useState(0)
     function updatecartAmount(inc) {
-        setAmount(Math.max(1, Math.min(amount + inc, props.selectedSearchResult.maxAvailable)))
+        setAmount(Math.max(1, Math.min(amount + inc, selectedSearchResult.maxAvailable)))
     }
 
-    const [currentLocationName, setCurrentLocationName] = React.useState("")
-    const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
-    React.useEffect(() => {
-        LocationService.getCurrentLocationName()
-            .then(data => {
-                console.log(data)
-                setCurrentLocationName(data)
-            })
-    }, [])
+
     return (
         <View style={{
             flex: 1
@@ -57,7 +50,7 @@ function SearchDetails(props) {
             }}>
                 <Text style={{
                     fontSize: 24
-                }}>{props.selectedSearchResult.itemName}</Text>
+                }}>{selectedSearchResult.itemName}</Text>
                 <View style={[styles.alighnHorizontal, {
 
                     alignItems: "center",
@@ -74,19 +67,19 @@ function SearchDetails(props) {
                             aspectRatio: 1,
                             borderRadius: 50,
                         }} source={{
-                            uri: props.selectedSearchResult.relatedPosts[0].images[0]
+                            uri: selectedSearchResult.relatedPosts[0].images[0]
                         }} />
                         <View style={{
                             marginLeft: 20
                         }}>
 
-                            <Text>⭐{props.selectedSearchResult.rating}</Text>
+                            <Text>⭐{selectedSearchResult.rating}</Text>
                             <View style={styles.horizontalAlign}>
                                 <Ionicons name="person" size={15} color="black" />
-                                <Text>{props.selectedSearchResult.ratedBy}</Text>
+                                <Text>{selectedSearchResult.ratedBy}</Text>
 
                             </View>
-                            <Text>💰Tk.{props.selectedSearchResult.price}</Text>
+                            <Text>💰Tk.{selectedSearchResult.price}</Text>
                         </View>
                     </View>
 
@@ -103,14 +96,14 @@ function SearchDetails(props) {
                                 aspectRatio: 1,
                                 borderRadius: 40,
                                 marginRight: 10
-                            }} source={{ uri: props.selectedSearchResult.vendor.facebookToken.profileImageURL }} />
-                            <Text>{props.selectedSearchResult.vendor.name}</Text>
+                            }} source={{ uri: selectedSearchResult.vendor.facebookToken.profileImageURL }} />
+                            <Text>{selectedSearchResult.vendor.name}</Text>
                         </View>
                     </View>
                 </View>
                 <Text>Recent posts</Text>
                 <ScrollView>
-                    {props.selectedSearchResult.relatedPosts.map((item, index) => {
+                    {selectedSearchResult.relatedPosts.map((item, index) => {
                         return <RenderPost {...props} item={item} key={index} />
                     })}
 
@@ -126,25 +119,25 @@ function SearchDetails(props) {
                 }]}>
 
 
-                    {!props.selectedSearchResult.cartInfo && <TouchableOpacity style={{
+                    {!selectedSearchResult.amount && <TouchableOpacity style={{
                         paddingVertical: 10,
                         paddingHorizontal: 60,
                         backgroundColor: "#77cf8e",
                         borderRadius: 10,
                         marginHorizontal: 10
                     }} onPress={() => {
-                        CartServices.addItem(props.selectedSearchResult.vendor, { ...props.selectedSearchResult }, amount)
+                        CartServices.addItem(selectedSearchResult.vendor, { ...selectedSearchResult }, amount)
                             .then(() => {
+                                setSearchResultItem({
+                                    ...selectedSearchResult, amount: amount
+                                })
                                 props.setSearchResultItem({
-                                    ...props.selectedSearchResult, cartInfo: {
-                                        item: props.selectedSearchResult,
-                                        amount: amount,
-                                        cook: props.selectedSearchResult.vendor
-                                    }
+                                    ...selectedSearchResult, amount: amount
                                 })
                                 return
                             })
                             .then(() => {
+                                if (props.onChange) props.onChange()
                                 // add toastAndroid
                             })
 
@@ -152,7 +145,7 @@ function SearchDetails(props) {
                         <Text>Add to cart</Text>
                     </TouchableOpacity>}
 
-                    {!props.selectedSearchResult.cartInfo && <View style={[styles.alighnHorizontal, {
+                    {!selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
                         marginHorizontal: 10,
                         justifyContent: "space-between"
                     }]}>
@@ -186,24 +179,29 @@ function SearchDetails(props) {
                         </TouchableOpacity>
                     </View>}
 
-                    {props.selectedSearchResult.cartInfo && <View style={[styles.alighnHorizontal, {
+                    {selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
                         justifyContent: "space-between",
                         width: "100%"
                     }]}>
                         <View>
-                            <Text>Amount:{props.selectedSearchResult.cartInfo.amount}</Text>
-                            <Text>Tk.{props.selectedSearchResult.cartInfo.amount * props.selectedSearchResult.price}</Text>
+                            <Text>Amount:{selectedSearchResult.amount}</Text>
+                            <Text>Tk.{selectedSearchResult.amount * selectedSearchResult.price}</Text>
                         </View>
 
                         <FontAwesome5 onPress={() => {
-                            CartServices.delete(props.selectedSearchResult.vendor.Id, props.selectedSearchResult.itemName)
+                            CartServices.delete(selectedSearchResult.vendor.Id, selectedSearchResult.itemName)
                                 .then(() => {
+                                    setSearchResultItem({
+                                        ...selectedSearchResult, amount: null
+                                    })
                                     props.setSearchResultItem({
-                                        ...props.selectedSearchResult, cartInfo: null
+                                        ...selectedSearchResult, amount: null
                                     })
                                     return
                                 })
                                 .then(() => {
+                                    if (props.onChange) props.onChange()
+
                                     // add toastAndroid
                                 })
                         }} name="trash" size={24} color="black" />

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Dimensions, Text, View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import CartServices from '../../services/CartServices'
 import { BottomSheet } from 'react-native-btr';
 
-import CartGroup from './cartViewUtils/CartGroup';
+import ResultBottomSheet from '../../components/routed/search/ResultBottomSheet'
 import { RootContext } from '../contexts/GlobalContext'
 import { useIsFocused } from '@react-navigation/native';
 import OrderConfirmation from './cartViewUtils/OrderConfirmation';
 function CartListView(props) {
+    const [dropDownVisibility, popupBottomSheet] = React.useState(false)
     const rootContext = React.useContext(RootContext)
     const [bottomSheetVisibility, setBottomSheetVisibility] = useState(false)
     const [groupedCartList, setCartList] = useState([])
@@ -15,12 +16,22 @@ function CartListView(props) {
     const [shouldRefresh, setRefreshFlag] = useState(false)
     const [isListEmpty, setEmptinessStatus] = useState(false)
     const [orderItems, setOrderItems] = useState([])
+    const [selectedcartItem, setSelectedCartItem] = useState(null)
     function updateCartList() {
 
         rootContext.setHeaderString("Cart")
         CartServices.getcartItems().then(data => {
-            const {cooks,items}=data
-            
+            const { cooks, items } = data
+            for (let cook of cooks) {
+                cook.items = []
+                for (let item of items) {
+                    if (item.vendor.Id == cook.Id) {
+
+                        cook.items.push(item)
+                    }
+                }
+            }
+            setCartList(cooks)
         })
     }
     const isFocused = useIsFocused()
@@ -40,7 +51,45 @@ function CartListView(props) {
 
                     margin: 5
                 }}>
-                    {groupedCartList.map((group, index) => <CartGroup navigation={props.navigation} key={index} group={group} />)}
+                    {groupedCartList.map((group, index) => <View key={index} style={{
+                        marginVertical: 5,
+                        backgroundColor: "#C4C4C4",
+                        borderRadius: 5,
+                        padding: 10
+                    }}>
+                        <Text>From</Text>
+                        <View style={{
+                            display: 'flex',
+                            flexDirection: "row",
+                            alignItems: "center",
+                            alignContent: "center",
+                            margin: 10
+                        }}>
+                            <Image style={{
+                                height: 50,
+                                aspectRatio: 1,
+                                borderRadius: 50,
+                            }} source={{ uri: group.facebookToken.profileImageURL }} />
+                            <Text>{group.name}</Text>
+                        </View>
+                        {group.items.map((item, index1) => <TouchableOpacity key={index1} onPress={() => {
+                            setSelectedCartItem(item)
+                            popupBottomSheet(true)
+                        }}>
+                            <View style={[styles.container, styles.alighnHorizontal]}>
+                                <Image style={{
+                                    height: 50,
+                                    aspectRatio: 1,
+                                    borderRadius: 50,
+                                }} source={{ uri: item.relatedPosts[0]?.images[0] }} />
+                                <View>
+                                    <Text>{item.itemName}</Text>
+                                    <Text>Amount:{item.amount}</Text>
+                                    <Text>Tk.{item.amount * item.price}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>)}
+                    </View >)}
                 </View>
             </ScrollView>
             <View style={{
@@ -79,6 +128,10 @@ function CartListView(props) {
                     <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} orderItems={orderItems} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
+            <ResultBottomSheet {...props} onChange={() => {
+                setRefreshFlag(!shouldRefresh)
+            }} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedcartItem} setSearchResultItem={() => { }} />
+
         </View>
 
     );
@@ -97,5 +150,34 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * 0.33,
         borderRadius: 10
     },
+    alighnHorizontal: {
+        display: "flex",
+        flexDirection: "row",
+        backgroundColor: "white",
+        borderRadius: 10,
+        justifyContent: "space-between",
+        alignContent: "center",
+        alignItems: "center"
+    },
+    container: {
+        justifyContent: "space-between",
+        alignContent: "center",
+        alignItems: "center",
+        margin: 5,
+        padding: 5
+    },
+    info: {
+        flex: 1,
+        paddingHorizontal: 5
+    },
+    updateAmountBtn: {
+        backgroundColor: "#FA01FF",
+        height: 30,
+        aspectRatio: 1,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    }
 })
 export default CartListView;

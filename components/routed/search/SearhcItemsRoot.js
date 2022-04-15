@@ -44,15 +44,15 @@ function SearhcItemsRoot(props) {
                                     CartServices.isAddedToCart(result.vendor.Id + "", result.itemName)
                                         .then(cartData => {
                                             console.log(cartData);
-                                            setSearchResultItem({ ...searchResultInfo, cartInfo: null })
+                                            setSearchResultItem({ ...searchResultInfo, amount: null })
                                             if (cartData) {
-                                                setSearchResultItem({ ...searchResultInfo, cartInfo: cartData })
+                                                setSearchResultItem({ ...searchResultInfo, amount: cartData })
                                             }
                                         })
                                         .then(() => {
                                             popupBottomSheet(true)
                                         })
-                                    // LocalStorageService.removeItem('storedCooks')
+                                    // LocalStorageService.removeItem('storedCookDatas')
                                     // LocalStorageService.removeItem('storedItems')
                                 })
 

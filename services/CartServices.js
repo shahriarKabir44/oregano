@@ -36,7 +36,7 @@ const CartServices = {
         if (!storedItems) return null
         for (let item of storedItems) {
             if (item.itemName === itemName && item.vendor.Id == cookId) {
-                return item
+                return item.amount
             }
         }
 
@@ -64,6 +64,7 @@ const CartServices = {
     },
     delete: async function (cookId, itemName) {
         let storedItems = await LocalStorageService.get("storedItems")
+        console.log(storedItems);
         storedItems = storedItems.filter(item => !(item.itemName == itemName && item.vendor.Id == cookId))
         await LocalStorageService.store('storedItems', storedItems)
         let storedCookDatas = await LocalStorageService.get('storedCookDatas')
