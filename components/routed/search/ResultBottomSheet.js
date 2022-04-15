@@ -133,15 +133,13 @@ function SearchDetails(props) {
                         borderRadius: 10,
                         marginHorizontal: 10
                     }} onPress={() => {
-                        CartServices.addItem(props.selectedSearchResult.vendor.Id, {
-                            name: props.selectedSearchResult.itemName,
-                            amount: amount
-                        })
+                        CartServices.addItem(props.selectedSearchResult.vendor, { ...props.selectedSearchResult }, amount)
                             .then(() => {
                                 props.setSearchResultItem({
                                     ...props.selectedSearchResult, cartInfo: {
-                                        name: props.selectedSearchResult.itemName,
-                                        amount: amount
+                                        item: props.selectedSearchResult,
+                                        amount: amount,
+                                        cook: props.selectedSearchResult.vendor
                                     }
                                 })
                                 return

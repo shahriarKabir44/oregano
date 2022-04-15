@@ -11,7 +11,7 @@ const results = [
                 profileImageURL: "https://graph.facebook.com/656455615445264/picture?type=large"
 
             },
-            expoPushToken: "poop",
+            expoPushToken: "abcd1234",
 
         },
         getLastPost: {

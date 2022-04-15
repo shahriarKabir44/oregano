@@ -18,8 +18,9 @@ function CartListView(props) {
     function updateCartList() {
 
         rootContext.setHeaderString("Cart")
-        CartServices.getcartItems().then(items => {
-            console.log(items)
+        CartServices.getcartItems().then(data => {
+            const {cooks,items}=data
+            
         })
     }
     const isFocused = useIsFocused()
