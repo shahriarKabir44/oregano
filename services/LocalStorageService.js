@@ -14,4 +14,7 @@ export default class LocalStorageService {
     static async clearAll() {
         await AsyncStorage.clear()
     }
+    static async removeItem(label) {
+        await AsyncStorage.removeItem(label)
+    }
 }

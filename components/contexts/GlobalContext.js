@@ -168,6 +168,7 @@ export default function GlobalContext({ children }) {
             setLoginStatus: setLoginStatus,
             isLoggedIn: isLoggedIn,
             getCurrentLocationGeocode: getCurrentLocationGeocode,
+            getCurrentLocationName: LocationService.getCurrentLocationName(),
             getCurrentuser: () => {
                 return globalObject.currentUser
             }

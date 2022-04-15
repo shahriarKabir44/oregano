@@ -8,7 +8,7 @@ const results = [
             name: "Kuddus",
             Id: "1",
             facebookToken: {
-                profileImageURL: "https://media.istockphoto.com/photos/asian-businesswoman-standing-smiling-at-the-camera-picture-id1335295926?b=1&k=20&m=1335295926&s=170667a&w=0&h=6TEcLiO3JwNG3VL2O1LLWGdFgUulikOMqG1cAGixf-E="
+                profileImageURL: "https://graph.facebook.com/656455615445264/picture?type=large"
 
             },
             expoPushToken: "poop",
@@ -28,10 +28,10 @@ const searchResultDetails = {
     lowerCasedName: "cake",
     maxAvailable: 5,
     vendor: {
-        name: "Kuddus",
+        name: "Nusrat Jahan Urme",
         Id: "1",
         facebookToken: {
-            profileImageURL: "https://media.istockphoto.com/photos/asian-businesswoman-standing-smiling-at-the-camera-picture-id1335295926?b=1&k=20&m=1335295926&s=170667a&w=0&h=6TEcLiO3JwNG3VL2O1LLWGdFgUulikOMqG1cAGixf-E="
+            profileImageURL: "https://graph.facebook.com/656455615445264/picture?type=large"
 
         },
         expoPushToken: "poop",
@@ -43,13 +43,8 @@ const searchResultDetails = {
     relatedPosts: [
         {
             postedOn: (new Date()) * 1,
-            images: ["https://upload.wikimedia.org/wikipedia/commons/0/04/Pound_layer_cake.jpg", "https://upload.wikimedia.org/wikipedia/commons/0/04/Pound_layer_cake.jpg"],
+            images: ["https://upload.wikimedia.org/wikipedia/commons/0/04/Pound_layer_cake.jpg", "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmlydGhkYXklMjBjYWtlc3xlbnwwfHwwfHw%3D&w=1000&q=80"],
             Id: "123"
-        },
-        {
-            postedOn: (new Date()) * 1 - 3600 * 1000,
-            images: ["https://upload.wikimedia.org/wikipedia/commons/0/04/Pound_layer_cake.jpg"],
-            Id: "111"
         }
     ]
 

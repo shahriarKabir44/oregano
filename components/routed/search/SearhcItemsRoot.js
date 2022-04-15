@@ -5,13 +5,14 @@ import SearchingServices from '../../../services/SearchingServices';
 import { Ionicons } from '@expo/vector-icons';
 import ResultBottomSheet from './ResultBottomSheet';
 import CartServices from '../../../services/CartServices';
+import LocalStorageService from '../../../services/LocalStorageService';
 function SearhcItemsRoot(props) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
 
     const [searchText, setSearchText] = React.useState("")
     const [searchResult, setSearchResult] = React.useState([])
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)
-    const [dropDownVisibility, setDropLocationMapVisibility] = React.useState(false)
+    const [dropDownVisibility, popupBottomSheet] = React.useState(false)
     function search(query) {
         setSearchText(query)
         SearchingServices.SearhcItems(query)
@@ -42,11 +43,16 @@ function SearhcItemsRoot(props) {
                                 }).then((searchResultInfo) => {
                                     CartServices.isAddedToCart(result.vendor.Id + "", result.itemName)
                                         .then(cartData => {
+                                            console.log(cartData);
+                                            setSearchResultItem({ ...searchResultInfo, cartInfo: null })
                                             if (cartData) {
-                                                setSearchResultItem({ ...searchResultInfo, cartInfo: cartInfo })
+                                                setSearchResultItem({ ...searchResultInfo, cartInfo: cartData })
                                             }
                                         })
-                                    setDropLocationMapVisibility(true)
+                                        .then(() => {
+                                            popupBottomSheet(true)
+                                        })
+                                    //   LocalStorageService.removeItem('carts')
                                 })
 
                         }} style={[styles.horizontalAlign, {
@@ -100,7 +106,7 @@ function SearhcItemsRoot(props) {
                     })}
                 </ScrollView>
             </View>
-            <ResultBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={setDropLocationMapVisibility} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
+            <ResultBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
         </View>
     );
 }

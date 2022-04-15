@@ -16,50 +16,10 @@ function CartListView(props) {
     const [isListEmpty, setEmptinessStatus] = useState(false)
     const [orderItems, setOrderItems] = useState([])
     function updateCartList() {
-        CartServices.getCartList().then(carts => {
-            if (!carts || carts.length == 0) setEmptinessStatus(true)
-            rootContext.updateContext({ ...rootContext.contextObject, headerString: "Cart" })
-            let orderItemList = []
-            let cookIndex = 0
-            let cookIds = {}
-            let cooksPosts = {}
-            for (let n = 0; n < carts.length; n++) {
-                carts[n]['itemIndex'] = n
-                let cookId = carts[n].owner.id
-                if (!cookIds[cookId]) {
-                    cookIds[cookId] = cookIndex++
-                    cooksPosts[cookIds[cookId]] = [{
-                        postId: carts[n].id,
-                        amount: carts[n].amount,
-                        cookId: cookId
-                    }]
 
-                }
-                else {
-                    cooksPosts[cookIds[cookId]].push({
-                        postId: carts[n].id,
-                        amount: carts[n].amount,
-                        cookId: cookId
-                    })
-                }
-                orderItemList.push({
-                    postId: carts[n].id,
-                    amount: carts[n].amount,
-                    cookId: cookId
-                })
-            }
-
-
-            let groupedList = new Array(cookIndex).fill([]).map(item => [])
-            for (let n = 0; n < carts.length; n++) {
-                let itemIndex = cookIds[carts[n].owner.id]
-                groupedList[itemIndex].push(carts[n])
-                carts[n]['groupIndex'] = groupedList[itemIndex].length - 1
-                carts[n]['groupNumber'] = itemIndex
-                setTotalCharge(parseInt(totalCharge) + parseInt(parseInt(carts[n].unitPrice) * parseInt(carts[n].amount)))
-            }
-            setOrderItems(orderItemList);
-            setCartList(groupedList)
+        rootContext.setHeaderString("Cart")
+        CartServices.getcartItems().then(items => {
+            console.log(items)
         })
     }
     const isFocused = useIsFocused()

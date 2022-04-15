@@ -32,24 +32,57 @@ const CartServices = {
 
     },
     isAddedToCart: async function (cookId, itemName) {
-        let items = await LocalStorageService.get(cookId)
-        for (let item of items) {
-            if (item.name == itemName) {
-                return item
+        let addedItems = await LocalStorageService.get("carts")
+
+        if (!addedItems) return null
+        for (let foodItem of addedItems) {
+
+            if (foodItem.cookId === cookId) {
+                let foodItems = foodItem.items
+                for (let food of foodItems) {
+                    if (food.name === itemName) {
+                        return food
+                    }
+                }
             }
         }
-        return false
+        return null
     },
     addItem: async function (cookId, item) {
-        let addedItems = await LocalStorageService.get(cookId);
+        let addedItems = await LocalStorageService.get("carts");
         if (!addedItems) addedItems = []
-        addedItems = [...addedItems, item]
+        let items = []
+        for (let foodItem of addedItems) {
+            if (foodItem.cookId == cookId) {
+                items = foodItem.items
+            }
+        }
+
+        items = [...items, item]
+        console.log([...addedItems, {
+            cookId: cookId,
+            items: items
+        }]);
+        await LocalStorageService.store("carts", [...addedItems, {
+            cookId: cookId,
+            items: items
+        }])
     },
     delete: async function (cookId, itemName) {
-        let addedItems = await LocalStorageService.get(cookId);
-        if (!addedItems) addedItems = []
-        addedItems = addedItems.filter(item => item.name != itemName)
-        await LocalStorageService.store(cookId, addedItems)
+        let addedItems = await LocalStorageService.get("carts")
+
+        if (!addedItems) return null
+        for (let foodItem of addedItems) {
+
+            if (foodItem.cookId === cookId) {
+                foodItem.items = foodItem.items.filter(food => food.name != itemName)
+
+            }
+        }
+        await LocalStorageService.store("carts", addedItems)
+    },
+    getcartItems: async function () {
+        return await LocalStorageService.get("carts")
     }
 }
 export default CartServices
