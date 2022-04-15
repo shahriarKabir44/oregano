@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LocalStorageService from './LocalStorageService'
 const CartServices = {
     setCartList: (cartList) => {
         AsyncStorage.setItem('cartList', JSON.stringify(cartList))
@@ -29,6 +30,26 @@ const CartServices = {
     },
     restructureCartGroups: function (cartGroups) {
 
+    },
+    isAddedToCart: async function (cookId, itemName) {
+        let items = await LocalStorageService.get(cookId)
+        for (let item of items) {
+            if (item.name == itemName) {
+                return item
+            }
+        }
+        return false
+    },
+    addItem: async function (cookId, item) {
+        let addedItems = await LocalStorageService.get(cookId);
+        if (!addedItems) addedItems = []
+        addedItems = [...addedItems, item]
+    },
+    delete: async function (cookId, itemName) {
+        let addedItems = await LocalStorageService.get(cookId);
+        if (!addedItems) addedItems = []
+        addedItems = addedItems.filter(item => item.name != itemName)
+        await LocalStorageService.store(cookId, addedItems)
     }
 }
 export default CartServices

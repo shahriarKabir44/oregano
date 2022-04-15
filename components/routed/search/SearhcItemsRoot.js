@@ -3,9 +3,15 @@ import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'rea
 import { TextInput } from 'react-native-paper'
 import SearchingServices from '../../../services/SearchingServices';
 import { Ionicons } from '@expo/vector-icons';
+import ResultBottomSheet from './ResultBottomSheet';
+import CartServices from '../../../services/CartServices';
 function SearhcItemsRoot(props) {
+    const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
+
     const [searchText, setSearchText] = React.useState("")
     const [searchResult, setSearchResult] = React.useState([])
+    const [selectedSearchResult, setSearchResultItem] = React.useState(null)
+    const [dropDownVisibility, setDropLocationMapVisibility] = React.useState(false)
     function search(query) {
         setSearchText(query)
         SearchingServices.SearhcItems(query)
@@ -29,6 +35,19 @@ function SearhcItemsRoot(props) {
                 <ScrollView>
                     {searchResult.map((result, index) => {
                         return (<TouchableOpacity onPress={() => {
+                            SearchingServices.getDetails(result.vendor.Id, result.itemName)
+                                .then(searchResultInfo => {
+                                    setSearchResultItem(searchResultInfo)
+                                    return searchResultInfo
+                                }).then((searchResultInfo) => {
+                                    CartServices.isAddedToCart(result.vendor.Id + "", result.itemName)
+                                        .then(cartData => {
+                                            if (cartData) {
+                                                setSearchResultItem({ ...searchResultInfo, cartInfo: cartInfo })
+                                            }
+                                        })
+                                    setDropLocationMapVisibility(true)
+                                })
 
                         }} style={[styles.horizontalAlign, {
                             backgroundColor: "#EBFDEF",
@@ -41,7 +60,7 @@ function SearhcItemsRoot(props) {
                                 aspectRatio: 1,
                                 borderRadius: 50
                             }} source={{
-                                uri: result.product.lastPost.images[0]
+                                uri: result.getLastPost.lastPost.images[0]
                             }} />
                             <View style={[styles.horizontalAlign, {
                                 justifyContent: "space-between",
@@ -81,7 +100,7 @@ function SearhcItemsRoot(props) {
                     })}
                 </ScrollView>
             </View>
-
+            <ResultBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={setDropLocationMapVisibility} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
         </View>
     );
 }
