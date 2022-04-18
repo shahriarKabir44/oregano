@@ -254,8 +254,9 @@ export default class PostService {
                 },
                 body: JSON.stringify({
                     userId: userId,
-                    tag: tag,
-                    day: Math.floor(((new Date()) * 1) / (24 * 3600 * 1000))
+                    tag: tag.tag,
+                    day: Math.floor(((new Date()) * 1) / (24 * 3600 * 1000)),
+                    unitPrice: tag.unitPrice
                 })
             }).then(response => response.json()))
         }
@@ -274,7 +275,7 @@ export default class PostService {
         }).then(response => response.json())
         let res = []
         for (let item of data) {
-            res.push(item.tag)
+            res.push({ tag: item.tag, unitPrice: item.unitPrice })
         }
         return res
     }

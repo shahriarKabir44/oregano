@@ -1,21 +1,25 @@
 import React from 'react';
-import { View,Text,StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 
-function RemovableTag({name,removeTag}) {
-         return (
-            <View style={tagStyles.container} >
-                <View style={{
-                    display:"flex",
-                    flexDirection:'row',
-                    
-                }}>
-                <Text> {name} </Text>
-                <Entypo name="circle-with-cross" size={25} onPress={removeTag}  />
-                </View>  
+function RemovableTag({ name, removeTag, unitPrice }) {
+    return (
+        <View style={tagStyles.container} >
+            <View style={{
+                display: "flex",
+                flexDirection: 'row',
+
+            }}>
+                <View>
+                    <Text>{name}</Text>
+                    <Text>Tk.{unitPrice}</Text>
+                </View>
+
+                <Entypo name="circle-with-cross" size={25} onPress={removeTag} />
             </View>
-        );
-    
+        </View>
+    );
+
 }
 const tagStyles = StyleSheet.create({
     container: {
@@ -24,7 +28,7 @@ const tagStyles = StyleSheet.create({
         borderWidth: 2,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        margin:2
+        margin: 2
     }
 })
 export default RemovableTag;

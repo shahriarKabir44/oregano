@@ -1,4 +1,4 @@
-import { SafeAreaView, FlatList, Button, Dimensions, ScrollView, RefreshControl, Text, View, StyleSheet, LogBox, TouchableOpacity } from 'react-native';
+import { ToastAndroid, SafeAreaView, FlatList, Button, Dimensions, ScrollView, Modal, RefreshControl, Text, View, StyleSheet, LogBox, TouchableOpacity } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
 import { TextInput } from 'react-native-paper'
 import Global from '../../services/Globals';
@@ -38,7 +38,9 @@ function MarkAvailableItemsBottomSheet(props) {
                             fontSize: 20
                         }}>Today's available items</Text>
                     </View>
-                    {props.bottomSheetVisibility && <RenderMainComponent {...props} />}
+                    {props.bottomSheetVisibility && <RenderMainComponent onComplete={() => {
+                        props.popupBottomSheet(false)
+                    }} {...props} />}
                 </View>
             </View>
         </BottomSheet>
@@ -49,41 +51,55 @@ function MarkAvailableItemsBottomSheet(props) {
 function RenderMainComponent(props) {
     const { getCurrentuser } = React.useContext(RootContext)
     const [searchText, setSeatchText] = React.useState("")
-    const [selected, setSelected] = React.useState([])
+    const [selected, setSelected] = React.useState([{ tag: "", unitPrice: 0 }])
     const [availableTags, setAvailableTagList] = React.useState([])
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     const [doesSearchExist, setExistence] = React.useState(true)
-
+    const [selectedTag, setSelectedTag] = React.useState({
+        tag: "",
+        unitPrice: 0
+    })
     const [tags, setAvailableTags] = React.useState([])
-    function getAvailableTags() {
+    function getAvailableTags(availables) {
         PostService.getAvailableItemsToday(getCurrentuser().id)
             .then(data => {
-                console.log(data);
+                let tempData = availables
+
+                for (let tag of data) {
+                    let temp = []
+                    for (let entry of tempData) {
+                        if (entry != tag.tag) {
+                            temp.push(entry)
+                        }
+                    }
+
+                    tempData = temp
+
+                }
+                setAvailableTagList(tempData)
+                setAvailableTags(tempData)
+
                 setSelected(data)
             })
     }
     React.useEffect(() => {
-        getAvailableTags()
+
         fetch(Global.SERVER_URL + '/getAvailableTags')
             .then(response => response.json())
             .then(({ data }) => {
                 setAvailableTagList(data)
+                setAvailableTags(data)
                 return data
             })
             .then((data) => {
-                let tempAvailable = data
-
-                setAvailableTags(tempAvailable)
+                getAvailableTags(data)
             })
     }, [])
-    /**
-     * 
-     * @param {String} tag 
-     */
     function addTag(tag) {
-        tag = tag.toLowerCase()
-        setSelected([...selected, tag.toLowerCase()])
-        setAvailableTags(tags.filter(name => name != tag))
+
+        setSelected([...selected, { ...tag, tag: tag.tag.toLowerCase() }])
+        setAvailableTags(tags.filter(item => item.tag != tag.tag))
     }
     function removeTag(tagName) {
         tagName = tagName.toLowerCase()
@@ -112,11 +128,51 @@ function RenderMainComponent(props) {
         flex: 1,
         padding: 10
     }}>
-        <TextInput
-            label="Tag name"
-            value={searchText}
-            onChangeText={text => search(text)}
-        />
+        <Modal
+            animationType="slide"
+            transparent={1 == 1}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(!modalVisible);
+            }}
+        >
+            <View style={styles.centeredView}>
+                <View style={[styles.modalView, {
+                    width: Dimensions.get('window').width * .9
+                }]}>
+                    <Text>Unit price</Text>
+                    <TextInput
+                        style={{ borderWidth: 1, borderColor: "black", width: "100%" }}
+                        label="Price"
+                        keyboardType="numeric"
+                        value={selectedTag.unitPrice + ""}
+                        onChangeText={text => {
+
+                            setSelectedTag({ ...selectedTag, unitPrice: text })
+                        }}
+                    />
+                    <Button title="Done" onPress={() => {
+                        addTag({
+                            ...selectedTag
+                        })
+                        setModalVisible(!modalVisible);
+                    }} />
+                </View>
+            </View>
+        </Modal>
+        <View style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between"
+        }}>
+            <TextInput
+                style={{ flex: 1, borderWidth: 1, borderColor: "black", margin: 2 }}
+                label="Tag name"
+                value={searchText}
+                onChangeText={text => search(text)}
+            />
+
+        </View>
         {selected.length > 0 && <View style={{
             margin: 10
         }}>
@@ -130,9 +186,9 @@ function RenderMainComponent(props) {
                 <FlatList
                     horizontal={true}
                     data={selected}
-                    keyExtractor={tag => tag}
+                    keyExtractor={tag => tag.tag}
                     renderItem={(tag) => {
-                        return <RemovableTag name={tag.item} removeTag={() => {
+                        return <RemovableTag name={tag.item.tag} unitPrice={tag.item.unitPrice} removeTag={() => {
                             removeTag(tag.item)
                         }} />
 
@@ -173,7 +229,8 @@ function RenderMainComponent(props) {
                         margin: 5
                     }}>
                         <Button title={tagName} onPress={() => {
-                            addTag(tagName)
+                            setSelectedTag({ tag: tagName, unitPrice: 0 })
+                            setModalVisible(true)
                         }} />
                     </View>
                 })}
@@ -183,6 +240,14 @@ function RenderMainComponent(props) {
 
         <TouchableOpacity onPress={() => {
             PostService.setAvailableItemsToday(getCurrentuser().id, selected)
+                .then(() => {
+                    ToastAndroid.showWithGravity(
+                        "Done!",
+                        ToastAndroid.SHORT,
+                        ToastAndroid.BOTTOM
+                    )
+                    props.onComplete()
+                })
         }}>
             <View style={{
                 backgroundColor: "#FFA500",
@@ -207,6 +272,27 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
 
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
 })
 
