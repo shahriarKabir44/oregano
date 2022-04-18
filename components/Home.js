@@ -74,7 +74,7 @@ function Home(props) {
             .then(() => {
                 rootContext.updateCurrentLocationInfo()
                     .then((data) => {
-                        console.log(data);
+
                         loadLocalDatas(data.region)
                             .then(() => setRefreshing(false));
                     })

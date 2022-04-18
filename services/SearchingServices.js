@@ -5,13 +5,13 @@ const results = [
         price: 400,
         ratedBy: 5,
         vendor: {
-            name: "Kuddus",
-            Id: "1",
+            name: "Nusrat Jahan Urme",
+            Id: "625502c8769f795e30e79b2a",
             facebookToken: {
                 profileImageURL: "https://graph.facebook.com/656455615445264/picture?type=large"
 
             },
-            expoPushToken: "abcd1234",
+            expoPushToken: "ExponentPushToken[7VU08nDS7lMz5Dy2s30Qwv]",
 
         },
         getLastPost: {
@@ -29,12 +29,12 @@ const searchResultDetails = {
     maxAvailable: 5,
     vendor: {
         name: "Nusrat Jahan Urme",
-        Id: "1",
+        Id: "625502c8769f795e30e79b2a",
         facebookToken: {
             profileImageURL: "https://graph.facebook.com/656455615445264/picture?type=large"
 
         },
-        expoPushToken: "poop",
+        expoPushToken: "ExponentPushToken[7VU08nDS7lMz5Dy2s30Qwv]",
 
     },
     price: 450,

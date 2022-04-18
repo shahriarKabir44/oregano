@@ -35,7 +35,9 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
             })
             setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
             setLoadingStatus(1 == 1)
-        })()
+        })().then(() => {
+
+        })
     }, [])
     function limitText(text) {
         let res = ""
@@ -119,23 +121,23 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                         ...currentLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
                     }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id)
-                        .then(() => {
-                            CartServices.clearAll()
-                                .then(() => {
-                                    setBottomSheetVisibility(false)
-                                })
-                                .then(() => {
-                                    setRefreshFlag(true)
-                                    setTotalCharge(0)
-                                })
-                                .then(() => {
-                                    ToastAndroid.showWithGravity(
-                                        "Order placed succesfully!",
-                                        ToastAndroid.SHORT,
-                                        ToastAndroid.CENTER
-                                    );
-                                })
-                        })
+                    // .then(() => {
+                    //     CartServices.clearAll()
+                    //         .then(() => {
+                    //             setBottomSheetVisibility(false)
+                    //         })
+                    //         .then(() => {
+                    //             setRefreshFlag(true)
+                    //             setTotalCharge(0)
+                    //         })
+                    //         .then(() => {
+                    //             ToastAndroid.showWithGravity(
+                    //                 "Order placed succesfully!",
+                    //                 ToastAndroid.SHORT,
+                    //                 ToastAndroid.CENTER
+                    //             );
+                    //         })
+                    // })
 
 
                 }}>

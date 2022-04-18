@@ -190,13 +190,15 @@ export default class OrderServices {
                 pickupLong: userData.currentLongitude,
                 pickupLocationGeocode: `${userData.locationInfoJson.city} , ${userData.locationInfoJson.district} , ${userData.locationInfoJson.subregion} , ${userData.locationInfoJson.region}`,
                 notificationMessage: notificationMessage,
-                itemsCount: itemsCount
+                itemsCount: itemsCount,
+
             })
         }).then(res => res.json())
         return orderInfo.data
 
     }
     static async createOrderItem(orderItem, orderId) {
+        console.log(orderItem);
         let orderItemData = await fetch(Global.SERVER_URL + '/graphql', {
             method: "POST",
             headers: {
@@ -207,39 +209,32 @@ export default class OrderServices {
                 query: `mutation{
                     createOrderItem(
                       orderId:"${orderId}",
-                      postId:"${orderItem.postId}",
+                      itemName:"${orderItem.itemName}",
+                      lowerCasedName:"${orderItem.lowerCasedName}",
                       amount:${orderItem.amount},
                     ){
-                      postId
+                        orderId
                     }
                   }`
             })
         }).then(res => res.json())
+        console.log(orderItemData);
         return orderItemData.data.createOrderItem
     }
     static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId) {
-        let cooks = new Set()
-        for (let orderItem of orderItems) {
-            cooks.add(orderItem.cookId)
-        }
-        cooks = [...cooks]
 
-        for (let cook of cooks) {
-            let totalItems = 0
-            for (let item of orderItems) {
-                totalItems += item.amount
-
-            }
-            let newOrderId = await OrderServices.createOrder(cook, orderLocationInfo, buyerName, buyerId, totalItems)
+        console.log(buyerName, buyerId);
+        for (let group of orderItems) {
+            let newOrderId = await OrderServices.createOrder(group.Id, orderLocationInfo, "Shahriar Kabir", "625537b08c4194e31ba27925", group.items.length)
             let promises = []
-            for (let item of orderItems) {
-                if (item.cookId == cook) {
-                    promises.push(OrderServices.createOrderItem(item, newOrderId._id))
-                }
+            for (let item of group.items) {
+
+                promises.push(OrderServices.createOrderItem(item, newOrderId._id))
+
             }
             await Promise.all(promises)
-        }
 
+        }
 
     }
 }

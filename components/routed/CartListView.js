@@ -57,7 +57,7 @@ function CartListView(props) {
                         borderRadius: 5,
                         padding: 10
                     }}>
-                        <Text>From</Text>
+
                         <View style={{
                             display: 'flex',
                             flexDirection: "row",
@@ -70,7 +70,12 @@ function CartListView(props) {
                                 aspectRatio: 1,
                                 borderRadius: 50,
                             }} source={{ uri: group.facebookToken.profileImageURL }} />
-                            <Text>{group.name}</Text>
+                            <View>
+                                <Text>From</Text>
+                                <Text>{group.name}</Text>
+
+                            </View>
+
                         </View>
                         {group.items.map((item, index1) => <TouchableOpacity key={index1} onPress={() => {
                             setSelectedCartItem(item)
@@ -82,30 +87,17 @@ function CartListView(props) {
                                     aspectRatio: 1,
                                     borderRadius: 50,
                                 }} source={{ uri: item.relatedPosts[0]?.images[0] }} />
-                                <View>
-                                    <Text>{item.itemName}</Text>
-                                    <Text>Amount:{item.amount}</Text>
-                                    <Text>Tk.{item.amount * item.price}</Text>
-                                </View>
+
+                                <Text>{item.itemName}</Text>
+                                <Text>Amount:{item.amount}</Text>
+                                <Text>Tk.{item.amount * item.price}</Text>
+
                             </View>
                         </TouchableOpacity>)}
                     </View >)}
                 </View>
             </ScrollView>
-            <View style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 10
-            }}>
-                <Text style={{
-                    fontSize: 20
-                }}>Total Charge</Text>
-                <Text style={{
-                    fontSize: 20,
-                    fontWeight: "bold"
-                }}>Tk{totalCharge}</Text>
-            </View>
+
             <TouchableOpacity onPress={() => {
                 if (!isListEmpty) setBottomSheetVisibility(true)
 
@@ -125,7 +117,7 @@ function CartListView(props) {
                 }}
             >
                 <View style={styles.bottomNavigationView}>
-                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} orderItems={orderItems} setBottomSheetVisibility={setBottomSheetVisibility} />
+                    <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} orderItems={groupedCartList} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
             <ResultBottomSheet {...props} onChange={() => {
