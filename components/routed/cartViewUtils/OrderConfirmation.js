@@ -121,23 +121,23 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                         ...currentLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
                     }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id)
-                    // .then(() => {
-                    //     CartServices.clearAll()
-                    //         .then(() => {
-                    //             setBottomSheetVisibility(false)
-                    //         })
-                    //         .then(() => {
-                    //             setRefreshFlag(true)
-                    //             setTotalCharge(0)
-                    //         })
-                    //         .then(() => {
-                    //             ToastAndroid.showWithGravity(
-                    //                 "Order placed succesfully!",
-                    //                 ToastAndroid.SHORT,
-                    //                 ToastAndroid.CENTER
-                    //             );
-                    //         })
-                    // })
+                        .then(() => {
+                            CartServices.clearAll()
+                                .then(() => {
+                                    setBottomSheetVisibility(false)
+                                })
+                                .then(() => {
+                                    setRefreshFlag(true)
+                                    setTotalCharge(0)
+                                })
+                                .then(() => {
+                                    ToastAndroid.showWithGravity(
+                                        "Order placed succesfully!",
+                                        ToastAndroid.SHORT,
+                                        ToastAndroid.CENTER
+                                    );
+                                })
+                        })
 
 
                 }}>

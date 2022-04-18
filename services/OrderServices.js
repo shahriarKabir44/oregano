@@ -218,7 +218,6 @@ export default class OrderServices {
                   }`
             })
         }).then(res => res.json())
-        console.log(orderItemData);
         return orderItemData.data.createOrderItem
     }
     static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId) {

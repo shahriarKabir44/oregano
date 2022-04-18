@@ -36,7 +36,7 @@ function SearchDetails(props) {
     const [selectedSearchResult, setSearchResultItem] = React.useState(props.selectedSearchResult)
     const [amount, setAmount] = React.useState(0)
     function updatecartAmount(inc) {
-        setAmount(Math.max(1, Math.min(amount + inc, selectedSearchResult.maxAvailable)))
+        setAmount(Math.max(1, Math.min(amount + inc, selectedSearchResult.amountProduced)))
     }
 
 

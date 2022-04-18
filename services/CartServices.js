@@ -10,11 +10,11 @@ const CartServices = {
     restructureCartGroups: function (cartGroups) {
 
     },
-    isAddedToCart: async function (cookId, itemName) {
+    isAddedToCart: async function (cookId, lowerCasedName) {
         let storedItems = await LocalStorageService.get('storedItems')
         if (!storedItems) return null
         for (let item of storedItems) {
-            if (item.itemName === itemName && item.vendor.Id == cookId) {
+            if (item.lowerCasedName === lowerCasedName && item.vendor.Id == cookId) {
                 return item.amount
             }
         }
@@ -38,13 +38,13 @@ const CartServices = {
             ...item,
             amount: amount
         })
+        console.log(item);
         await LocalStorageService.store('storedItems', storedItems)
         await LocalStorageService.store('storedCookDatas', storedCookDatas)
     },
-    delete: async function (cookId, itemName) {
+    delete: async function (cookId, lowerCasedName) {
         let storedItems = await LocalStorageService.get("storedItems")
-        console.log(storedItems);
-        storedItems = storedItems.filter(item => !(item.itemName == itemName && item.vendor.Id == cookId))
+        storedItems = storedItems.filter(item => !(item.lowerCasedName == lowerCasedName && item.vendor.Id == cookId))
         await LocalStorageService.store('storedItems', storedItems)
         let storedCookDatas = await LocalStorageService.get('storedCookDatas')
         for (let item of storedItems) {
@@ -55,7 +55,9 @@ const CartServices = {
     },
     getcartItems: async function () {
         let coox = await LocalStorageService.get("storedCookDatas")
+        if (!coox) coox = []
         let items = await LocalStorageService.get("storedItems")
+        if (!items) items = []
         return {
             cooks: coox,
             items: items

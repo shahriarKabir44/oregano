@@ -4,9 +4,9 @@ import CartServices from '../../services/CartServices'
 function AddTocart({ post, togglePopup, addToCart }) {
     const [cartList, setCartList] = useState([])
     useEffect(() => {
-        CartServices.getCartList().then(carts => {
-            setCartList(carts)
-        })
+        // CartServices.getCartList().then(carts => {
+        //     setCartList(carts)
+        // })
     }, [])
     const [itemChosen, setItemChosen] = useState(1)
     function updateAmount(type) {
@@ -92,15 +92,44 @@ function AddTocart({ post, togglePopup, addToCart }) {
                 </View>
             </ScrollView>
             <TouchableOpacity onPress={() => {
+                console.log(post.lowerCasedName);
                 try {
+                    let dataToStore = {
+                        itemName: post.itemName,
+                        lowerCasedName: post.lowerCasedName,
+                        amountProduced: 5,
+                        vendor: {
+                            name: post.owner.name,
+                            Id: post.owner.id,
+                            facebookToken: {
+                                profileImageURL: post.owner.facebookToken.profileImageURL
 
-                    CartServices.setCartList([...cartList, { ...post, amount: itemChosen }])
+                            },
+                            expoPushToken: "ExponentPushToken[7VU08nDS7lMz5Dy2s30Qwv]",
+
+                        },
+                        price: post.unitPrice,
+                        ratedBy: 5,
+                        rating: 4.5,
+                        relatedPosts: [
+                            {
+                                postedOn: post.postedOn,
+                                images: post.images,
+                                Id: post.id
+                            }
+                        ]
+                    }
+
+                    CartServices.addItem(dataToStore.vendor, dataToStore, itemChosen)
+                        .then(() => {
+                            addToCart()
+                            togglePopup(false)
+                        })
                 }
                 catch {
-                    CartServices.setCartList([{ ...post, amount: itemChosen }])
+                    //   CartServices.setCartList([{ ...post, amount: itemChosen }])
                 }
-                addToCart()
-                togglePopup(false)
+
             }}>
                 <View style={styles.footer}>
                     <Text style={{

@@ -93,12 +93,15 @@ export default class PostService {
             body: JSON.stringify({
                 query: `query{findPost(id:"${id}"){
                     images
+                    lowerCasedName
                     itemName
                     id
                     owner{
                       facebookToken
                       id
+                      name
                     }
+                    postedBy
                     tags
                     unitPrice
                     amountProduced
@@ -197,17 +200,19 @@ export default class PostService {
             body: JSON.stringify({
                 query: `query{
                     getPosts {
+                        lowerCasedName
                         itemName
                         images
                         unitType
                         owner{
                           facebookToken
                           id
+                          name
                         }
                         id
                         amountProduced
                         unitPrice
-                         
+                        postedOn
                         tags
                       } 
                 }`

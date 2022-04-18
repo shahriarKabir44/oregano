@@ -26,7 +26,7 @@ const results = [
 const searchResultDetails = {
     itemName: "Cake",
     lowerCasedName: "cake",
-    maxAvailable: 5,
+    amountProduced: 5,
     vendor: {
         name: "Nusrat Jahan Urme",
         Id: "625502c8769f795e30e79b2a",
