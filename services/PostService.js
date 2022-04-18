@@ -244,4 +244,38 @@ export default class PostService {
         }).then(res => res.json())
         return data.getPostRatings
     }
+    static async setAvailableItemsToday(userId, tagList) {
+        let promises = []
+        for (let tag of tagList) {
+            promises.push(fetch(`${Global.SERVER_URL}/posts/updateTags`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    tag: tag,
+                    day: Math.floor(((new Date()) * 1) / (24 * 3600 * 1000))
+                })
+            }).then(response => response.json()))
+        }
+        await Promise.all(promises)
+    }
+    static async getAvailableItemsToday(userId) {
+        let { data } = await fetch(`${Global.SERVER_URL}/posts/getTagsOfToday`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userId,
+                day: Math.floor(((new Date()) * 1) / (24 * 3600 * 1000))
+            })
+        }).then(response => response.json())
+        let res = []
+        for (let item of data) {
+            res.push(item.tag)
+        }
+        return res
+    }
 }

@@ -14,6 +14,7 @@ import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 import SearchBottomSheet from './shared/SearchBottomSheet';
 import CreatePostBottomSheet from './shared/CreatePostBottomSheet';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MarkAvailableItemsBottomSheet from './shared/MarkAvailableItemsBottomSheet';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -30,6 +31,7 @@ function Home(props) {
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    const [showAvailableItemsBottomSheet, toggleAvailableItemsBottomSheet] = useState(false)
 
     const rootContext = React.useContext(RootContext)
 
@@ -113,14 +115,7 @@ function Home(props) {
         });
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
         });
-
-
         loadData()
-
-
-
-
-
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current);
             Notifications.removeNotificationSubscription(responseListener.current);
@@ -130,6 +125,7 @@ function Home(props) {
         <SafeAreaView style={{
             flex: 1
         }}>
+            <MarkAvailableItemsBottomSheet  {...props} bottomSheetVisibility={showAvailableItemsBottomSheet} popupBottomSheet={toggleAvailableItemsBottomSheet} />
             <CreatePostBottomSheet {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
             <SearchBottomSheet {...props} popupBottomSheet={setBottomsheetVisible} bottomSheetVisibility={searchBottomSheet} />
             <ScrollView
@@ -194,7 +190,9 @@ function Home(props) {
                 <ActionButton.Item
                     buttonColor="#9b59b6"
                     title="Post what you've cooked"
-                    onPress={() => alert('Added to watch later')}>
+                    onPress={() => {
+                        popupCreatePostBottomSheet(1 == 1)
+                    }}>
                     <Icon
                         name="md-camera"
                         style={styles.actionButtonIcon}
@@ -203,7 +201,7 @@ function Home(props) {
                 <ActionButton.Item
                     buttonColor="#3498db"
                     title="Mark Today's available items"
-                    onPress={() => alert('Added to favourite')}>
+                    onPress={() => toggleAvailableItemsBottomSheet(2 == 2)}>
                     <Icon
                         name="md-star"
                         style={styles.actionButtonIcon}
