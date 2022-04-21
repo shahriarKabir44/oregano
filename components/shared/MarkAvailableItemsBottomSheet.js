@@ -49,7 +49,7 @@ function MarkAvailableItemsBottomSheet(props) {
 
 
 function RenderMainComponent(props) {
-    const { getCurrentuser } = React.useContext(RootContext)
+    const { getCurrentuser, getCurrentLocationGeocode } = React.useContext(RootContext)
     const [searchText, setSeatchText] = React.useState("")
     const [selected, setSelected] = React.useState([{ tag: "", unitPrice: 0 }])
     const [availableTags, setAvailableTagList] = React.useState([])
@@ -243,7 +243,7 @@ function RenderMainComponent(props) {
 
 
         <TouchableOpacity onPress={() => {
-            PostService.setAvailableItemsToday(getCurrentuser().id, selected)
+            PostService.setAvailableItemsToday(getCurrentuser().id, selected, getCurrentLocationGeocode().city)
                 .then(() => {
                     ToastAndroid.showWithGravity(
                         "Done!",

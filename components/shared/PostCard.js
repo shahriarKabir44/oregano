@@ -15,6 +15,7 @@ function PostCard({ post, drawerNav, stackNav }) {
             overflow: 'hidden',
 
         }} onPress={() => {
+            if (post.id == -1) return;
             stackNav.push('Post details', {
                 postId: post.id,
                 headerString: `${post?.owner?.facebookToken?.name}'s post`

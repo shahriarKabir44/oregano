@@ -244,7 +244,7 @@ export default class PostService {
         }).then(res => res.json())
         return data.getPostRatings
     }
-    static async setAvailableItemsToday(userId, tagList) {
+    static async setAvailableItemsToday(userId, tagList, region) {
         let promises = []
         for (let tag of tagList) {
             promises.push(fetch(`${Global.SERVER_URL}/posts/updateTags`, {
@@ -256,7 +256,8 @@ export default class PostService {
                     userId: userId,
                     tag: tag.tag,
                     day: Math.floor(((new Date()) * 1) / (24 * 3600 * 1000)),
-                    unitPrice: tag.unitPrice
+                    unitPrice: tag.unitPrice,
+                    region: region
                 })
             }).then(response => response.json()))
         }

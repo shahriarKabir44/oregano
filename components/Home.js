@@ -39,7 +39,7 @@ function Home(props) {
     let initialPost = {
         itemName: "Loading..",
         id: -1,
-        images: ["https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/articles/2016/02/plate-1508865660.jpg?crop=1xw:0.75xh;center,top&resize=480:*"],
+        images: ["https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/articles/2016/02/plate-1508865660.jpg?crop=1xw:0.75xh;center,top&resize=480"],
         tags: [],
         owner: {
             facebookToken: {
@@ -210,30 +210,7 @@ function Home(props) {
 
             </ActionButton>
 
-            {/* <View style={{
-                position: "absolute",
-                borderRadius: 50,
-                height: 60,
-                aspectRatio: 1,
-                backgroundColor: "#02DBC6",
-                bottom: 20,
-                right: 20,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
 
-            }} >
-                <TouchableOpacity onPress={() => {
-
-                    popupCreatePostBottomSheet(true)
-                }}>
-                    <Text style={{
-                        color: "white",
-                        fontSize: 30,
-                    }}
-                    >+</Text>
-                </TouchableOpacity>
-            </View> */}
 
         </SafeAreaView>
     );
