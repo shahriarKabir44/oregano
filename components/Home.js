@@ -155,6 +155,14 @@ function Home(props) {
                             marginVertical: 5,
                             paddingLeft: 5
                         }}
+                    >Available Items in your area</Text>
+                    <AvailableTags {...props} />
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            marginVertical: 5,
+                            paddingLeft: 5
+                        }}
                     >Posts from your area</Text>
                     {!isLocalPostsLoaded && <PostCard post={initialPost} />}
                     {isLocalPostsLoaded && <PostCardRoot {...props} postList={localPostList.filter(post => post.owner.id != rootContext.contextObject.currentUser.id)} />}

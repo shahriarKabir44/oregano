@@ -7,7 +7,9 @@ import ResultBottomSheet from './ResultBottomSheet';
 import CartServices from '../../../services/CartServices';
 import LocalStorageService from '../../../services/LocalStorageService';
 import { RootContext } from '../../contexts/GlobalContext';
+import { useIsFocused } from '@react-navigation/native';
 function SearhcItemsRoot(props) {
+    const isFocused = useIsFocused()
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
     const { getCurrentuser, getCurrentLocationGeocode } = React.useContext(RootContext)
     function limitText(text) {
@@ -18,6 +20,12 @@ function SearhcItemsRoot(props) {
         if (text.length > 10) res += "..."
         return res
     }
+    React.useEffect(() => {
+        if (isFocused) {
+            if (props.tabNavRoute.params.query)
+                search(props.tabNavRoute.params.query)
+        }
+    }, [])
     const [searchText, setSearchText] = React.useState("")
     const [searchResult, setSearchResult] = React.useState([])
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)

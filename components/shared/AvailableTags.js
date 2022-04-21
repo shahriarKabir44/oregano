@@ -1,14 +1,26 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Global from '../../services/Globals';
 
 
-function AvailableTags({ navigator }) {
+function AvailableTags(props) {
     const [availableTags, setAvailableTags] = React.useState(["Loading.."])
     React.useEffect(() => {
-        fetch('http://192.168.43.90:3000/getAvailableTags')
+        fetch(Global.searchServerURL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getLocalAvailableItems 
+                  }`
+            })
+
+        })
             .then(response => response.json())
             .then(({ data }) => {
-                setAvailableTags(data);
+                setAvailableTags(data.getLocalAvailableItems);
 
             })
     }, [])
@@ -32,8 +44,8 @@ function AvailableTags({ navigator }) {
                     margin: 5,
 
                 }} key={index} onPress={() => {
-                    navigator.push('searchResult', {
-                        tag: item
+                    props.tabNav.navigate('Search items', {
+                        query: item
                     })
                 }}>
                     <Text style={{

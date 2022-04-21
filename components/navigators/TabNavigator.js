@@ -39,7 +39,7 @@ export default function TabNavigator(props) {
                     return <View></View>
                 }
             }} name="Home" >
-                {(childProp) => <Home {...props} {...childProp} />}
+                {(childProp) => <Home {...props} tabNav={childProp.navigation} />}
 
             </Tab.Screen>
             <Tab.Screen options={{
@@ -47,7 +47,7 @@ export default function TabNavigator(props) {
                     return <View></View>
                 }
             }} name="Search items"  >
-                {(childProp) => <SearhcItemsRoot {...childProp} {...props} />}
+                {(childProp) => <SearhcItemsRoot tabNav={childProp.navigation} tabNavRoute={childProp.route} {...props} />}
             </Tab.Screen>
         </Tab.Navigator>
 
