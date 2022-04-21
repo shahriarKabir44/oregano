@@ -38,8 +38,8 @@ function SearchDetails(props) {
     function updatecartAmount(inc) {
         setAmount(Math.max(1, Math.min(amount + inc, selectedSearchResult.amountProduced)))
     }
-
-
+    const placeHolderImage = "https://previews.123rf.com/images/takasumi/takasumi1510/takasumi151000226/46196249-%E3%83%87%E3%82%A3%E3%83%8A%E3%83%BC%E7%9A%BF%E3%80%81%E3%83%8A%E3%82%A4%E3%83%95%E3%80%81%E3%82%B9%E3%83%97%E3%83%BC%E3%83%B3%E3%80%81%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88-%E3%83%90%E3%83%83%E3%82%AF-%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AF.jpg"
+    const vendorLocationInfo = selectedSearchResult.vendor.locationInfoJson
     return (
         <View style={{
             flex: 1
@@ -67,7 +67,7 @@ function SearchDetails(props) {
                             aspectRatio: 1,
                             borderRadius: 50,
                         }} source={{
-                            uri: selectedSearchResult.relatedPosts[0].images[0]
+                            uri: selectedSearchResult.relatedPost.length ? JSON.parse(selectedSearchResult.relatedPost[0].images)[0] : placeHolderImage
                         }} />
                         <View style={{
                             marginLeft: 20
@@ -96,14 +96,17 @@ function SearchDetails(props) {
                                 aspectRatio: 1,
                                 borderRadius: 40,
                                 marginRight: 10
-                            }} source={{ uri: selectedSearchResult.vendor.facebookToken.profileImageURL }} />
+                            }} source={{ uri: selectedSearchResult.vendor.personalInfo.profileImageURL }} />
                             <Text>{selectedSearchResult.vendor.name}</Text>
                         </View>
+
+
                     </View>
                 </View>
+
                 <Text>Recent posts</Text>
                 <ScrollView>
-                    {selectedSearchResult.relatedPosts.map((item, index) => {
+                    {selectedSearchResult.relatedPost.map((item, index) => {
                         return <RenderPost {...props} item={item} key={index} />
                     })}
 
@@ -112,6 +115,10 @@ function SearchDetails(props) {
             </View>
 
             <View style={styles.footer}>
+                <Text style={{
+                    fontSize: 12
+                }}>Location:{vendorLocationInfo.street},{vendorLocationInfo.district},{vendorLocationInfo.city}</Text>
+
                 <View style={[styles.alighnHorizontal, {
                     padding: 20,
                     justifyContent: "space-between",
@@ -227,7 +234,7 @@ function RenderPost(props) {
             height: 140,
             aspectRatio: 1,
         }} source={{
-            uri: props.item.images[0]
+            uri: JSON.parse(props.item.images)[0]
         }} />
         <View style={[styles.horizontalAlign]}>
             <View>
@@ -236,21 +243,26 @@ function RenderPost(props) {
                     aspectRatio: 1,
                     margin: 5
                 }} source={{
-                    uri: props.item.images[1]
+                    uri: JSON.parse(props.item.images)[1]
                 }} />
                 <Image style={{
                     height: 60,
                     aspectRatio: 1,
                     margin: 5
                 }} source={{
-                    uri: props.item.images[2]
+                    uri: JSON.parse(props.item.images)[2]
                 }} />
             </View>
             <View>
                 <Text style={{
                     fontSize: 12
                 }}>{(new Date(props.item.postedOn)).toLocaleTimeString()},{(new Date(props.item.postedOn)).toLocaleDateString()}</Text>
-                <TouchableOpacity style={{
+                <TouchableOpacity onPress={() => {
+                    props.stackNav.push('Post details', {
+                        postId: props.item.id,
+
+                    })
+                }} style={{
                     backgroundColor: "#E1E8F6",
                     padding: 5
                 }}>

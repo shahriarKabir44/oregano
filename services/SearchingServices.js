@@ -53,7 +53,8 @@ const searchResultDetails = {
 }
 
 export default class SearchingServices {
-    static async SearhcItems(query) {
+
+    static async SearhcItems(itemName, currentUserId, region) {
         let { data } = await fetch(Global.searchServerURL + '/graphql', {
             method: 'POST',
             headers: {
@@ -61,7 +62,7 @@ export default class SearchingServices {
             },
             body: JSON.stringify({
                 query: `query{
-                searchByName(tagName:"${query}"){
+                searchByName(itemname:"${itemName}",userId:"${currentUserId}",region:"${region}"){
                   vendor{
                     id
                     name
@@ -83,6 +84,45 @@ export default class SearchingServices {
         return data.searchByName
     }
     static async getDetails(sellerId, itemName) {
-        return searchResultDetails
+        console.log(sellerId, itemName);
+        let { data } = await fetch(Global.searchServerURL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getItemDetails(tag:"${itemName}" ,userId:"${sellerId}"){
+                      itemName
+                      lowerCasedName
+                      vendor{
+                        name
+                        id
+                        personalInfo{
+                            profileImageURL
+                          }
+                        locationInfoJson{
+                          city
+                          district
+                          street
+                          region
+                        }
+                        currentLatitude
+                        currentLongitude
+                      }
+                      relatedPost{
+                        id
+                        images
+                        postedOn
+                      }
+                      rating
+                      ratedBy
+                      unitPrice
+                      
+                    }
+                       
+                  }`})
+        }).then(res => res.json())
+        return data.getItemDetails
     }
 }

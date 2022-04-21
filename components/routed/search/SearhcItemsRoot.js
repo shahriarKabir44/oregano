@@ -6,8 +6,10 @@ import { Ionicons } from '@expo/vector-icons';
 import ResultBottomSheet from './ResultBottomSheet';
 import CartServices from '../../../services/CartServices';
 import LocalStorageService from '../../../services/LocalStorageService';
+import { RootContext } from '../../contexts/GlobalContext';
 function SearhcItemsRoot(props) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
+    const { getCurrentuser, getCurrentLocationGeocode } = React.useContext(RootContext)
     function limitText(text) {
         let res = ""
         for (let n = 0; n < Math.min(10, text.length); n++) {
@@ -22,7 +24,7 @@ function SearhcItemsRoot(props) {
     const [dropDownVisibility, popupBottomSheet] = React.useState(false)
     function search(query) {
         setSearchText(query)
-        SearchingServices.SearhcItems(query)
+        SearchingServices.SearhcItems(query, getCurrentuser().id, getCurrentLocationGeocode().city)
             .then(data => {
                 setSearchResult(data)
             })
@@ -43,12 +45,13 @@ function SearhcItemsRoot(props) {
                 <ScrollView>
                     {searchResult.map((result, index) => {
                         return (<TouchableOpacity onPress={() => {
-                            SearchingServices.getDetails(result.vendor.Id, result.itemName)
+                            SearchingServices.getDetails(result.vendor.id, result.itemName)
                                 .then(searchResultInfo => {
                                     setSearchResultItem(searchResultInfo)
                                     return searchResultInfo
                                 }).then((searchResultInfo) => {
-                                    CartServices.isAddedToCart(result.vendor.Id + "", result.itemName)
+                                    console.log(searchResultInfo);
+                                    CartServices.isAddedToCart(result.vendor.id + "", result.itemName)
                                         .then(cartData => {
                                             setSearchResultItem({ ...searchResultInfo, amount: null })
                                             if (cartData) {
