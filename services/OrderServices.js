@@ -220,8 +220,9 @@ export default class OrderServices {
         return orderItemData.data.createOrderItem
     }
     static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId) {
+
         for (let group of orderItems) {
-            let newOrderId = await OrderServices.createOrder(group.Id, orderLocationInfo, "Shahriar Kabir", "625537b08c4194e31ba27925", group.items.length)
+            let newOrderId = await OrderServices.createOrder(group.id, orderLocationInfo, buyerName, buyerId, group.items.length)
             let promises = []
             for (let item of group.items) {
                 promises.push(OrderServices.createOrderItem(item, newOrderId._id))

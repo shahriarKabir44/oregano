@@ -72,7 +72,7 @@ function CartListView(props) {
                                 height: 50,
                                 aspectRatio: 1,
                                 borderRadius: 50,
-                            }} source={{ uri: group.facebookToken.profileImageURL }} />
+                            }} source={{ uri: group.personalInfo.profileImageURL }} />
                             <View>
                                 <Text>From</Text>
                                 <Text>{group.name}</Text>
@@ -83,17 +83,18 @@ function CartListView(props) {
                         {group.items.map((item, index1) => <TouchableOpacity key={index1} onPress={() => {
                             setSelectedCartItem(item)
                             popupBottomSheet(true)
+
                         }}>
                             <View style={[styles.container, styles.alighnHorizontal]}>
                                 <Image style={{
                                     height: 50,
                                     aspectRatio: 1,
                                     borderRadius: 50,
-                                }} source={{ uri: item.relatedPosts[0]?.images[0] }} />
+                                }} source={{ uri: JSON.parse(item.relatedPost[0]?.images)[0] }} />
 
                                 <Text>{item.itemName}</Text>
                                 <Text>Amount:{item.amount}</Text>
-                                <Text>Tk.{item.amount * item.price}</Text>
+                                <Text>Tk.{item.amount * item.unitPrice}</Text>
 
                             </View>
                         </TouchableOpacity>)}

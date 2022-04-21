@@ -50,7 +50,6 @@ function SearhcItemsRoot(props) {
                                     setSearchResultItem(searchResultInfo)
                                     return searchResultInfo
                                 }).then((searchResultInfo) => {
-                                    console.log(searchResultInfo);
                                     CartServices.isAddedToCart(result.vendor.id + "", result.itemName)
                                         .then(cartData => {
                                             setSearchResultItem({ ...searchResultInfo, amount: null })

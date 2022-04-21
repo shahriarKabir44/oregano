@@ -84,7 +84,6 @@ export default class SearchingServices {
         return data.searchByName
     }
     static async getDetails(sellerId, itemName) {
-        console.log(sellerId, itemName);
         let { data } = await fetch(Global.searchServerURL + '/graphql', {
             method: 'POST',
             headers: {

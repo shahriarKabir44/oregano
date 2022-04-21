@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Modal, TouchableOpacity, ToastAndroid } from 'react-native'
 import { RadioButton, TextInput } from 'react-native-paper';
 import * as Location from 'expo-location';
 import { RootContext } from '../../contexts/GlobalContext'
@@ -16,7 +16,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
     const [currentLocationCoords, setCurrentLocationCoords] = React.useState(null)
     const [hasLocationGeocodeLoaded, setLoadingStatus] = React.useState(false)
     const [customLocationGeocode, setCustomLocationGeocode] = React.useState("Pick from map")
-
+    const [modalVisible, setModalVisible] = React.useState(false)
     React.useEffect(() => {
         (async function () {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -52,6 +52,21 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
         <View style={{
             flex: 1
         }}>
+            <Modal
+                animationType="slide"
+                transparent={1 == 1}
+                visible={modalVisible}
+                onRequestClose={() => {
+
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Please wait...</Text>
+
+                    </View>
+                </View>
+            </Modal>
             {currentLocationCoords && <LocationView onLocationSelect={() => {
 
 
@@ -158,6 +173,27 @@ const styles = StyleSheet.create({
         height: 60,
         justifyContent: "center",
         alignItems: "center"
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
 })
 export default OrderConfirmation;

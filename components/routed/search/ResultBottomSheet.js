@@ -34,9 +34,9 @@ function ResultBottomSheet(props) {
 
 function SearchDetails(props) {
     const [selectedSearchResult, setSearchResultItem] = React.useState(props.selectedSearchResult)
-    const [amount, setAmount] = React.useState(0)
+    const [amount, setAmount] = React.useState(1)
     function updatecartAmount(inc) {
-        setAmount(Math.max(1, Math.min(amount + inc, selectedSearchResult.amountProduced)))
+        setAmount(Math.max(1, Math.min(amount + inc, 100)))
     }
     const placeHolderImage = "https://previews.123rf.com/images/takasumi/takasumi1510/takasumi151000226/46196249-%E3%83%87%E3%82%A3%E3%83%8A%E3%83%BC%E7%9A%BF%E3%80%81%E3%83%8A%E3%82%A4%E3%83%95%E3%80%81%E3%82%B9%E3%83%97%E3%83%BC%E3%83%B3%E3%80%81%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88-%E3%83%90%E3%83%83%E3%82%AF-%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AF.jpg"
     const vendorLocationInfo = selectedSearchResult.vendor.locationInfoJson
@@ -79,7 +79,7 @@ function SearchDetails(props) {
                                 <Text>{selectedSearchResult.ratedBy}</Text>
 
                             </View>
-                            <Text>💰Tk.{selectedSearchResult.price}</Text>
+                            <Text>💰Tk.{selectedSearchResult.unitPrice}</Text>
                         </View>
                     </View>
 
@@ -192,7 +192,7 @@ function SearchDetails(props) {
                     }]}>
                         <View>
                             <Text>Amount:{selectedSearchResult.amount}</Text>
-                            <Text>Tk.{selectedSearchResult.amount * selectedSearchResult.price}</Text>
+                            <Text>Tk.{selectedSearchResult.amount * selectedSearchResult.unitPrice}</Text>
                         </View>
 
                         <FontAwesome5 onPress={() => {
@@ -258,6 +258,7 @@ function RenderPost(props) {
                     fontSize: 12
                 }}>{(new Date(props.item.postedOn)).toLocaleTimeString()},{(new Date(props.item.postedOn)).toLocaleDateString()}</Text>
                 <TouchableOpacity onPress={() => {
+                    props.popupBottomSheet(false)
                     props.stackNav.push('Post details', {
                         postId: props.item.id,
 
