@@ -1,33 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Global from '../../services/Globals';
+import { RootContext } from '../contexts/GlobalContext';
 
 
 function AvailableTags(props) {
-    const [availableTags, setAvailableTags] = React.useState(["Loading.."])
-    React.useEffect(() => {
-        fetch(Global.searchServerURL + '/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `query{
-                    getLocalAvailableItems 
-                  }`
-            })
-
-        })
-            .then(response => response.json())
-            .then(({ data }) => {
-                setAvailableTags(data.getLocalAvailableItems);
-
-            })
-    }, [])
-
-
-
-
     return (
         <View style={{
             display: "flex",
@@ -35,7 +12,7 @@ function AvailableTags(props) {
             flexWrap: "wrap",
             justifyContent: "space-around"
         }}>
-            {availableTags.map((item, index) => {
+            {props.localItems.map((item, index) => {
                 return (<TouchableOpacity style={{
                     backgroundColor: "#4da5ffe0",
                     padding: 10,

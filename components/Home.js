@@ -15,6 +15,7 @@ import SearchBottomSheet from './shared/SearchBottomSheet';
 import CreatePostBottomSheet from './shared/CreatePostBottomSheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MarkAvailableItemsBottomSheet from './shared/MarkAvailableItemsBottomSheet';
+import Global from '../services/Globals';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -53,6 +54,13 @@ function Home(props) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null)
     const [localUsers, setLocalUsers] = React.useState([])
+    const [isLocationLoaded, setLocationLoadedStatus] = React.useState(false)
+    const [localItems, setLocalItems] = React.useState([])
+    async function loadLocalItems(userId, region) {
+        let { data } = await fetch(Global.searchServerURL + `/getLocalAvailableItems/${userId}/${region}`)
+            .then(response => response.json())
+        setLocalItems(data)
+    }
     async function loadLocalDatas(region) {
         return Promise.all([
             UserService.getLocalUsers(region, rootContext.getCurrentuser().id)
@@ -62,7 +70,6 @@ function Home(props) {
                 }),
             PostService.findLocalPosts()
                 .then(data => {
-
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
                 }),
@@ -76,6 +83,8 @@ function Home(props) {
             .then(() => {
                 rootContext.updateCurrentLocationInfo()
                     .then((data) => {
+                        loadLocalItems(rootContext.getCurrentuser().id, data.city)
+
 
                         loadLocalDatas(data.region)
                             .then(() => setRefreshing(false));
@@ -156,7 +165,7 @@ function Home(props) {
                             paddingLeft: 5
                         }}
                     >Available Items in your area</Text>
-                    <AvailableTags {...props} />
+                    <AvailableTags localItems={localItems} {...props} />
                     <Text
                         style={{
                             fontSize: 20,

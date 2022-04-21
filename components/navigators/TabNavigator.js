@@ -13,13 +13,13 @@ export default function TabNavigator(props) {
     return (
 
         <Tab.Navigator
-            initialRouteName='Home'
+            initialRouteName='Gallery'
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
 
                     let iconName;
 
-                    if (route.name == 'Home') {
+                    if (route.name == 'Gallery') {
                         iconName = focused
                             ? 'home'
                             : 'home';
@@ -38,7 +38,7 @@ export default function TabNavigator(props) {
                 header: (prop) => {
                     return <View></View>
                 }
-            }} name="Home" >
+            }} name="Gallery" >
                 {(childProp) => <Home {...props} tabNav={childProp.navigation} />}
 
             </Tab.Screen>

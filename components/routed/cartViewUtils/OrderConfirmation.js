@@ -131,6 +131,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
             </ScrollView>
             <View style={styles.footer}>
                 <TouchableOpacity onPress={() => {
+                    setModalVisible(true)
 
                     OrderServices.placeOrders(orderItems, {
                         ...currentLocationCoords,
@@ -146,6 +147,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                                     setTotalCharge(0)
                                 })
                                 .then(() => {
+                                    setModalVisible(false)
                                     ToastAndroid.showWithGravity(
                                         "Order placed succesfully!",
                                         ToastAndroid.SHORT,
