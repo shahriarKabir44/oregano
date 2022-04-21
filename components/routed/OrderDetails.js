@@ -12,7 +12,7 @@ import OrderServices from '../../services/OrderServices';
 
 function OrderDetails(props) {
     const [mapVisibility, setMapVisibility] = React.useState(false)
-    let { updateContext, contextObject } = React.useContext(RootContext)
+    let { updateContext, contextObject, setHeaderString } = React.useContext(RootContext)
     let orderId = props.route.params
     const [orderDetails, setOrderDetails] = React.useState({})
     const [isLoaded, setIsLoaded] = React.useState(false)
@@ -42,9 +42,10 @@ function OrderDetails(props) {
 
         (async () => {
             if (isFocused) {
+                setHeaderString("Order info")
                 OrderServices.getOrderInfo(orderId)
                     .then(orderInfoData => {
-                        updateContext({ ...contextObject, headerString: "Order info" })
+
                         let productList = []
                         if (orderInfoData.status == 2) {
                             setOrderRejectance(true)
@@ -58,12 +59,15 @@ function OrderDetails(props) {
                         })
                         let statuses = []
                         for (let item of orderInfoData.orderedItems) {
-
                             let data = {
                                 amount: item.amount,
-                                product: item.post,
+                                product: {
+                                    lowerCasedName: item.lowerCasedName,
+                                    image: JSON.parse(item.lastPost.images)[0]
+                                },
                                 status: item.status
                             }
+                            console.log(data.product.image);
                             productList.push(data)
                             statuses.push(item.status)
 
@@ -108,7 +112,7 @@ function OrderDetails(props) {
             OrderServices.acceptOrders(orderDetails.id, rejectedItems, contextObject.currentUser.facebookToken.name, buyerInfo.id)
                 .then(() => {
                     ToastAndroid.showWithGravity(
-                        "Order has been accepted!",
+                        "Order is now moved to pending list",
                         ToastAndroid.SHORT,
                         ToastAndroid.CENTER
                     )

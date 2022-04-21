@@ -22,7 +22,7 @@ function SearhcItemsRoot(props) {
     }
     React.useEffect(() => {
         if (isFocused) {
-            if (props.tabNavRoute.params.query)
+            if (props.tabNavRoute.params)
                 search(props.tabNavRoute.params.query)
         }
     }, [])

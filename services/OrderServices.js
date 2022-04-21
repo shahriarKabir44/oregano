@@ -96,6 +96,7 @@ export default class OrderServices {
 
     }
     static async getOrderInfo(orderId) {
+
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
@@ -124,17 +125,16 @@ export default class OrderServices {
                             }
                             phone
                         }
-                        orderedItems{
-                            post{
-                                itemName
-                                images
-                                id
-                                city
-                                district
+                        
+                            orderedItems{
+                                lowerCasedName
+                                lastPost{
+                                  images
+                                }
+                                amount
+                                status
                             }
-                            amount
-                            status
-                        }
+                         
                         drop_lat
                         drop_long
                         status

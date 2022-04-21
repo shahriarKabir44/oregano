@@ -12,12 +12,7 @@ function OrderListItem(props) {
             alignItems: "center",
             alignContent: "center"
         }}>
-            <TouchableOpacity onPress={() => {
-                props.navigation.push('Post details', {
-                    postId: props.order.product.id,
-                    headerString: `Your post`
-                })
-            }} style={{
+            <TouchableOpacity style={{
                 display: "flex",
                 flexDirection: "row",
                 alignContent: "center",
@@ -33,13 +28,13 @@ function OrderListItem(props) {
                     aspectRatio: 1,
                     borderRadius: 50
                 }} source={{
-                    uri: JSON.parse(props.order.product.images)[0]
+                    uri: props.order.product.image
                 }} />
                 <View>
                     <Text style={{
                         fontSize: 20,
                         fontWeight: "bold"
-                    }}>{props.order.product.itemName}</Text>
+                    }}>{props.order.product.lowerCasedName}</Text>
                     <Text>Amount: {props.order.amount}{props.order.product.unitType} </Text>
                 </View>
             </TouchableOpacity>

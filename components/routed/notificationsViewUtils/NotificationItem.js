@@ -39,8 +39,6 @@ function NotificationItem({ notificationItem, navigator }) {
                                     break;
                             }
 
-
-
                         }
                     })
             }}>
