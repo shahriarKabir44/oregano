@@ -92,7 +92,6 @@ function AddTocart({ post, togglePopup, addToCart }) {
                 </View>
             </ScrollView>
             <TouchableOpacity onPress={() => {
-                console.log(post.lowerCasedName);
                 try {
                     let dataToStore = {
                         itemName: post.itemName,

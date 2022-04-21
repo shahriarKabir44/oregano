@@ -70,14 +70,7 @@ function Favourites(props) {
 
 function FollowingListItem({ followee, stackNav }) {
 
-    function limitText(text) {
-        let res = ""
-        for (let n = 0; n < Math.min(12, text.length); n++) {
-            res += text[n]
-        }
-        if (text.length > 12) res += "..."
-        return res
-    }
+
     return (
         <TouchableOpacity style={{
             backgroundColor: "white",
@@ -144,14 +137,7 @@ function FollowingListItem({ followee, stackNav }) {
 
 function FollowerListItem({ follower }) {
 
-    function limitText(text) {
-        let res = ""
-        for (let n = 0; n < Math.min(12, text.length); n++) {
-            res += text[n]
-        }
-        if (text.length > 12) res += "..."
-        return res
-    }
+
     return (
         <TouchableOpacity style={{
             backgroundColor: "white",

@@ -65,7 +65,6 @@ function RenderMainComponent(props) {
         PostService.getAvailableItemsToday(getCurrentuser().id)
             .then(data => {
                 let tempData = availables
-
                 for (let tag of data) {
                     let temp = []
                     for (let entry of tempData) {
@@ -77,7 +76,7 @@ function RenderMainComponent(props) {
                     tempData = temp
 
                 }
-                setAvailableTagList(tempData)
+
                 setAvailableTags(tempData)
 
                 setSelected(data)
@@ -93,20 +92,25 @@ function RenderMainComponent(props) {
                 return data
             })
             .then((data) => {
+
                 getAvailableTags(data)
             })
     }, [])
     function addTag(tag) {
-
-        setSelected([...selected, { ...tag, tag: tag.tag.toLowerCase() }])
-        setAvailableTags(tags.filter(item => item.tag != tag.tag))
+        let selectedList = [...selected, { ...tag, tag: tag.tag.toLowerCase() }]
+        setSelected(selectedList)
+        let tempAvailable = availableTags
+        for (let entry of selectedList) {
+            tempAvailable = (tempAvailable.filter(item => item != entry.tag))
+        }
+        setAvailableTags(tempAvailable)
     }
     function removeTag(tagName) {
         tagName = tagName.toLowerCase()
-        setSelected(selected.filter(name => name != tagName))
+        setSelected(selected.filter(name => name.tag != tagName))
         let temp = availableTags
         for (let tag in selected) {
-            temp = temp.filter(name => name != tag)
+            temp = temp.filter(name => name.tag != tag)
         }
         setAvailableTags([...temp])
     }
@@ -189,7 +193,7 @@ function RenderMainComponent(props) {
                     keyExtractor={tag => tag.tag}
                     renderItem={(tag) => {
                         return <RemovableTag name={tag.item.tag} unitPrice={tag.item.unitPrice} removeTag={() => {
-                            removeTag(tag.item)
+                            removeTag(tag.item.tag)
                         }} />
 
                     }}

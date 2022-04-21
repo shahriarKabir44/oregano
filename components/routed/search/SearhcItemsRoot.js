@@ -8,7 +8,14 @@ import CartServices from '../../../services/CartServices';
 import LocalStorageService from '../../../services/LocalStorageService';
 function SearhcItemsRoot(props) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
-
+    function limitText(text) {
+        let res = ""
+        for (let n = 0; n < Math.min(10, text.length); n++) {
+            res += text[n]
+        }
+        if (text.length > 10) res += "..."
+        return res
+    }
     const [searchText, setSearchText] = React.useState("")
     const [searchResult, setSearchResult] = React.useState([])
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)
@@ -43,7 +50,6 @@ function SearhcItemsRoot(props) {
                                 }).then((searchResultInfo) => {
                                     CartServices.isAddedToCart(result.vendor.Id + "", result.itemName)
                                         .then(cartData => {
-                                            console.log(cartData);
                                             setSearchResultItem({ ...searchResultInfo, amount: null })
                                             if (cartData) {
                                                 setSearchResultItem({ ...searchResultInfo, amount: cartData })
@@ -67,7 +73,7 @@ function SearhcItemsRoot(props) {
                                 aspectRatio: 1,
                                 borderRadius: 50
                             }} source={{
-                                uri: result.getLastPost.lastPost.images[0]
+                                uri: result.getLastPost ? JSON.parse(result.getLastPost.images)[0] : "https://previews.123rf.com/images/takasumi/takasumi1510/takasumi151000226/46196249-%E3%83%87%E3%82%A3%E3%83%8A%E3%83%BC%E7%9A%BF%E3%80%81%E3%83%8A%E3%82%A4%E3%83%95%E3%80%81%E3%82%B9%E3%83%97%E3%83%BC%E3%83%B3%E3%80%81%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88-%E3%83%90%E3%83%83%E3%82%AF-%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AF.jpg"
                             }} />
                             <View style={[styles.horizontalAlign, {
                                 justifyContent: "space-between",
@@ -77,7 +83,7 @@ function SearhcItemsRoot(props) {
                                 <View>
                                     <View style={styles.horizontalAlign}>
                                         <Text>{result.itemName}</Text>
-                                        <Text>Tk.{result.price}</Text>
+                                        <Text>Tk.{result.unitPrice}</Text>
                                     </View>
                                     <Text>{result.rating}⭐</Text>
                                     <View style={styles.horizontalAlign}>
@@ -97,9 +103,10 @@ function SearhcItemsRoot(props) {
                                         <Image style={{
                                             height: 30,
                                             aspectRatio: 1,
-                                            borderRadius: 30
-                                        }} source={{ uri: result.vendor.facebookToken.profileImageURL }} />
-                                        <Text>{result.vendor.name}</Text>
+                                            borderRadius: 30,
+                                            marginRight: 20
+                                        }} source={{ uri: JSON.parse(result.vendor.facebookToken).profileImageURL }} />
+                                        <Text>{limitText(result.vendor.name)}</Text>
                                     </View>
                                 </View>
                             </View>

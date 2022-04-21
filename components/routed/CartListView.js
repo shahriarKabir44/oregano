@@ -19,9 +19,9 @@ function CartListView(props) {
     const [selectedcartItem, setSelectedCartItem] = useState(null)
     function updateCartList() {
 
-        rootContext.setHeaderString("Cart")
         CartServices.getcartItems().then(data => {
             const { cooks, items } = data
+            if (!items.length) setEmptinessStatus(true)
             for (let cook of cooks) {
                 cook.items = []
                 for (let item of items) {
@@ -36,8 +36,11 @@ function CartListView(props) {
     }
     const isFocused = useIsFocused()
     useEffect(() => {
-        if (isFocused)
+        if (isFocused) {
+            rootContext.setHeaderString("Cart")
             updateCartList()
+        }
+
         else {
             setTotalCharge(0)
         }
@@ -121,7 +124,7 @@ function CartListView(props) {
                 </View>
             </BottomSheet>
             <ResultBottomSheet {...props} onChange={() => {
-                setRefreshFlag(!shouldRefresh)
+                updateCartList()
             }} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedcartItem} setSearchResultItem={() => { }} />
 
         </View>

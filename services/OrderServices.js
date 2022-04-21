@@ -198,7 +198,6 @@ export default class OrderServices {
 
     }
     static async createOrderItem(orderItem, orderId) {
-        console.log(orderItem);
         let orderItemData = await fetch(Global.SERVER_URL + '/graphql', {
             method: "POST",
             headers: {
@@ -221,15 +220,11 @@ export default class OrderServices {
         return orderItemData.data.createOrderItem
     }
     static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId) {
-
-        console.log(buyerName, buyerId);
         for (let group of orderItems) {
             let newOrderId = await OrderServices.createOrder(group.Id, orderLocationInfo, "Shahriar Kabir", "625537b08c4194e31ba27925", group.items.length)
             let promises = []
             for (let item of group.items) {
-
                 promises.push(OrderServices.createOrderItem(item, newOrderId._id))
-
             }
             await Promise.all(promises)
 

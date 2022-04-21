@@ -85,7 +85,6 @@ function PostDetails(props) {
                 })
             PostService.findPost(postId)
                 .then(postInfo => {
-                    console.log(postInfo.lowerCasedName);
                     setCurrentPost(postInfo)
                     setOwnershipStatus(postInfo.owner.id == rootContext.contextObject.currentUser.id)
                     if (postInfo.owner.id == rootContext.contextObject.currentUser.id) {
@@ -420,7 +419,6 @@ function PostDetails(props) {
                         </View>
 
                         <FontAwesome5 onPress={() => {
-                            console.log("del")
                             CartServices.delete(post.postedBy, post.lowerCasedName)
                                 .then(() => {
                                     updateCartInfo(post)

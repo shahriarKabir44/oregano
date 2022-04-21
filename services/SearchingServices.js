@@ -1,3 +1,5 @@
+
+import Global from "./Globals";
 const results = [
     {
         itemName: "Cake",
@@ -51,8 +53,34 @@ const searchResultDetails = {
 }
 
 export default class SearchingServices {
-    static async SearhcItems() {
-        return results
+    static async SearhcItems(query) {
+        let { data } = await fetch(Global.searchServerURL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: `query{
+                searchByName(tagName:"${query}"){
+                  vendor{
+                    id
+                    name
+                    facebookToken 
+                    expoPushToken
+                  }
+                   
+                  rating
+                  ratedBy
+                  lowerCasedName
+                  itemName
+                  unitPrice
+                  getLastPost{
+                    images
+                  }
+                }
+              }`})
+        }).then(res => res.json())
+        return data.searchByName
     }
     static async getDetails(sellerId, itemName) {
         return searchResultDetails
