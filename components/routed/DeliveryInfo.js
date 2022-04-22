@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, Text, ScrollView, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
+import { View, Button, Modal, Text, ScrollView, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
 import LocationView from '../shared/LocationView';
 import Collapsible from 'react-native-collapsible';
 import { RootContext } from '../contexts/GlobalContext';
@@ -42,7 +42,21 @@ function DeliveryInfo(props) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(1 == 0)
     return (
         <View style={styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={1 == 1}
+                visible={modalVisible}
+                onRequestClose={() => {
 
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Please wait...</Text>
+
+                    </View>
+                </View>
+            </Modal>
             <ScrollView>
                 <TouchableOpacity style={{
                     borderRadius: 20,
@@ -196,6 +210,7 @@ function DeliveryInfo(props) {
                     alignItems: 'center',
                     borderRadius: 5
                 }} onPress={() => {
+                    setModalVisible(true)
                     if (!isPickedUp) {
                         DeliveyService.markPickedUp(deliveryDetails.id, deliveryDetails.buyer.id)
                             .then(data => {
@@ -205,6 +220,7 @@ function DeliveryInfo(props) {
                                     ToastAndroid.CENTER
                                 )
                                 setPickupStatus(true)
+                                setModalVisible(false)
                             })
                     }
                     else if (!isDelivered) {
@@ -216,7 +232,7 @@ function DeliveryInfo(props) {
                                     ToastAndroid.CENTER
                                 );
                                 setDeliveredStatus(true)
-                                setModalVisible(true)
+                                setModalVisible(false)
                             })
                     }
                 }}>

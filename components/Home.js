@@ -146,17 +146,7 @@ function Home(props) {
                     overflow: "visible"
                 }}>
 
-                    <View>
-                        {subscribedPosts.length > 0 && <Text
-                            style={{
-                                fontSize: 20,
-                                paddingLeft: 5,
-                                padding: 10
-                            }}
-                        >From people you follow</Text>}
-                    </View>
-                    {!isLoaded && <PostCard post={initialPost} />}
-                    {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
+
 
                     <Text
                         style={{
@@ -198,7 +188,17 @@ function Home(props) {
                         }} name="search1" size={24} color="black" />
                     </View>
                     <LocalUsersRoot {...props} users={localUsers} />
-
+                    <View>
+                        {subscribedPosts.length > 0 && <Text
+                            style={{
+                                fontSize: 20,
+                                paddingLeft: 5,
+                                padding: 10
+                            }}
+                        >From people you follow</Text>}
+                    </View>
+                    {!isLoaded && <PostCard post={initialPost} />}
+                    {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
                 </View>
             </ScrollView>
 
