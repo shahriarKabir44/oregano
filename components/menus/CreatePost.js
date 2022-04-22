@@ -248,8 +248,8 @@ function CreatePost(props) {
 							...locationData,
 							postedBy: rootContext.contextObject.currentUser.id,
 							tags: JSON.stringify(item.tags),
-							postedOn: (new Date()) * 1
-
+							postedOn: (new Date()) * 1,
+							lowerCasedName: item.itemName.toLowerCase()
 						};
 						return newPost
 					})

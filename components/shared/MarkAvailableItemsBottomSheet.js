@@ -64,6 +64,7 @@ function RenderMainComponent(props) {
     function getAvailableTags(availables) {
         PostService.getAvailableItemsToday(getCurrentuser().id)
             .then(data => {
+                console.log(data);
                 let tempData = availables
                 for (let tag of data) {
                     let temp = []
@@ -79,12 +80,12 @@ function RenderMainComponent(props) {
 
                 setAvailableTags(tempData)
 
-                setSelected(data)
+                setSelected([])
             })
     }
     React.useEffect(() => {
 
-        fetch(Global.SERVER_URL + '/getAvailableTags')
+        fetch(Global.SERVER_URL + '/getAvailableTags/' + getCurrentuser().id)
             .then(response => response.json())
             .then(({ data }) => {
                 setAvailableTagList(data)
@@ -205,7 +206,7 @@ function RenderMainComponent(props) {
         <Text style={{
             padding: 5,
             fontSize: 25
-        }}>Available tags:</Text>
+        }}>From your posts:</Text>
         <ScrollView>
 
             {!doesSearchExist && <View>

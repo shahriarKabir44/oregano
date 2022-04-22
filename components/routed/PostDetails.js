@@ -73,18 +73,19 @@ function PostDetails(props) {
         if (isFocused) {
 
             rootContext.setHeaderString("")
-            PostService.getPostRatings(postId)
-                .then(data => {
-                    for (let ratingInfo of data) {
-                        if (ratingInfo.getUser.id == rootContext.contextObject.currentUser.id) {
-                            setRatingRelation(true)
-                            setCurrentUserRating(ratingInfo.rating)
-                        }
-                    }
-                    setRatingList(data)
-                })
+
             PostService.findPost(postId)
                 .then(postInfo => {
+                    PostService.getPostRatings(postInfo.lowerCasedName, postInfo.postedBy)
+                        .then(data => {
+                            for (let ratingInfo of data) {
+                                if (ratingInfo.getUser.id == rootContext.getCurrentUser().id) {
+                                    setRatingRelation(true)
+                                    setCurrentUserRating(ratingInfo.rating)
+                                }
+                            }
+                            setRatingList(data)
+                        })
                     setCurrentPost(postInfo)
                     setOwnershipStatus(postInfo.owner.id == rootContext.contextObject.currentUser.id)
                     if (postInfo.owner.id == rootContext.contextObject.currentUser.id) {

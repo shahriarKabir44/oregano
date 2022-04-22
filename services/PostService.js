@@ -221,7 +221,7 @@ export default class PostService {
         return res
 
     }
-    static async getPostRatings(postId) {
+    static async getPostRatings(lowerCasedName, postedBy) {
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
@@ -229,7 +229,7 @@ export default class PostService {
             },
             body: JSON.stringify({
                 query: `query{
-                    getPostRatings(postId:"${postId}") {
+                    getPostRatings(lowerCasedName:"${lowerCasedName}",ownerId:"${postedBy}") {
                       rating
                       getUser{
                         id
