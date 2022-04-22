@@ -69,7 +69,7 @@ export default class SearchingServices {
                     facebookToken 
                     expoPushToken
                   }
-                   
+                  getRatings
                   rating
                   ratedBy
                   lowerCasedName

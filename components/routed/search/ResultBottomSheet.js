@@ -73,12 +73,8 @@ function SearchDetails(props) {
                             marginLeft: 20
                         }}>
 
-                            <Text>⭐{selectedSearchResult.rating}</Text>
-                            <View style={styles.horizontalAlign}>
-                                <Ionicons name="person" size={15} color="black" />
-                                <Text>{selectedSearchResult.ratedBy}</Text>
+                            <Text>⭐{selectedSearchResult.getRatings}</Text>
 
-                            </View>
                             <Text>💰Tk.{selectedSearchResult.unitPrice}</Text>
                         </View>
                     </View>

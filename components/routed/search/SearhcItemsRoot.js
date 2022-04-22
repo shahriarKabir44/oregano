@@ -95,11 +95,8 @@ function SearhcItemsRoot(props) {
                                         <Text>{result.itemName}</Text>
                                         <Text>Tk.{result.unitPrice}</Text>
                                     </View>
-                                    <Text>{result.rating}⭐</Text>
-                                    <View style={styles.horizontalAlign}>
-                                        <Ionicons name="person" size={15} color="black" />
-                                        <Text>{result.ratedBy}</Text>
-                                    </View>
+                                    <Text>{result.getRatings}⭐</Text>
+
                                 </View>
                                 <View style={{
                                     flex: 1,
