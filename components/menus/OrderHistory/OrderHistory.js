@@ -1,6 +1,6 @@
 import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions, FlatList, ToastAndroid } from 'react-native'
+import { View, Text, RefreshControl, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions, FlatList, ToastAndroid } from 'react-native'
 import OrderServices from '../../../services/OrderServices'
 import { RootContext } from '../../contexts/GlobalContext';
 import Ordergroup from './Ordergroup';
@@ -17,20 +17,33 @@ function OrderHistory(props) {
     const [currentlyFocusedProduct, setCurrentProduct] = React.useState(null)
     const [hasRatingChanged, detectChange] = React.useState(false)
     const [shouldreload, setReloading] = React.useState(false)
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    function loadData() {
+        setRefreshing(true)
+
+        OrderServices.getPreviousOrders(contextObject.currentUser.id)
+            .then(data => {
+                setRefreshing(false)
+
+                setOrderList(data)
+            })
+    }
+
     React.useEffect(() => {
         popupBottomSheet(false)
         setCurrentProduct(null)
         setHeaderString("Order history")
-        OrderServices.getPreviousOrders(contextObject.currentUser.id)
-            .then(data => {
-                setOrderList(data)
-            })
+        loadData()
     }, [isFocused, shouldreload])
     return (
         <View style={{
             flex: 1
         }}>
-            <ScrollView>
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={loadData} />}
+
+            >
                 {orderList.map((item, key) => {
                     return <Ordergroup orderGroupIndex={key} key={key} setCurrentProduct={setCurrentProduct} popupBottomSheet={popupBottomSheet} orderInfo={item} navigator={props.navigation} />
                 })}
@@ -64,21 +77,21 @@ function OrderHistory(props) {
                                     <View>
                                         <Text style={{
                                             fontSize: 20
-                                        }}>{(currentlyFocusedProduct?.product.post.itemName)}</Text>
-                                        <Text>{currentlyFocusedProduct?.product.amount}{currentlyFocusedProduct?.product.post.unitType}</Text>
+                                        }}>{(currentlyFocusedProduct?.product.lowerCasedName)}</Text>
+                                        <Text>{currentlyFocusedProduct?.product.amount}Unit(s)</Text>
                                     </View>
                                     <Image style={{
                                         height: 60,
                                         aspectRatio: 1,
                                         borderRadius: 60
                                     }} source={{
-                                        uri: JSON.parse(currentlyFocusedProduct?.product.post.images)[0]
+                                        uri: JSON.parse(currentlyFocusedProduct?.product.lastPost.images)[0]
                                     }} />
                                 </View>
 
                                 <FlatList
                                     horizontal={true}
-                                    data={JSON.parse(currentlyFocusedProduct?.product.post.images)}
+                                    data={JSON.parse(currentlyFocusedProduct?.product.lastPost.images)}
                                     keyExtractor={image => image}
                                     renderItem={(image) => {
                                         return <View style={{
@@ -104,7 +117,7 @@ function OrderHistory(props) {
                                     borderRadius: 5
                                 }} onPress={() => {
                                     props.stackNav.push('Post details', {
-                                        postId: currentlyFocusedProduct?.product.post.id,
+                                        postId: currentlyFocusedProduct?.product.lastPost.id,
 
                                     })
                                 }}>
@@ -145,7 +158,13 @@ function OrderHistory(props) {
                                     backgroundColor: "#c4c4c1",
                                     borderRadius: 5
                                 }} onPress={() => {
-                                    RatingServices.rateItem(currentlyFocusedProduct?.product.post.id, contextObject.currentUser.id, currentlyFocusedProduct.rating, currentlyFocusedProduct?.product.post.postedBy, currentlyFocusedProduct?.product.post.tags, contextObject.currentUser.facebookToken.name, currentlyFocusedProduct?.product.post.itemName)
+                                    const lowerCasedName = currentlyFocusedProduct?.product.lowerCasedName
+                                    const userId = contextObject.currentUser.id
+                                    const rating = currentlyFocusedProduct.rating
+                                    const ownerId = currentlyFocusedProduct?.product.lastPost.postedBy
+                                    const buyerName = contextObject.currentUser.facebookToken.name
+                                    console.log(lowerCasedName);
+                                    RatingServices.rateItem(lowerCasedName, userId, rating, ownerId, buyerName)
                                         .then(() => {
                                             setOrderList([...orderList])
                                             ToastAndroid.showWithGravity(

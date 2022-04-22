@@ -26,8 +26,8 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupI
             popupBottomSheet(true)
         }}>
             <View>
-                <Text>{orderItem.post.itemName}</Text>
-                <Text>{orderItem.amount} {orderItem.post.unitType}</Text>
+                <Text>{orderItem.lowerCasedName}</Text>
+                <Text>{orderItem.amount} Unit(s)</Text>
                 <View style={{
                     display: "flex",
                     flexDirection: "row"
@@ -49,7 +49,7 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupI
                 aspectRatio: 1,
                 borderRadius: 50
             }} source={{
-                uri: JSON.parse(orderItem.post.images)[0]
+                uri: JSON.parse(orderItem.lastPost.images)[0]
             }} />
         </TouchableOpacity>
     );

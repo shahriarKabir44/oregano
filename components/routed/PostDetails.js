@@ -109,31 +109,7 @@ function PostDetails(props) {
         }
     }, [isFocused])
 
-    function rateItem(rating) {
-        RatingServices.rateItem(post.id, rootContext.contextObject.currentUser.id, rating, post.owner.id, JSON.stringify(post.tags), rootContext.contextObject.currentUser.facebookToken.name, post.itemName)
-            .then(() => {
-                if (!hasUserRated) {
-                    setRatingList([...ratingList, {
-                        rating: rating,
-                        getUser: {
-                            id: rootContext.contextObject.currentUser.id,
-                            personalInfo: {
-                                profileImageURL: rootContext.contextObject.currentUser.facebookToken.profileImageURL,
-                                name: rootContext.contextObject.currentUser.facebookToken.name
-                            }
-                        }
-                    }])
-                }
-                ToastAndroid.showWithGravity(
-                    "Thank you for your rating!",
-                    ToastAndroid.SHORT,
-                    ToastAndroid.BOTTOM
-                )
-                detectChange(false)
-                setRatingRelation(true)
-                setRatingWindow(false)
-            })
-    }
+
 
 
     return (
@@ -260,15 +236,7 @@ function PostDetails(props) {
                                 flex: 1
                             }} title="View location" />
 
-                            {!isOwnPost && < Button onPress={() => {
-                                setRatingWindow(true)
-                            }} style={{
-                                paddingHorizontal: 15,
-                                paddingVertical: 5,
-                                backgroundColor: "#c4c4c4",
-                                borderRadius: 5,
-                                flex: 1
-                            }} title="rate item" />}
+
 
                         </View>
                         <View style={[styles.tags, styles.marginVertical, {
@@ -451,52 +419,7 @@ function PostDetails(props) {
 
             </View>
             }
-            <BottomSheet
-                visible={canShowRatingWindow}
-                onBackButtonPress={() => {
-                    setRatingWindow(false)
-                }}
-                onBackdropPress={() => {
-                    setRatingWindow(false)
-                }}
-            >
-                <View style={[styles.bottomNavigationView]}>
-                    <View style={{
-                        padding: 10,
-                        margin: 10,
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between"
 
-                    }}>
-                        <Text>Your rating:</Text>
-
-                        <View style={{
-                            display: "flex",
-                            flexDirection: "row"
-                        }}>
-                            {[0, 1, 2, 3, 4].map((item, index) => {
-                                return <View key={index}>
-                                    {(item + 1 <= currentUserRating) && <AntDesign onPress={() => { setCurrentUserRating(item + 1); detectChange(true) }} name="star" size={24} color="black" />}
-                                    {(item + 1 > currentUserRating) && <AntDesign onPress={() => { setCurrentUserRating(item + 1); detectChange(true) }} name="staro" size={24} color="black" />}
-
-                                </View>
-                            })}
-                        </View>
-                    </View>
-                    {isRatingChanged && <TouchableOpacity onPress={() => {
-                        rateItem(currentUserRating)
-                    }} style={{
-                        backgroundColor: "#E6E6E6",
-                        padding: 20,
-                        borderRadius: 10
-                    }}>
-                        <Text style={{
-                            fontSize: 15
-                        }}>Update rating</Text>
-                    </TouchableOpacity>}
-                </View>
-            </BottomSheet>
         </View>
     );
 }

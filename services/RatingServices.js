@@ -1,13 +1,13 @@
 import Global from "./Globals"
 export default class RatingServices {
-    static async getMyRating(productId, userId) {
+    static async getMyRating(lowerCasedName, userId) {
         let { data } = await fetch(`${Global.SERVER_URL}/ratings/getUserRating`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                postId: productId,
+                lowerCasedName: lowerCasedName,
                 ratedBy: userId
             })
         }).then(response => response.json())
@@ -23,20 +23,19 @@ export default class RatingServices {
         }).then(res => res.json())
         return data
     }
-    static async rateItem(postId, userid, rating, ownerid, tagList, userName, itemName) {
+    static async rateItem(lowerCasedName, userid, rating, ownerid, userName) {
         let { data } = await fetch(`${Global.SERVER_URL}/ratings/rateItem`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                postId: postId,
+                lowerCasedName: lowerCasedName,
                 ownerId: ownerid,
                 ratedBy: userid,
-                tagLIst: (tagList),
                 rating: rating,
                 userName: userName,
-                itemName: itemName
+                itemName: lowerCasedName
             })
         }).then(response => response.json())
         return data

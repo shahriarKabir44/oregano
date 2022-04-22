@@ -29,17 +29,16 @@ export default class OrderServices {
                           }
                         }
                         orderedItems{
-                          amount
-                          post{
-                            id
+                            amount
                             itemName
-                            images
-                            unitType
-                            tags
-                            postedBy
+                            lowerCasedName
+                            lastPost{
+                              id
+                              images
+                              postedBy
+                            }
                           }
                         }
-                    }
                   }`
             })
         }).then(res => res.json())
@@ -58,7 +57,7 @@ export default class OrderServices {
     }
 
     static async setRating(datas, row, col, buyerId) {
-        let data = await RatingServices.getMyRating(datas[row].orderedItems[col].post.id, buyerId)
+        let data = await RatingServices.getMyRating(datas[row].orderedItems[col].lowerCasedName, buyerId)
         datas[row].orderedItems[col].rating = data?.rating ? data.rating : 0
     }
 
