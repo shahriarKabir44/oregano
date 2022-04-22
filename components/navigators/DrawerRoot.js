@@ -22,6 +22,7 @@ import RegisterRider from '../menus/RegisterRider';
 import { } from 'react-native-gesture-handler';
 import UserService from '../../services/UserService';
 import TabNavigator from './TabNavigator';
+import ReceivedOrdersRoot from '../menus/receivedOrders/ReceivedOrdersRoot';
 const Drawer = createDrawerNavigator();
 export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 	const { contextObject } = React.useContext(RootContext)
@@ -49,6 +50,14 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				}
 			}} name="Profile" >
 				{props => <UserProfile drawerNav={props.navigation} stackNav={stackNavigator} />}
+			</Drawer.Screen>}
+
+			{contextObject.currentUser && <Drawer.Screen options={{
+				header: (prop) => {
+					return <CustomHeader goBackOnly={true} name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
+				}
+			}} name="Received Orders" >
+				{props => <ReceivedOrdersRoot drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}
 
 			<Drawer.Screen options={{

@@ -4,7 +4,10 @@ import Global from "./Globals";
 
 export default class OrderServices {
 
-
+    static async requestRider(orderid) {
+        let { data } = await fetch(Global.SERVER_URL + `/orders/requestRider/${orderid}`).then(response => response.json())
+        return data
+    }
     static async getPreviousOrders(buyerId) {
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
@@ -231,6 +234,39 @@ export default class OrderServices {
 
         }
 
+    }
+
+    static async getReceivedOrders(sellerId) {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getReceivedOrders(id:"${sellerId}"){
+                      id
+                      time
+                      pickupLat
+                      pickupLong
+                      drop_lat
+                      drop_long
+                      status
+                      pickupLocationGeocode
+                      dropLocationGeocode
+                      buyer{
+                        id
+                        name
+                        personalInfo{
+                          profileImageURL
+                        }
+                         
+                      }
+                    }
+                  }`
+            })
+        }).then(res => res.json())
+        return data.getReceivedOrders
     }
 }
 
