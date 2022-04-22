@@ -170,7 +170,7 @@ export default class OrderServices {
     }
 
 
-    static async createOrder(cookId, orderLocationInfo, buyerName, buyerId, itemsCount) {
+    static async createOrder(cookId, orderLocationInfo, buyerName, buyerId, itemsCount, orderCity) {
         let userData = await UserService.findUser(cookId)
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
         let orderInfo = await fetch(Global.SERVER_URL + '/orders/createNewOrder', {
@@ -187,6 +187,7 @@ export default class OrderServices {
                 riderId: null,
                 status: 0,
                 charge: 30,
+                city: orderCity,
                 time: (new Date()) * 1,
                 pickupLat: userData.currentLatitude,
                 pickupLong: userData.currentLongitude,
@@ -221,10 +222,10 @@ export default class OrderServices {
         }).then(res => res.json())
         return orderItemData.data.createOrderItem
     }
-    static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId) {
+    static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId, orderCity) {
 
         for (let group of orderItems) {
-            let newOrderId = await OrderServices.createOrder(group.id, orderLocationInfo, buyerName, buyerId, group.items.length)
+            let newOrderId = await OrderServices.createOrder(group.id, orderLocationInfo, buyerName, buyerId, group.items.length, orderCity)
             let promises = []
             for (let item of group.items) {
                 promises.push(OrderServices.createOrderItem(item, newOrderId._id))

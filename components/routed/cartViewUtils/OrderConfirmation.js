@@ -17,6 +17,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
     const [hasLocationGeocodeLoaded, setLoadingStatus] = React.useState(false)
     const [customLocationGeocode, setCustomLocationGeocode] = React.useState("Pick from map")
     const [modalVisible, setModalVisible] = React.useState(false)
+    const [orderCity, setOrderCity] = React.useState("")
     React.useEffect(() => {
         (async function () {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -33,6 +34,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude
             })
+            setOrderCity(currentLocationGeoCode[0].city)
             setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
             setLoadingStatus(1 == 1)
         })().then(() => {
@@ -136,7 +138,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                     OrderServices.placeOrders(orderItems, {
                         ...currentLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
-                    }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id)
+                    }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id, orderCity)
                         .then(() => {
                             CartServices.clearAll()
                                 .then(() => {
