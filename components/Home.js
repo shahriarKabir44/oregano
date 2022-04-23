@@ -59,7 +59,6 @@ function Home(props) {
     async function loadLocalItems(userId, region) {
         let { data } = await fetch(Global.searchServerURL + `/getLocalAvailableItems/${userId}/${region}`)
             .then(response => response.json())
-        console.log(data, userId, region)
         setLocalItems(data)
     }
     async function loadLocalDatas(region) {

@@ -35,8 +35,8 @@ function ReceivedOrdersRoot(props) {
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={loadData} />}
 
             >
-                {orderList.map((item, index) => {
-                    return <OrderGroup loadData={loadData} item={item} {...props} index={index} />
+                {orderList.map((item, index1) => {
+                    return <OrderGroup loadData={loadData} item={item} {...props} index={index1} />
                 })}
             </ScrollView>
         </View>
@@ -75,7 +75,9 @@ function OrderGroup(props) {
 
     return (<View style={{
         backgroundColor: "#F5C9E6",
-        padding: 10
+        padding: 10,
+        margin: 5,
+        borderRadius: 5,
     }} >
         <TouchableOpacity onPress={() => {
             getOrderItems().then(() => {

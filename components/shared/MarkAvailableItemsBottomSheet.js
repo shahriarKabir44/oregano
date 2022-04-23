@@ -64,7 +64,6 @@ function RenderMainComponent(props) {
     function getAvailableTags(availables) {
         PostService.getAvailableItemsToday(getCurrentuser().id)
             .then(data => {
-                console.log(data);
                 let tempData = availables
                 for (let tag of data) {
                     let temp = []
@@ -77,10 +76,8 @@ function RenderMainComponent(props) {
                     tempData = temp
 
                 }
-
                 setAvailableTags(tempData)
-
-                setSelected([])
+                setSelected(data)
             })
     }
     React.useEffect(() => {
@@ -124,8 +121,7 @@ function RenderMainComponent(props) {
         }
         temp = temp.filter(name => name.startsWith(query))
         setAvailableTags(temp)
-        if (!temp.length) setExistence(1 == 0)
-        else setExistence(1 == 1)
+
     }
     return (<View style={{
         margin: 10,

@@ -244,7 +244,20 @@ export default class PostService {
         }).then(res => res.json())
         return data.getPostRatings
     }
+    static async removeTodayTags(userId) {
+        return fetch(`${Global.SERVER_URL}/posts/removeTodayTags`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userId,
+
+            })
+        }).then(response => response.json())
+    }
     static async setAvailableItemsToday(userId, tagList, region) {
+        await PostService.removeTodayTags(userId)
         let promises = []
         for (let tag of tagList) {
             promises.push(fetch(`${Global.SERVER_URL}/posts/updateTags`, {
