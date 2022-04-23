@@ -37,7 +37,8 @@ export default class PostService {
         }
         return posts
     }
-    static async findLocalPosts(district = "California") {
+    static async findLocalPosts(city) {
+
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
             headers: {
@@ -45,7 +46,7 @@ export default class PostService {
             },
             body: JSON.stringify({
                 query: `query{
-                    findLocalPosts(district:"${district}"){
+                    findLocalPosts(city:"${city}"){
                       itemName
                       id
                         images
@@ -65,6 +66,7 @@ export default class PostService {
             })
 
         }).then(res => res.json())
+        console.log(data)
         data = data.findLocalPosts
         for (let post of data) {
             post.images = JSON.parse(post.images)

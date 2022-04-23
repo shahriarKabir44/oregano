@@ -61,15 +61,16 @@ function Home(props) {
             .then(response => response.json())
         setLocalItems(data)
     }
-    async function loadLocalDatas(region) {
+    async function loadLocalDatas(location) {
         return Promise.all([
-            UserService.getLocalUsers(region, rootContext.getCurrentuser().id)
+            UserService.getLocalUsers(location.region, rootContext.getCurrentuser().id)
                 .then(data => {
 
                     setLocalUsers(data);
                 }),
-            PostService.findLocalPosts()
+            PostService.findLocalPosts(location.city)
                 .then(data => {
+                    console.log(data);
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
                 }),
@@ -86,7 +87,7 @@ function Home(props) {
                         loadLocalItems(rootContext.getCurrentuser().id, data.city)
 
 
-                        loadLocalDatas(data.region)
+                        loadLocalDatas(data)
                             .then(() => setRefreshing(false));
                     })
 
