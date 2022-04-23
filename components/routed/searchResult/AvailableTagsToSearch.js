@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Button } from 'react-native'
 import { RootContext } from '../../contexts/GlobalContext';
 import { TextInput } from 'react-native-paper'
+import Global from '../../../services/Globals';
 
 function AvailableTagsToSearch(props) {
     const { setHeaderString } = React.useContext(RootContext)
@@ -10,7 +11,7 @@ function AvailableTagsToSearch(props) {
     const [tempList, setTempList] = React.useState([])
     React.useEffect(() => {
         setHeaderString("Suggestions")
-        fetch('http://192.168.43.90:3000/getAvailableTags')
+        fetch(Global.SERVER_URL + '/getAvailableTags')
             .then(response => response.json())
             .then(({ data }) => {
                 setAvailableTags(data)

@@ -18,7 +18,7 @@ function CreatePostBottomSheet(props) {
             }}
         >
             <View style={{
-                maxHeight: Dimensions.get('window').height * .9,
+                maxHeight: Dimensions.get('window').height * .75,
 
             }}>
                 <View style={[styles.bottomNavigationView, { height: "100%" }]}>

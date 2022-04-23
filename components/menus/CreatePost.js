@@ -18,7 +18,7 @@ function CreatePost(props) {
 	const isFocused = useIsFocused()
 	const rootContext = React.useContext(RootContext)
 	const [item, setItemProperty] = useState({
-		itemName: "",
+		itemName: "Please select",
 		tags: [],
 		images: "",
 		unitPrice: "",
@@ -127,8 +127,9 @@ function CreatePost(props) {
 			>
 				<View style={styles.centeredView1}>
 					<View style={styles.modalView1}>
-						<Addtags {...props} setSelectedTags={(tagList) => {
-							setItemProperty({ ...item, tags: tagList })
+						<Addtags {...props} setSelectedTags={(tagName) => {
+							console.log(tagName)
+							setItemProperty({ ...item, itemName: tagName })
 							setTagSelectionModalVisibility(!tagSelectionModal);
 						}} selectedNames={item.tags} />
 					</View>
@@ -148,11 +149,7 @@ function CreatePost(props) {
 					{isFocused && <View>
 						<Text></Text>
 					</View>}
-					<TextInput
-						label="Item Name"
-						value={item.itemName}
-						onChangeText={text => setItemProperty({ ...item, itemName: text })}
-					/>
+
 					{/* images section */}
 
 					<Text style={{
@@ -188,54 +185,18 @@ function CreatePost(props) {
 							</View>
 						}}
 					/>
-					<Button title='+ Add tags' onPress={() => {
-						// TagsSelectionService.setTagList(item.tags)
-						// props.navigation.push('Add tags', {
-						// 	selectedNames: item.tags
-						// })
+					<Button title='Set item name' onPress={() => {
+
 						setTagSelectionModalVisibility(1 == 1)
 					}} />
-					{item.tags.length > 0 && <View style={{
-						margin: 10
-					}}>
-						<Text>Added tags</Text>
-						<View style={{
-							display: "flex",
-							flexDirection: "row"
-						}}>
-							{item.tags.map((tag, index) => <RemovableTag key={index} name={tag} removeTag={() => {
-								setItemProperty({ ...item, tags: item.tags.filter(name => name != tag) })
-							}} />)}
-						</View>
-					</View>}
 
-					<View style={{
-						marginVertical: 20,
+					<Text style={{
+						fontSize: 20
+					}}>Item name:{item.itemName}</Text>
 
-					}}>
-						<TextInput
-							keyboardType="numeric"
-							label="Amount Produced"
-							value={item.amountProduced}
-							onChangeText={text => setItemProperty({ ...item, amountProduced: text })}
-						/>
-						<Picker
-							selectedValue={item.unitType}
 
-							onValueChange={(itemValue, itemIndex) => setItemProperty({ ...item, unitType: itemValue })}
-						>
-							<Picker.Item label="Units" value="Units" />
-							<Picker.Item label="Kgs" value="Kgs" />
-						</Picker>
-					</View>
-					<View>
-						<TextInput
-							keyboardType="numeric"
-							label="Price"
-							value={item.unitPrice}
-							onChangeText={text => setItemProperty({ ...item, unitPrice: text })}
-						/>
-					</View>
+
+
 				</View>
 			</ScrollView>
 
@@ -320,12 +281,12 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginTop: 22,
 		width: Dimensions.get('window').width,
-		height: Dimensions.get('window').height,
+		height: Dimensions.get('window').height * .8,
 	},
 	modalView1: {
 		width: Dimensions.get('window').width * .8,
-		height: Dimensions.get('window').height * .8,
-
+		maxHeight: Dimensions.get('window').height * .8,
+		height: '100%',
 		backgroundColor: "white",
 		borderRadius: 20,
 

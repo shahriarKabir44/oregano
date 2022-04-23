@@ -19,7 +19,7 @@ function Addtags(props) {
     const [tags, setAvailableTags] = useState([])
     useEffect(() => {
         setSelected(props.selectedNames)
-        fetch(Global.SERVER_URL + '/getAvailableTags')
+        fetch(Global.SERVER_URL + '/getAllTags')
             .then(response => response.json())
             .then(({ data }) => {
                 setAvailableTagList(data)
@@ -76,7 +76,7 @@ function Addtags(props) {
             padding: 10
         }}>
             <TextInput
-                label="Tag name"
+                label="Search name"
                 value={searchText}
                 onChangeText={text => search(text)}
             />
@@ -107,16 +107,15 @@ function Addtags(props) {
             </View>}
             <Text style={{
                 padding: 5,
-                fontSize: 25
-            }}>Available tags:</Text>
+                fontSize: 20
+            }}>Available names:</Text>
             <ScrollView>
 
                 {!doesSearchExist && <View>
                     <TouchableOpacity style={[styles.alighnHorizontal, {
                         paddingHorizontal: 10
                     }]} onPress={() => {
-                        addTag(searchText)
-                        search("")
+                        props.setSelectedTags(searchText)
                     }} >
                         <View style={styles.updateAmountBtn}>
                             <Text style={{
@@ -125,9 +124,9 @@ function Addtags(props) {
                         </View>
 
                         <Text style={{
-                            fontSize: 20,
+                            fontSize: 15,
                             marginLeft: 20
-                        }}>Add tag "{searchText}"</Text>
+                        }}>Set name as "{searchText}"</Text>
                     </TouchableOpacity>
                 </View>}
                 {doesSearchExist && <View>
@@ -136,7 +135,7 @@ function Addtags(props) {
                             margin: 5
                         }}>
                             <Button title={tagName} onPress={() => {
-                                addTag(tagName)
+                                props.setSelectedTags(tagName)
                             }} />
                         </View>
                     })}
@@ -144,20 +143,7 @@ function Addtags(props) {
             </ScrollView>
 
 
-            <TouchableOpacity onPress={() => {
-                props.setSelectedTags(selected)
-            }}>
-                <View style={{
-                    backgroundColor: "#FFA500",
-                    height: 40,
-                    justifyContent: "center",
-                    alignItems: "center"
-                }}>
-                    <Text style={{
-                        fontSize: 20
-                    }}> Done! </Text>
-                </View>
-            </TouchableOpacity>
+
         </View>
     );
 }

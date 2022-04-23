@@ -95,7 +95,7 @@ function SearhcItemsRoot(props) {
                                         <Text>{result.itemName}</Text>
                                         <Text>Tk.{result.unitPrice}</Text>
                                     </View>
-                                    <Text>{result.getRatings}⭐</Text>
+                                    <Text>{result.getRatings ? result.getRatings : 0}⭐</Text>
 
                                 </View>
                                 <View style={{
