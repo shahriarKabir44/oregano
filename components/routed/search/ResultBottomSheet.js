@@ -73,7 +73,7 @@ function SearchDetails(props) {
                             marginLeft: 20
                         }}>
 
-                            <Text>⭐{selectedSearchResult.getRatings ? selectedSearchResult.getRatings : 0}</Text>
+                            <Text>⭐{selectedSearchResult.getRatings}</Text>
 
                             <Text>💰Tk.{selectedSearchResult.unitPrice}</Text>
                         </View>

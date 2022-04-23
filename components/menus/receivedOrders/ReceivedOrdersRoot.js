@@ -19,8 +19,9 @@ function ReceivedOrdersRoot(props) {
         OrderServices.getReceivedOrders(getCurrentuser().id)
             .then(data => {
                 setOrderList(data);
+            })
+            .then(() => {
                 setRefreshing(false)
-
             })
     }
     React.useEffect(() => {
@@ -36,7 +37,7 @@ function ReceivedOrdersRoot(props) {
 
             >
                 {orderList.map((item, index1) => {
-                    return <OrderGroup loadData={loadData} item={item} {...props} index={index1} />
+                    return <OrderGroup loadData={loadData} item={item} {...props} key={index1} />
                 })}
             </ScrollView>
         </View>
@@ -54,7 +55,6 @@ function OrderGroup(props) {
     }
 
     function translateStatus(status) {
-        console.log(status);
         switch (status) {
             case 0:
                 return 'Pending'
@@ -74,7 +74,7 @@ function OrderGroup(props) {
     }
 
     return (<View style={{
-        backgroundColor: "#F5C9E6",
+        backgroundColor: "#E7F3ED",
         padding: 10,
         margin: 5,
         borderRadius: 5,

@@ -128,7 +128,6 @@ function CreatePost(props) {
 				<View style={styles.centeredView1}>
 					<View style={styles.modalView1}>
 						<Addtags {...props} setSelectedTags={(tagName) => {
-							console.log(tagName)
 							setItemProperty({ ...item, itemName: tagName })
 							setTagSelectionModalVisibility(!tagSelectionModal);
 						}} selectedNames={item.tags} />

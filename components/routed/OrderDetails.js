@@ -67,7 +67,6 @@ function OrderDetails(props) {
                                 },
                                 status: item.status
                             }
-                            console.log(data.product.image);
                             productList.push(data)
                             statuses.push(item.status)
 

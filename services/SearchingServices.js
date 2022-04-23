@@ -117,7 +117,7 @@ export default class SearchingServices {
                       rating
                       ratedBy
                       unitPrice
-                      
+                      getRatings
                     }
                        
                   }`})

@@ -83,7 +83,6 @@ function Home(props) {
             .then(() => {
                 rootContext.updateCurrentLocationInfo()
                     .then((data) => {
-                        console.log(data);
                         loadLocalItems(rootContext.getCurrentuser().id, data.city)
 
 
