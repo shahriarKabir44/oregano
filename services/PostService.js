@@ -66,7 +66,6 @@ export default class PostService {
             })
 
         }).then(res => res.json())
-        console.log(data)
         data = data.findLocalPosts
         for (let post of data) {
             post.images = JSON.parse(post.images)

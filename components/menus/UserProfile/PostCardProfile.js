@@ -53,7 +53,7 @@ function PostCardProfile({ post, drawerNav, stackNav }) {
 
 
                 </View>
-                <View style={[styles.tags, styles.marginVertical, {
+                {/* <View style={[styles.tags, styles.marginVertical, {
                     padding: 5,
                     flex: 1
                 }]}>
@@ -62,7 +62,7 @@ function PostCardProfile({ post, drawerNav, stackNav }) {
                     {post?.tags?.map((tag, index) => (
                         <Tags key={index} name={tag} />
                     ))}
-                </View>
+                </View> */}
                 <View style={[styles.otherInfo, styles.marginVertical]}>
                     <Text> Tk {post?.unitPrice} </Text>
                     <Text> {post?.amountProduced} {post?.unitType} available </Text>
