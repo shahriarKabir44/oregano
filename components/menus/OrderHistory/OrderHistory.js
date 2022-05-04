@@ -7,6 +7,7 @@ import Ordergroup from './Ordergroup';
 import { BottomSheet } from 'react-native-btr';
 import { AntDesign } from '@expo/vector-icons';
 import RatingServices from '../../../services/RatingServices';
+import Global from '../../../services/Globals';
 
 function OrderHistory(props) {
     const isFocused = useIsFocused()
@@ -85,13 +86,13 @@ function OrderHistory(props) {
                                         aspectRatio: 1,
                                         borderRadius: 60
                                     }} source={{
-                                        uri: JSON.parse(currentlyFocusedProduct?.product.lastPost.images)[0]
+                                        uri: Global.SERVER_IP + JSON.parse(currentlyFocusedProduct?.product.lastPost.images)[0]
                                     }} />
                                 </View>
 
                                 <FlatList
                                     horizontal={true}
-                                    data={JSON.parse(currentlyFocusedProduct?.product.lastPost.images)}
+                                    data={JSON.parse(currentlyFocusedProduct?.product.lastPost.images).map(url => Global.SERVER_IP + url)}
                                     keyExtractor={image => image}
                                     renderItem={(image) => {
                                         return <View style={{

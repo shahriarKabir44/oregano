@@ -8,6 +8,7 @@ import OrderListItem from './OrderListItem/OrderListItem';
 import { RootContext } from '../contexts/GlobalContext';
 import { useIsFocused } from '@react-navigation/native';
 import OrderServices from '../../services/OrderServices';
+import Global from '../../services/Globals';
 
 
 function OrderDetails(props) {
@@ -63,7 +64,7 @@ function OrderDetails(props) {
                                 amount: item.amount,
                                 product: {
                                     lowerCasedName: item.lowerCasedName,
-                                    image: JSON.parse(item.lastPost.images)[0]
+                                    image: Global.SERVER_IP + JSON.parse(item.lastPost.images)[0]
                                 },
                                 status: item.status
                             }

@@ -9,7 +9,7 @@ import PostService from '../services/PostService';
 import UserService from '../services/UserService';
 import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
-import ActionButton from 'react-native-action-button';
+import ActionButton from 'react-native-circular-action-menu';
 import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 import SearchBottomSheet from './shared/SearchBottomSheet';
 import CreatePostBottomSheet from './shared/CreatePostBottomSheet';
@@ -81,30 +81,30 @@ function Home(props) {
         setRefreshing(true)
 
         loadPosts()
-            .then(() => {
-                rootContext.updateCurrentLocationInfo()
-                    .then((data) => {
-                        loadLocalItems(rootContext.getCurrentuser().id, data.city)
+
+        console.log('first')
+        rootContext.updateCurrentLocationInfo()
+            .then((data) => {
+                loadLocalItems(rootContext.getCurrentuser().id, data.city)
 
 
-                        loadLocalDatas(data)
-                            .then(() => setRefreshing(false));
-                    })
-
+                loadLocalDatas(data)
+                    .then(() => setRefreshing(false));
             })
+
+
     }
     async function loadPosts() {
+
         return Promise.all([
-            UserService.getFolloweesPosts(rootContext.contextObject.currentUser.id)
+            UserService.getFolloweesPosts(rootContext.getCurrentuser().id)
                 .then(data => {
 
                     setSubscribedPosts(data)
                     setIsLoaded(true)
                 })
 
-        ]).then(() => {
-
-        })
+        ])
 
     }
     const onRefresh = React.useCallback(() => {

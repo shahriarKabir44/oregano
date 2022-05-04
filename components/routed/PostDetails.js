@@ -15,6 +15,7 @@ import { RootContext } from '../contexts/GlobalContext'
 import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
 import RatingServices from '../../services/RatingServices';
+import Global from '../../services/Globals';
 
 function PostDetails(props) {
     const [isOwnPost, setOwnershipStatus] = React.useState(false)
@@ -98,7 +99,7 @@ function PostDetails(props) {
                     let images = []
                     for (let image of postInfo.images) {
                         images.push({
-                            url: image,
+                            url: Global.SERVER_IP + image,
                             props: ""
                         })
                     }
@@ -142,7 +143,7 @@ function PostDetails(props) {
                                 aspectRatio: 1,
                                 borderRadius: 100
                             }} source={{
-                                uri: post.images[0]
+                                uri: Global.SERVER_IP + post.images[0]
                             }} />
                             <View style={styles.primaryInfo}>
                                 <Text style={{
@@ -194,7 +195,7 @@ function PostDetails(props) {
                         }}>Details: </Text>
                         <FlatList
                             horizontal={true}
-                            data={post.images}
+                            data={post.images.map(url => url + Global.SERVER_IP)}
                             keyExtractor={image => image}
                             renderItem={(image) => {
                                 return <View style={{
@@ -413,7 +414,7 @@ function PostDetails(props) {
                 <Modal visible={canPopUpImageModal} transparent={true}>
                     <ImageViewer onDoubleClick={() => {
                         setImageModalVisibility(false)
-                    }} imageUrls={images} />
+                    }} imageUrls={images.map(item => { return { ...item, url: Global.SERVER_IP + item.url } })} />
                 </Modal>
 
                 <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={post} tagnameLabel="Post location" />

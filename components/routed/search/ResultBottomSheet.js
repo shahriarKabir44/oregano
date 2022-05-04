@@ -7,6 +7,7 @@ import Collapsible from 'react-native-collapsible';
 import LocationService from '../../../services/LocationService'
 import CartServices from '../../../services/CartServices'
 import { FontAwesome5 } from '@expo/vector-icons';
+import Global from '../../../services/Globals';
 
 function ResultBottomSheet(props) {
 
@@ -67,7 +68,7 @@ function SearchDetails(props) {
                             aspectRatio: 1,
                             borderRadius: 50,
                         }} source={{
-                            uri: selectedSearchResult.relatedPost.length ? JSON.parse(selectedSearchResult.relatedPost[0].images)[0] : placeHolderImage
+                            uri: selectedSearchResult.relatedPost.length ? Global.SERVER_IP + JSON.parse(selectedSearchResult.relatedPost[0].images)[0] : placeHolderImage
                         }} />
                         <View style={{
                             marginLeft: 20
@@ -230,7 +231,7 @@ function RenderPost(props) {
             height: 140,
             aspectRatio: 1,
         }} source={{
-            uri: JSON.parse(props.item.images)[0]
+            uri: Global.SERVER_IP + JSON.parse(props.item.images)[0]
         }} />
         <View style={[styles.horizontalAlign]}>
             <View>
@@ -239,14 +240,14 @@ function RenderPost(props) {
                     aspectRatio: 1,
                     margin: 5
                 }} source={{
-                    uri: JSON.parse(props.item.images)[1]
+                    uri: Global.SERVER_IP + JSON.parse(props.item.images)[1]
                 }} />
                 <Image style={{
                     height: 60,
                     aspectRatio: 1,
                     margin: 5
                 }} source={{
-                    uri: JSON.parse(props.item.images)[2]
+                    uri: Global.SERVER_IP + JSON.parse(props.item.images)[2]
                 }} />
             </View>
             <View>

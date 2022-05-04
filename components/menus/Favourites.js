@@ -2,6 +2,7 @@ import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { Text, View, Image, StyleSheet, ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
+import Global from '../../services/Globals';
 
 
 import UserService from '../../services/UserService';
@@ -120,7 +121,7 @@ function FollowingListItem({ followee, stackNav }) {
                             aspectRatio: 1,
                             borderRadius: 50
                         }} source={{
-                            uri: followee.lastPost.images[0]
+                            uri: Global.SERVER_IP + followee.lastPost.images[0]
                         }} />
                         <Text style={{ fontSize: 15, marginLeft: 10 }}> {(followee.lastPost.itemName)} </Text>
                     </View>
@@ -183,7 +184,7 @@ function FollowerListItem({ follower }) {
                             aspectRatio: 1,
                             borderRadius: 50
                         }} source={{
-                            uri: follower.lastPost.images[0]
+                            uri: Global.SERVER_IP + follower.lastPost.images[0]
                         }} />
                         <Text style={{ fontSize: 15, marginLeft: 10 }}> {(follower.lastPost.itemName)} </Text>
                     </View>

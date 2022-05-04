@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
+import Global from '../../../services/Globals';
 import RatingServices from '../../../services/RatingServices';
 import { RootContext } from '../../contexts/GlobalContext';
 
@@ -49,7 +50,7 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupI
                 aspectRatio: 1,
                 borderRadius: 50
             }} source={{
-                uri: JSON.parse(orderItem.lastPost.images)[0]
+                uri: Global.SERVER_IP + JSON.parse(orderItem.lastPost.images)[0]
             }} />
         </TouchableOpacity>
     );

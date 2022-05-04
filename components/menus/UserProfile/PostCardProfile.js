@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { FlatList } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Global from '../../../services/Globals';
 import Tags from '../../shared/Tags';
 
 function PostCardProfile({ post, drawerNav, stackNav }) {
@@ -26,7 +27,7 @@ function PostCardProfile({ post, drawerNav, stackNav }) {
                 <View>
                     <Image style={styles.cardImg} source={{
 
-                        uri: post?.images[0],
+                        uri: Global.SERVER_IP + post?.images[0],
                         height: "100%"
                     }} />
                 </View>

@@ -6,6 +6,7 @@ import { BottomSheet } from 'react-native-btr';
 import OrderServices from '../../../services/OrderServices';
 import { RootContext } from '../../contexts/GlobalContext';
 import { useIsFocused } from '@react-navigation/native';
+import Global from '../../../services/Globals';
 
 function ReceivedOrdersRoot(props) {
     const isFocused = useIsFocused()
@@ -124,7 +125,7 @@ function OrderGroup(props) {
                     aspectRatio: 1,
                     borderRadius: 50
                 }} source={{
-                    uri: JSON.parse(orderedItem.lastPost.images)[0]
+                    uri: Global.SERVER_IP + JSON.parse(orderedItem.lastPost.images)[0]
                 }} />
                 <View>
                     <Text>Name: {orderedItem.lowerCasedName} </Text>

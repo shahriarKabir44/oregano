@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Text, TouchableOpacityBase } from 'react-native';
+import Global from '../../../services/Globals';
 import { RootContext } from '../../contexts/GlobalContext';
 
 
@@ -28,7 +29,7 @@ function SearchResultItem(props) {
                             width: 110,
                             borderRadius: 60
                         }} source={{
-                            uri: props.item['images'][0]
+                            uri: Global.SERVER_IP + props.item['images'][0]
                         }} />
                     </View>
                     <View style={styles.info}>

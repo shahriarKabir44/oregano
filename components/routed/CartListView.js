@@ -7,6 +7,7 @@ import ResultBottomSheet from '../../components/routed/search/ResultBottomSheet'
 import { RootContext } from '../contexts/GlobalContext'
 import { useIsFocused } from '@react-navigation/native';
 import OrderConfirmation from './cartViewUtils/OrderConfirmation';
+import Global from '../../services/Globals';
 function CartListView(props) {
     const [dropDownVisibility, popupBottomSheet] = React.useState(false)
     const rootContext = React.useContext(RootContext)
@@ -90,7 +91,7 @@ function CartListView(props) {
                                     height: 50,
                                     aspectRatio: 1,
                                     borderRadius: 50,
-                                }} source={{ uri: JSON.parse(item.relatedPost[0]?.images)[0] }} />
+                                }} source={{ uri: Global.SERVER_IP + JSON.parse(item.relatedPost[0]?.images)[0] }} />
 
                                 <Text>{item.itemName}</Text>
                                 <Text>Amount:{item.amount}</Text>
