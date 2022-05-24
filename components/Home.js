@@ -70,7 +70,6 @@ function Home(props) {
                 }),
             PostService.findLocalPosts(location.city)
                 .then(data => {
-                    console.log(data);
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
                 }),
@@ -81,8 +80,6 @@ function Home(props) {
         setRefreshing(true)
 
         loadPosts()
-
-        console.log('first')
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
                 loadLocalItems(rootContext.getCurrentuser().id, data.city)
