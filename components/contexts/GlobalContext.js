@@ -52,9 +52,8 @@ export default function GlobalContext({ children }) {
             if (status) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
-                        //console.log(data)
-                        setCurrentUser(data)
-                        // setCurrentUser(users[2])
+                        //   setCurrentUser(data)
+                        setCurrentUser(users[2])
                     })
             }
             // LocalStorageService.clearAll()
@@ -119,6 +118,7 @@ export default function GlobalContext({ children }) {
     async function updateCurrentLocationInfo() {
         let locationInfo = await LocationService.getCurrentLocation()
             .then(coords => {
+
                 let locationInfo = {
                     coords: {
                         ...coords
@@ -127,7 +127,6 @@ export default function GlobalContext({ children }) {
                 return locationInfo
             })
         let geocodeData = await LocationService.getLocationGeocode(locationInfo.coords)
-
         let geocode = {}
         if (geocodeData.length) {
             geocode = { ...geocodeData[0] }

@@ -11,6 +11,7 @@ import { BottomSheet } from 'react-native-btr';
 import LocalStorageService from '../../../services/LocalStorageService';
 import { Ionicons } from '@expo/vector-icons';
 import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
+import Global from '../../../services/Globals';
 
 function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
@@ -187,7 +188,7 @@ function UserProfile(props) {
                                 width: '100%',
                                 aspectRatio: 16 / 9
                             }} source={{
-                                uri: UserProfileInfo.facebookToken.coverPhotoURL
+                                uri: Global.SERVER_IP + UserProfileInfo.facebookToken.coverPhotoURL
                             }} />
                             {isCurrentUser && <Entypo name="camera" onPress={() => {
                                 handleUpload()

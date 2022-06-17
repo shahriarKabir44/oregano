@@ -7,6 +7,7 @@ import React from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import Home from '../Home';
 import SearhcItemsRoot from '../routed/search/SearhcItemsRoot';
+import CreateItem from '../routed/CreateItem';
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator(props) {
@@ -20,11 +21,12 @@ export default function TabNavigator(props) {
                     let iconName;
 
                     if (route.name == 'Gallery') {
-                        iconName = focused
-                            ? 'home'
-                            : 'home';
+                        iconName = 'home';
                     } else if (route.name === 'Search items') {
-                        iconName = focused ? 'search1' : 'search1';
+                        iconName = 'search1';
+                    }
+                    else {
+                        iconName = "megaphone"
                     }
 
                     // You can return any component that you like here!
@@ -48,6 +50,13 @@ export default function TabNavigator(props) {
                 }
             }} name="Search items"  >
                 {(childProp) => <SearhcItemsRoot tabNav={childProp.navigation} tabNavRoute={childProp.route} {...props} />}
+            </Tab.Screen>
+            <Tab.Screen options={{
+                header: (prop) => {
+                    return <View></View>
+                }
+            }} name="Express yourself!">
+                {(childProp) => <CreateItem tabNav={childProp.navigation} tabNavRoute={childProp.route} {...props} />}
             </Tab.Screen>
         </Tab.Navigator>
 

@@ -32,7 +32,6 @@ function Home(props) {
     const notificationListener = useRef();
     const responseListener = useRef();
 
-    const [showAvailableItemsBottomSheet, toggleAvailableItemsBottomSheet] = useState(false)
 
     const rootContext = React.useContext(RootContext)
 
@@ -54,7 +53,6 @@ function Home(props) {
     const [refreshing, setRefreshing] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null)
     const [localUsers, setLocalUsers] = React.useState([])
-    const [isLocationLoaded, setLocationLoadedStatus] = React.useState(false)
     const [localItems, setLocalItems] = React.useState([])
     async function loadLocalItems(userId, region) {
         let { data } = await fetch(Global.searchServerURL + `/getLocalAvailableItems/${userId}/${region}`)
@@ -70,7 +68,6 @@ function Home(props) {
                 }),
             PostService.findLocalPosts(location.city)
                 .then(data => {
-                    console.log(data);
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
                 }),
@@ -82,11 +79,9 @@ function Home(props) {
 
         loadPosts()
 
-        console.log('first')
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
                 loadLocalItems(rootContext.getCurrentuser().id, data.city)
-
 
                 loadLocalDatas(data)
                     .then(() => setRefreshing(false));
@@ -135,8 +130,6 @@ function Home(props) {
         <SafeAreaView style={{
             flex: 1
         }}>
-            <MarkAvailableItemsBottomSheet  {...props} bottomSheetVisibility={showAvailableItemsBottomSheet} popupBottomSheet={toggleAvailableItemsBottomSheet} />
-            <CreatePostBottomSheet {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
             <SearchBottomSheet {...props} popupBottomSheet={setBottomsheetVisible} bottomSheetVisibility={searchBottomSheet} />
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -202,34 +195,6 @@ function Home(props) {
                     {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
                 </View>
             </ScrollView>
-
-            <ActionButton buttonColor="rgba(231,76,60,1)">
-
-                <ActionButton.Item
-                    buttonColor="#9b59b6"
-                    title="Post what you've cooked"
-                    onPress={() => {
-                        popupCreatePostBottomSheet(1 == 1)
-                    }}>
-                    <Icon
-                        name="md-camera"
-                        style={styles.actionButtonIcon}
-                    />
-                </ActionButton.Item>
-                <ActionButton.Item
-                    buttonColor="#3498db"
-                    title="Mark Today's available items"
-                    onPress={() => toggleAvailableItemsBottomSheet(2 == 2)}>
-                    <Icon
-                        name="md-star"
-                        style={styles.actionButtonIcon}
-                    />
-                </ActionButton.Item>
-
-            </ActionButton>
-
-
-
         </SafeAreaView>
     );
 }
