@@ -78,7 +78,6 @@ function Home(props) {
         setRefreshing(true)
 
         loadPosts()
-
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
                 loadLocalItems(rootContext.getCurrentuser().id, data.city)
