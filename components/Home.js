@@ -40,7 +40,7 @@ function Home(props) {
         itemName: "Loading..",
         id: -1,
         images: ["https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/articles/2016/02/plate-1508865660.jpg?crop=1xw:0.75xh;center,top&resize=480"],
-        tags: [],
+        tags: "[]",
         owner: {
             facebookToken: {
                 name: "Loading..."

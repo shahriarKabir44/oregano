@@ -8,12 +8,9 @@ function CreatePostBottomSheet(props) {
     return (
         <BottomSheet visible={props.bottomSheetVisibility}
             onBackButtonPress={() => {
-
                 props.popupBottomSheet(false)
             }}
             onBackdropPress={() => {
-
-
                 props.popupBottomSheet(false)
             }}
         >

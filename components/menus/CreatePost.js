@@ -11,8 +11,10 @@ import Addtags from './Addtags';
 
 function CreatePost(props) {
 	const [modalVisible, setModalVisible] = useState(false);
+	const [imagesCount, setImagesCount] = useState(0);
 	const isFocused = useIsFocused()
 	const rootContext = React.useContext(RootContext)
+	const [isNameSelected, setSelectionStatus] = useState(false)
 	const [isVaidPost, setPostValidity] = React.useState(false)
 	const [item, setItemProperty] = useState({
 		itemName: "Please select",
@@ -29,22 +31,16 @@ function CreatePost(props) {
 		postedOn: "",
 		postedBy: "",
 	})
-	function checkValidity() {
-		if (item.itemName == "Please select" || item.itemName == "") setPostValidity(false)
-		if (item.latitude == "") setPostValidity(false)
-		if (images.length == 0) setPostValidity(false)
-		setPostValidity(1 == 1)
+	function checkValidity(numImages, isNameFixed) {
+		console.log(numImages, isNameFixed)
+		if (isNameFixed == false) { setPostValidity(false); return }
+		if (numImages == 0) { setPostValidity(false); return }
+		else setPostValidity(1 == 1)
 	}
-	const [currentLocation, setCurrentLocation] = React.useState({})
 
 	const [tagSelectionModal, setTagSelectionModalVisibility] = React.useState(false)
 	async function setGeoInfo() {
 		let coords = await LocationService.getCurrentLocation()
-		setCurrentLocation({
-			latitude: coords.latitude,
-			longitude: coords.longitude
-		})
-
 		let geocode = await LocationService.getLocationGeocode(coords)
 		let locationInfo = {
 			...coords,
@@ -87,12 +83,20 @@ function CreatePost(props) {
 				setImagesList([...images, newImage])
 				if (lastImageId == 3) setLastImageId(5)
 				else setLastImageId(lastImageId + 1)
+				console.log("before ", imagesCount);
+				checkValidity(Math.min(imagesCount + 1, 4), isNameSelected)
+				setImagesCount(Math.min(imagesCount + 1, 4))
 
 			}
 		}
 	}
 	function removeImage(index) {
+		if (imagesCount == 1) setPostValidity(false)
+		else checkValidity(imagesCount - 1, isNameSelected)
+		setImagesCount(Math.max(0, imagesCount - 1))
 		setImagesList(images.filter(image => image.index != index))
+
+
 	}
 	return (
 		<View style={{
@@ -127,6 +131,8 @@ function CreatePost(props) {
 						<Addtags {...props} setSelectedTags={(tagName) => {
 							setItemProperty({ ...item, itemName: tagName })
 							setTagSelectionModalVisibility(!tagSelectionModal);
+							checkValidity(imagesCount, true);
+							setSelectionStatus(true)
 						}} selectedNames={item.tags} />
 					</View>
 				</View>
@@ -197,6 +203,7 @@ function CreatePost(props) {
 			</ScrollView>
 
 			<TouchableOpacity onPress={() => {
+				if (!isVaidPost) return
 				//setModalVisible(1 == 1)
 				setGeoInfo()
 					.then((locationData) => {
@@ -230,20 +237,16 @@ function CreatePost(props) {
 									})
 							})
 					})
-
-
-
-
 			}}>
 				<View style={{
-					backgroundColor: "#FFA500",
+					backgroundColor: isVaidPost ? "#FFA500" : "#809599",
 					height: 60,
 					justifyContent: "center",
 					alignItems: "center"
 				}}>
 					<Text style={{
 						fontSize: 20
-					}}> Post! </Text>
+					}}> POST </Text>
 				</View>
 			</TouchableOpacity>
 		</View>
