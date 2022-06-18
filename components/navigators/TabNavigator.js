@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import Home from '../Home';
 import SearhcItemsRoot from '../routed/search/SearhcItemsRoot';
 import CreateItem from '../routed/CreateItem';
@@ -19,18 +19,18 @@ export default function TabNavigator(props) {
                 tabBarIcon: ({ focused, color, size }) => {
 
                     let iconName;
-
+                    let iconSize = focused ? 30 : 24
                     if (route.name == 'Gallery') {
                         iconName = 'home';
                     } else if (route.name === 'Search items') {
-                        iconName = 'search1';
+                        iconName = 'magnifying-glass';
                     }
                     else {
                         iconName = "megaphone"
                     }
 
                     // You can return any component that you like here!
-                    return <AntDesign name={iconName} size={24} color="black" />
+                    return <Entypo name={iconName} size={iconSize} color="black" />
                 },
                 tabBarActiveTintColor: 'tomato',
                 tabBarInactiveTintColor: 'gray',
