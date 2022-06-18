@@ -26,7 +26,7 @@ function PostCard({ post, drawerNav, stackNav }) {
                 <View>
                     <Image style={styles.cardImg} source={{
 
-                        uri: Global.SERVER_IP + post?.images[0],
+                        uri: post?.images[0],
                         height: "100%"
                     }} />
                 </View>

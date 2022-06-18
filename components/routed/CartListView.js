@@ -91,7 +91,7 @@ function CartListView(props) {
                                     height: 50,
                                     aspectRatio: 1,
                                     borderRadius: 50,
-                                }} source={{ uri: Global.SERVER_IP + JSON.parse(item.relatedPost[0]?.images)[0] }} />
+                                }} source={{ uri: JSON.parse(item.relatedPost[0]?.images)[0] }} />
 
                                 <Text>{item.itemName}</Text>
                                 <Text>Amount:{item.amount}</Text>

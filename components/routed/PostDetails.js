@@ -99,7 +99,7 @@ function PostDetails(props) {
                     let images = []
                     for (let image of postInfo.images) {
                         images.push({
-                            url: Global.SERVER_IP + image,
+                            url: image,
                             props: ""
                         })
                     }
@@ -143,7 +143,7 @@ function PostDetails(props) {
                                 aspectRatio: 1,
                                 borderRadius: 100
                             }} source={{
-                                uri: Global.SERVER_IP + post.images[0]
+                                uri: post.images[0]
                             }} />
                             <View style={styles.primaryInfo}>
                                 <Text style={{
@@ -414,7 +414,7 @@ function PostDetails(props) {
                 <Modal visible={canPopUpImageModal} transparent={true}>
                     <ImageViewer onDoubleClick={() => {
                         setImageModalVisibility(false)
-                    }} imageUrls={images.map(item => { return { ...item, url: Global.SERVER_IP + item.url } })} />
+                    }} imageUrls={images.map(item => { return { ...item, url: item.url } })} />
                 </Modal>
 
                 <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={post} tagnameLabel="Post location" />

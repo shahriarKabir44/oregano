@@ -50,7 +50,7 @@ function OrderItem({ orderItem, popupBottomSheet, setCurrentProduct, orderGroupI
                 aspectRatio: 1,
                 borderRadius: 50
             }} source={{
-                uri: Global.SERVER_IP + JSON.parse(orderItem.lastPost.images)[0]
+                uri: JSON.parse(orderItem.lastPost.images)[0]
             }} />
         </TouchableOpacity>
     );

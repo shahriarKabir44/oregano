@@ -64,7 +64,7 @@ function OrderDetails(props) {
                                 amount: item.amount,
                                 product: {
                                     lowerCasedName: item.lowerCasedName,
-                                    image: Global.SERVER_IP + JSON.parse(item.lastPost.images)[0]
+                                    image: JSON.parse(item.lastPost.images)[0]
                                 },
                                 status: item.status
                             }

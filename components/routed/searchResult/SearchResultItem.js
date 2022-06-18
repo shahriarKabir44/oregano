@@ -29,7 +29,7 @@ function SearchResultItem(props) {
                             width: 110,
                             borderRadius: 60
                         }} source={{
-                            uri: Global.SERVER_IP + props.item['images'][0]
+                            uri: props.item['images'][0]
                         }} />
                     </View>
                     <View style={styles.info}>

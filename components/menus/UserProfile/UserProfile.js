@@ -188,7 +188,7 @@ function UserProfile(props) {
                                 width: '100%',
                                 aspectRatio: 16 / 9
                             }} source={{
-                                uri: Global.SERVER_IP + UserProfileInfo.facebookToken.coverPhotoURL
+                                uri: UserProfileInfo.facebookToken.coverPhotoURL
                             }} />
                             {isCurrentUser && <Entypo name="camera" onPress={() => {
                                 handleUpload()

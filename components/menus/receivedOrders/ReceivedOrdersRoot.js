@@ -125,7 +125,7 @@ function OrderGroup(props) {
                     aspectRatio: 1,
                     borderRadius: 50
                 }} source={{
-                    uri: Global.SERVER_IP + JSON.parse(orderedItem.lastPost.images)[0]
+                    uri: JSON.parse(orderedItem.lastPost.images)[0]
                 }} />
                 <View>
                     <Text>Name: {orderedItem.lowerCasedName} </Text>
