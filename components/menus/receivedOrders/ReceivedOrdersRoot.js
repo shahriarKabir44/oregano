@@ -12,12 +12,12 @@ function ReceivedOrdersRoot(props) {
     const isFocused = useIsFocused()
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const { setHeaderString, getCurrentuser } = React.useContext(RootContext)
+    const { setHeaderString, getCurrentUser } = React.useContext(RootContext)
     const [orderList, setOrderList] = React.useState([])
     function loadData() {
         setRefreshing(true)
 
-        OrderServices.getReceivedOrders(getCurrentuser().id)
+        OrderServices.getReceivedOrders(getCurrentUser().id)
             .then(data => {
                 setOrderList(data);
             })

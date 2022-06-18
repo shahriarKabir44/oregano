@@ -6,12 +6,12 @@ import DeliveyService from '../../services/DeliveryService';
 function DeliveryHistory(props) {
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const { getCurrentuser, setHeaderString } = React.useContext(RootContext)
+    const { getCurrentUser, setHeaderString } = React.useContext(RootContext)
     const isFocused = useIsFocused()
     const [previousDeliveries, setDeliveryList] = React.useState([])
     function loadData() {
         setRefreshing(true)
-        DeliveyService.getDeliveredOrders(getCurrentuser().id)
+        DeliveyService.getDeliveredOrders(getCurrentUser().id)
             .then(data => {
 
                 setDeliveryList(data);

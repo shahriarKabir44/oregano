@@ -6,7 +6,7 @@ import { RadioButton, TextInput } from 'react-native-paper';
 import UserService from '../../services/UserService';
 
 function RegisterRider(props) {
-    const { setCurrentUser, setHeaderString, getCurrentuser } = React.useContext(RootContext)
+    const { setCurrentUser, setHeaderString, getCurrentUser } = React.useContext(RootContext)
     React.useEffect(() => {
         setHeaderString("Become a rider")
     }, [])
@@ -50,10 +50,10 @@ function RegisterRider(props) {
             </View>
             <TouchableOpacity onPress={() => {
                 if (isAccepted) {
-                    UserService.registerRider(getCurrentuser().id)
+                    UserService.registerRider(getCurrentUser().id)
                         .then(() => {
                             setCurrentUser({
-                                ...getCurrentuser(),
+                                ...getCurrentUser(),
                                 isRider: 1
                             })
                             return 1

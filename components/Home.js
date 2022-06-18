@@ -61,7 +61,7 @@ function Home(props) {
     }
     async function loadLocalDatas(location) {
         return Promise.all([
-            UserService.getLocalUsers(location.region, rootContext.getCurrentuser().id)
+            UserService.getLocalUsers(location.region, rootContext.getCurrentUser().id)
                 .then(data => {
 
                     setLocalUsers(data);
@@ -80,7 +80,7 @@ function Home(props) {
         loadPosts()
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
-                loadLocalItems(rootContext.getCurrentuser().id, data.city)
+                loadLocalItems(rootContext.getCurrentUser().id, data.city)
 
                 loadLocalDatas(data)
                     .then(() => setRefreshing(false));
@@ -91,7 +91,7 @@ function Home(props) {
     async function loadPosts() {
 
         return Promise.all([
-            UserService.getFolloweesPosts(rootContext.getCurrentuser().id)
+            UserService.getFolloweesPosts(rootContext.getCurrentUser().id)
                 .then(data => {
 
                     setSubscribedPosts(data)

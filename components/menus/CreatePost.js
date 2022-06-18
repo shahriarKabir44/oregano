@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, ToastAndroid, Modal } from 'react-native';
-import { TextInput } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Entypo } from '@expo/vector-icons';
-import RemovableTag from '../shared/RemovableTag';
-import { Picker } from '@react-native-picker/picker';
-import TagsSelectionService from '../../services/TagsSelectionService';
 import { useIsFocused } from '@react-navigation/native';
 import { RootContext } from '../contexts/GlobalContext'
 import LocationService from '../../services/LocationService';
@@ -17,6 +13,7 @@ function CreatePost(props) {
 	const [modalVisible, setModalVisible] = useState(false);
 	const isFocused = useIsFocused()
 	const rootContext = React.useContext(RootContext)
+	const [isVaidPost, setPostValidity] = React.useState(false)
 	const [item, setItemProperty] = useState({
 		itemName: "Please select",
 		tags: [],
@@ -32,12 +29,14 @@ function CreatePost(props) {
 		postedOn: "",
 		postedBy: "",
 	})
+	function checkValidity() {
+		if (item.itemName == "Please select" || item.itemName == "") setPostValidity(false)
+		if (item.latitude == "") setPostValidity(false)
+		if (images.length == 0) setPostValidity(false)
+		setPostValidity(1 == 1)
+	}
 	const [currentLocation, setCurrentLocation] = React.useState({})
-	const [currentGeocode, setCurrentGeocode] = React.useState({
-		country: "",
-		district: "",
-		city: "",
-	})
+
 	const [tagSelectionModal, setTagSelectionModalVisibility] = React.useState(false)
 	async function setGeoInfo() {
 		let coords = await LocationService.getCurrentLocation()
@@ -56,9 +55,7 @@ function CreatePost(props) {
 	}
 	useEffect(() => {
 		if (isFocused) {
-
-			setItemProperty({ ...item, postedBy: rootContext.contextObject.currentUser.id })
-			setItemProperty({ ...item, tags: [] })
+			setItemProperty({ ...item, postedBy: rootContext.getCurrentUser().id })
 		}
 
 	}, [isFocused])

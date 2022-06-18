@@ -169,7 +169,7 @@ export default function GlobalContext({ children }) {
             isLoggedIn: isLoggedIn,
             getCurrentLocationGeocode: getCurrentLocationGeocode,
             getCurrentLocationName: LocationService.getCurrentLocationName(),
-            getCurrentuser: () => {
+            getCurrentUser: () => {
                 return globalObject.currentUser
             }
         }}>

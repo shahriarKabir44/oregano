@@ -115,7 +115,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 }
 
 function DrawerContentRoot(props) {
-	const { getCurrentuser, setCurrentUser } = React.useContext(RootContext)
+	const { getCurrentUser, setCurrentUser } = React.useContext(RootContext)
 	const [modalVisible, setModalVisible] = React.useState(false)
 	const [unRegisterModal, toggleUnregisterModal] = React.useState(false)
 	return (
@@ -139,7 +139,7 @@ function DrawerContentRoot(props) {
 						}}>
 							<TouchableOpacity onPress={() => {
 								setModalVisible(!modalVisible);
-								UserService.logout(getCurrentuser().id)
+								UserService.logout(getCurrentUser().id)
 									.then(data => {
 										props.setAuthorizationValue(false)
 										ToastAndroid.showWithGravity(
@@ -191,10 +191,10 @@ function DrawerContentRoot(props) {
 						}}>
 							<TouchableOpacity onPress={() => {
 								toggleUnregisterModal(false);
-								UserService.unRegister(getCurrentuser().id)
+								UserService.unRegister(getCurrentUser().id)
 									.then(data => {
 										setCurrentUser({
-											...getCurrentuser(),
+											...getCurrentUser(),
 											isRider: 2
 										})
 
@@ -234,19 +234,19 @@ function DrawerContentRoot(props) {
 				justifyContent: "space-between",
 				paddingHorizontal: 10
 			}} >
-				{getCurrentuser() && <Image style={styles.sideMenuProfileIcon} source={{
-					uri: getCurrentuser().facebookToken.profileImageURL
+				{getCurrentUser() && <Image style={styles.sideMenuProfileIcon} source={{
+					uri: getCurrentUser().facebookToken.profileImageURL
 				}} />}
-				{getCurrentuser() && <Text
+				{getCurrentUser() && <Text
 					style={{
 						paddingVertical: 15
 					}}
-				> {getCurrentuser().facebookToken.name} </Text>}
+				> {getCurrentUser().facebookToken.name} </Text>}
 			</View>
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />
 			</DrawerContentScrollView>
-			{getCurrentuser() && getCurrentuser().isRider == 1 && <View style={{
+			{getCurrentUser() && getCurrentUser().isRider == 1 && <View style={{
 
 				padding: 10,
 				backgroundColor: "#FFF4F3",
