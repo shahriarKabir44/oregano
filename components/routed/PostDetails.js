@@ -350,14 +350,25 @@ function PostDetails(props) {
                 </ScrollView>
 
                 {!isOwnPost && <View>
-                    {(!isAddedToCart) && <View style={styles.footer}>
+                    {(!isAddedToCart && itemAvailability.isAvailable == 1) && <View style={styles.footer}>
                         <TouchableOpacity onPress={() => {
                             toggleBottomNavigationView()
 
                         }}>
                             <Text style={{
-                                fontSize: 20
-                            }}>Add to cart</Text>
+                                fontSize: 15
+                            }}>ADD TO CART</Text>
+
+                        </TouchableOpacity>
+
+                    </View>}
+                    {(!isAddedToCart && itemAvailability.isAvailable == 0) && <View style={[styles.footer, { backgroundColor: "#c4c4c4" }]}>
+                        <TouchableOpacity onPress={() => {
+
+                        }}>
+                            <Text style={{
+                                fontSize: 15
+                            }}>ITEM UNAVAILABLE</Text>
 
                         </TouchableOpacity>
 
@@ -458,7 +469,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFA500",
         height: 60,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+
     },
     footer2: {
         backgroundColor: "#ffffff",
