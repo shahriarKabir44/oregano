@@ -8,7 +8,7 @@ import { RootContext } from '../contexts/GlobalContext'
 import LocationService from '../../services/LocationService';
 import PostService from '../../services/PostService';
 import Addtags from './Addtags';
-
+import UploadManager from '../../services/UploadManager'
 function CreatePost(props) {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [imagesCount, setImagesCount] = useState(0);
@@ -63,32 +63,20 @@ function CreatePost(props) {
 			base64: ""
 		}])
 	const [lastImageId, setLastImageId] = useState(0)
+
 	async function handleUpload() {
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: 1,
-			base64: true
-		})
-		if (result) {
-			if (!result.cancelled) {
-				let imageUriSplit = result.uri.split(".")
-				let newImage = {
-					body: result.uri,
+
+		UploadManager.uploadImageFromDevice()
+			.then(newImageURI => {
+				setImagesList([...images, {
 					index: lastImageId,
-					base64: `data:image/${imageUriSplit[imageUriSplit.length - 1]};base64,${result.base64}`,
-					type: imageUriSplit[imageUriSplit.length - 1],
-				}
-				setImagesList([...images, newImage])
+					body: newImageURI
+				}])
+			}).then(() => {
 				if (lastImageId == 3) setLastImageId(5)
 				else setLastImageId(lastImageId + 1)
-				console.log("before ", imagesCount);
-				checkValidity(Math.min(imagesCount + 1, 4), isNameSelected)
-				setImagesCount(Math.min(imagesCount + 1, 4))
-
-			}
-		}
+				setImagesCount(imagesCount + 1)
+			})
 	}
 	function removeImage(index) {
 		if (imagesCount == 1) setPostValidity(false)
@@ -161,7 +149,7 @@ function CreatePost(props) {
 					<FlatList
 						horizontal={true}
 						data={images}
-						keyExtractor={photo => photo.index}
+						keyExtractor={image => image.index}
 						renderItem={(image) => {
 							return <View style={{
 								padding: 10
@@ -217,16 +205,17 @@ function CreatePost(props) {
 						};
 						return newPost
 					})
-					.then(newPost => {
+					.then((newPost) => {
 						setModalVisible(true);
-						PostService.createPost(newPost)
-							.then(({ data }) => {
-								PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
-									.then(resp => {
-										setModalVisible(false);
-
-									})
+						let urls = []
+						UploadManager.uploadMany(images.filter(image => image.index != 4).map(image => image.body),
+							`post/`,
+							`${rootContext.getCurrentUser().id}/${item.itemName}/${(new Date()) * 1}/image-`
+							, 0, urls,
+							(urls) => {
+								PostService.createPost({ ...newPost, images: JSON.stringify(urls) })
 									.then(() => {
+
 										ToastAndroid.showWithGravity(
 											"Post created succesfully!",
 											ToastAndroid.SHORT,
@@ -234,8 +223,26 @@ function CreatePost(props) {
 										)
 										props.popupBottomSheet(false)
 										if (props.onComplete) props.onComplete()
+										setModalVisible(false);
 									})
-							})
+
+
+
+							}
+						)
+
+
+
+
+						// 
+						// 	.then(({ data }) => {
+						// 		PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
+						// 			.then(resp => {
+						// 				
+
+						// 			})
+						// 			
+						// 	})
 					})
 			}}>
 				<View style={{
@@ -249,7 +256,7 @@ function CreatePost(props) {
 					}}> POST </Text>
 				</View>
 			</TouchableOpacity>
-		</View>
+		</View >
 	);
 }
 const styles = StyleSheet.create({

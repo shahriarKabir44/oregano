@@ -117,7 +117,6 @@ export default function GlobalContext({ children }) {
     async function updateCurrentLocationInfo() {
         let locationInfo = await LocationService.getCurrentLocation()
             .then(coords => {
-
                 let locationInfo = {
                     coords: {
                         ...coords
@@ -130,7 +129,6 @@ export default function GlobalContext({ children }) {
         if (geocodeData.length) {
             geocode = { ...geocodeData[0] }
         }
-
         let locationData = {
             ...locationInfo,
             currentLocationGeoCode: geocode,

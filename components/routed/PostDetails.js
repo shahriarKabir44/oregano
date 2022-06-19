@@ -14,6 +14,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
 import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
+import SimilarItemViewRoot from './postDetailsUtils/SimilarItemViewRoot';
 
 function PostDetails(props) {
     const [isOwnPost, setOwnershipStatus] = React.useState(false)
@@ -244,7 +245,7 @@ function PostDetails(props) {
                         </View>
 
                     </View>
-
+                    <SimilarItemViewRoot {...props} itemName={post.lowerCasedName} />
                     {!ratingList.length && <View>
                         <Text style={{
                             fontSize: 15,

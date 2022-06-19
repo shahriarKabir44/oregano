@@ -120,49 +120,7 @@ export default class PostService {
         return res.data.findPost
 
     }
-    static async uploadImages(images, postedBy, postid, postedOn) {
-        let urls = []
-        let index = 0
-        for (let image of images) {
-            if (image.index != 4) {
-                let { data } = await PostService.updateImage(image, postedBy, postid, postedOn, index++)
-                urls.push(data)
-            }
-        }
-        return this.updateImageURLs(postid, urls)
-    }
-    static async updateImageURLs(postId, images) {
-        let { data } = await fetch(Global.SERVER_URL + '/posts/updatePostImages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                postId: postId,
-                images: JSON.stringify(images)
-            })
-        }).then(response => response.json())
-        return data
-    }
-    static async updateImage(image, postedBy, postid, postedOn, index) {
-        let formData = new FormData()
-        formData.append('file', image.base64)
 
-        let data = await fetch(Global.SERVER_URL + '/posts/upload', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                postedOn: postedOn,
-                postedBy: postedBy,
-                postid: postid,
-                type: image.type,
-                fileName: postid + "image-" + index
-            },
-            body: formData
-        }).then(res => res.json())
-        return data
-
-    }
     static async getOrderList(postId) {
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
