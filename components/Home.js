@@ -51,7 +51,6 @@ function Home(props) {
     const [subscribedPosts, setSubscribedPosts] = useState([])
     const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
-    const [currentUser, setCurrentUser] = React.useState(null)
     const [localUsers, setLocalUsers] = React.useState([])
     const [localItems, setLocalItems] = React.useState([])
     async function loadLocalItems(userId, region) {
@@ -105,10 +104,8 @@ function Home(props) {
         loadData()
 
     }, []);
-    const [createPostBottomSheetVisibility, popupCreatePostBottomSheet] = React.useState(false)
     const [searchBottomSheet, setBottomsheetVisible] = React.useState(false)
     useEffect(() => {
-        LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
         registerForPushNotificationsAsync().then(token => {
             rootContext.updatePushToken(token)
             setExpoPushToken(token)

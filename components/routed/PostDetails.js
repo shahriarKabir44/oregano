@@ -195,7 +195,7 @@ function PostDetails(props) {
                         }}>Details: </Text>
                         <FlatList
                             horizontal={true}
-                            data={post.images.map(url => url + Global.SERVER_IP)}
+                            data={post.images}
                             keyExtractor={image => image}
                             renderItem={(image) => {
                                 return <View style={{

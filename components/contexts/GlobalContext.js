@@ -53,7 +53,7 @@ export default function GlobalContext({ children }) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
                         //   setCurrentUser(data)
-                        setCurrentUser(users[2])
+                        setCurrentUser(users[1])
                     })
             }
             // LocalStorageService.clearAll()
@@ -61,7 +61,6 @@ export default function GlobalContext({ children }) {
 
 
     }, [])
-    const [currentUser, setUser] = React.useState(null)
     function getCurrentLocationGeocode() {
         return globalObject.currentLocation.currentLocationGeoCode
     }

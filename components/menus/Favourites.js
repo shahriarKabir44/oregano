@@ -14,12 +14,12 @@ function Favourites(props) {
     const isFocused = useIsFocused()
     useEffect(() => {
         if (isFocused) {
-            rootContext.updateContext({ ...rootContext.contextObject, headerString: "Connections" })
-            UserService.findFollowingList(rootContext.contextObject.currentUser.id)
+            rootContext.setHeaderString("Connections")
+            UserService.findFollowingList(rootContext.getCurrentUser().id)
                 .then(data => {
                     setFollowingList([...data])
                 })
-            UserService.getFollowers(rootContext.contextObject.currentUser.id)
+            UserService.getFollowers(rootContext.getCurrentUser().id)
                 .then(data => {
                     setFollowersList([...data])
                 })
