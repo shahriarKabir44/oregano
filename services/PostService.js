@@ -299,7 +299,7 @@ export default class PostService {
      * @param {String} itemName 
      */
     static async isItemAvailable(itemName, ownerId) {
-        let { data } = await fetch(Global.SERVER_URL + '/posts/isItemAvailable/' + itemName + ownerId)
+        let { data } = await fetch(Global.SERVER_URL + `/posts/isItemAvailable/${itemName}/${ownerId}`)
             .then(response => response.json())
         return data;
     }

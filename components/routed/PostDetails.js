@@ -14,12 +14,13 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
 import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
-import RatingServices from '../../services/RatingServices';
-import Global from '../../services/Globals';
 
 function PostDetails(props) {
     const [isOwnPost, setOwnershipStatus] = React.useState(false)
-    const [canShowRatingWindow, setRatingWindow] = React.useState(false)
+    const [itemAvailability, setItemAvailability] = React.useState({
+        isAvailable: 0,
+        unitPrice: 0
+    })
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const rootContext = useContext(RootContext)
@@ -43,10 +44,7 @@ function PostDetails(props) {
         setCartStatus(true)
         updateCartInfo(post)
     }
-    function removeFromCart() {
-        setCartStatus(false)
-        updateCartInfo(post)
-    }
+
     function updateCartInfo(postInfo) {
         CartServices.isAddedToCart(postInfo.postedBy, postInfo.lowerCasedName).then(carts => {
             try {
@@ -64,9 +62,7 @@ function PostDetails(props) {
 
         })
     }
-    function updatecartAmount(inc) {
-        setCartInfo({ ...cartInfo, info: { ...cartInfo.info, amount: Math.max(1, Math.min(cartInfo.info.amount + inc, post.amountProduced)) } })
-    }
+
     const [orderList, setOrderList] = useState([])
     const [canPopUpImageModal, setImageModalVisibility] = useState(false)
     useEffect(() => {
@@ -93,6 +89,12 @@ function PostDetails(props) {
                         PostService.getOrderList(postId)
                             .then(data => {
                                 setOrderList(data);
+                            })
+                    }
+                    else {
+                        PostService.isItemAvailable(postInfo.lowerCasedName, postInfo.postedBy)
+                            .then(data => {
+                                setItemAvailability(data)
                             })
                     }
                     rootContext.setHeaderString(`${postInfo.owner.id == rootContext.contextObject.currentUser.id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}`)
@@ -215,8 +217,7 @@ function PostDetails(props) {
                             }}
                         />
                         <View style={styles.horizontalAlign}>
-                            <Text style={styles.infoText}>Tk. {post.unitPrice} </Text>
-                            <Text style={styles.infoText}>{post.amountProduced} {post.unitType} available </Text>
+                            <Text style={styles.infoText}>Tk. {(itemAvailability.isAvailable ? itemAvailability.unitPrice : "Item unavailable")} </Text>
                         </View>
                         <View style={styles.horizontalAlign}>
                             <Text style={styles.infoText}>Posted on:</Text>
@@ -236,29 +237,12 @@ function PostDetails(props) {
                                 backgroundColor: "#c4c4c4",
                                 borderRadius: 5,
                                 flex: 1
-                            }} title="View location" />
+                            }} title="View post location" />
 
 
 
                         </View>
-                        <View style={[styles.tags, styles.marginVertical, {
-                            padding: 5
-                        }]}>
-                            <Text style={styles.tagIcon}>🏷️</Text>
 
-                            {post.tags.map((tag, index) => (
-                                <TouchableOpacity key={index} onPress={() => {
-                                    rootContext.updateContext({ ...rootContext.contextObject, headerString: "" })
-
-                                    props.navigation.push('searchResult', {
-                                        tag: tag
-                                    })
-                                }} >
-                                    <Tags name={tag} />
-                                </TouchableOpacity>
-
-                            ))}
-                        </View>
                     </View>
 
                     {!ratingList.length && <View>
@@ -366,7 +350,7 @@ function PostDetails(props) {
                 </ScrollView>
 
                 {!isOwnPost && <View>
-                    {!isAddedToCart && <View style={styles.footer}>
+                    {(!isAddedToCart) && <View style={styles.footer}>
                         <TouchableOpacity onPress={() => {
                             toggleBottomNavigationView()
 
