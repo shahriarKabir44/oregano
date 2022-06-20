@@ -7,41 +7,34 @@ import CartServices from '../../../services/CartServices'
 import LocationView from '../../shared/LocationView';
 import OrderServices from '../../../services/OrderServices';
 import SearchLocation from './SearchLocation';
+import LocationService from '../../../services/LocationService';
 function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
-    let { contextObject, updateContext } = React.useContext(RootContext)
-    const [orderLocation, setOrderLocation] = React.useState('')
+    let { getCurrentUser } = React.useContext(RootContext)
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("Loading..")
-    const [customLocation, setCustomLocation] = React.useState("")
-    const [mapViewVisibility, setMapViewVisibility] = React.useState(false)
-    const [currentLocationCoords, setCurrentLocationCoords] = React.useState(null)
+    const [selectedLocationCoords, setSelectedLocationCoords] = React.useState(null)
     const [hasLocationGeocodeLoaded, setLoadingStatus] = React.useState(false)
     const [customLocationGeocode, setCustomLocationGeocode] = React.useState("Choose location")
     const [modalVisible, setModalVisible] = React.useState(false)
     const [orderCity, setOrderCity] = React.useState("")
     const [searchLocationBottomSheetVisibility, setSearchLocationBottomSheetVisibility] = React.useState(false)
     React.useEffect(() => {
-        (async function () {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                return;
-            }
-            let location = await Location.getCurrentPositionAsync({});
+        LocationService.getCurrentLocation()
+            .then((coords) => {
+                setSelectedLocationCoords({
+                    latitude: coords.latitude,
+                    longitude: coords.longitude
+                })
 
-            let currentLocationGeoCode = await Location.reverseGeocodeAsync({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
+                LocationService.getLocationGeocode(coords)
+                    .then(currentLocationGeoCode => {
+                        setOrderCity(currentLocationGeoCode[0].city)
+                        setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
+                        setLoadingStatus(1 == 1)
+                    })
             })
-            setCurrentLocationCoords({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
-            })
-            setOrderCity(currentLocationGeoCode[0].city)
-            setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
-            setLoadingStatus(1 == 1)
-        })().then(() => {
 
-        })
+
     }, [])
     function limitText(text) {
         let res = ""
@@ -71,19 +64,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                     </View>
                 </View>
             </Modal>
-            {currentLocationCoords && <LocationView onLocationSelect={() => {
 
-
-                (async function () {
-
-                    let newLocation = await Location.reverseGeocodeAsync({
-                        latitude: currentLocationCoords.latitude,
-                        longitude: currentLocationCoords.longitude
-                    })
-                    setCustomLocationGeocode(`${newLocation[0].name}, ${newLocation[0].street}, ${newLocation[0].postalCode}, ${newLocation[0].city}`)
-                    setMapViewVisibility(1 == 0);
-                })()
-            }} mapVisibility={mapViewVisibility} setMapVisibility={setMapViewVisibility} tagnameLabel="You" shouldChangeOnDrag={1 == 1} target={currentLocationCoords} setTargetCoordinates={setCurrentLocationCoords} />}
             <ScrollView>
                 <View style={{
                     padding: 10
@@ -103,7 +84,6 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                             status={locationType === 1 ? 'checked' : 'unchecked'}
                             onPress={() => {
                                 setLocationType(1)
-                                setOrderLocation(currentLocationGeoCode)
                             }}
                         />
                         <Text style={{
@@ -119,12 +99,10 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                         alignItems: "center",
                     }}>
                         <RadioButton
-                            disabled={!hasLocationGeocodeLoaded}
-                            value={customLocation}
+                            value={customLocationGeocode}
                             status={locationType === 2 ? 'checked' : 'unchecked'}
                             onPress={() => {
                                 setLocationType(2)
-                                setOrderLocation(customLocation)
                                 setSearchLocationBottomSheetVisibility(1 == 1)
                             }}
                         />
@@ -138,9 +116,9 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                     setModalVisible(true)
 
                     OrderServices.placeOrders(orderItems, {
-                        ...currentLocationCoords,
+                        ...selectedLocationCoords,
                         dropLocationGeocode: (locationType == 1 ? currentLocationGeoCode : customLocationGeocode)
-                    }, contextObject.currentUser.facebookToken.name, contextObject.currentUser.id, orderCity)
+                    }, getCurrentUser().facebookToken.name, getCurrentUser().id, orderCity)
                         .then(() => {
                             CartServices.clearAll()
                                 .then(() => {
@@ -169,8 +147,11 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 </TouchableOpacity>
 
             </View>
-            <SearchLocation visibility={searchLocationBottomSheetVisibility} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(value) => {
-                console.log(value)
+            <SearchLocation visibility={searchLocationBottomSheetVisibility} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(selectedLocation) => {
+                setCustomLocationGeocode(selectedLocation.name)
+                setSelectedLocationCoords(selectedLocation.coords)
+                setOrderCity(selectedLocation.city)
+
             }} />
         </View>
     );

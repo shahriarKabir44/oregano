@@ -65,8 +65,8 @@ export default class SearchingServices {
                 name: element.properties.formatted,
                 street: element.properties.street,
                 coords: {
-                    lat: element.properties.lat,
-                    lon: element.properties.lon,
+                    latitude: element.properties.lat,
+                    longitude: element.properties.lon,
                 },
                 city: element.properties.city
             }
