@@ -258,31 +258,18 @@ export default class UserService {
         return data.data.getCreatedPosts
     }
 
-    static async uploadCoverPhoto(userId, image) {
-        let formData = new FormData()
-        formData.append('file', image.base64)
-
-        let { data } = await fetch(Global.SERVER_URL + '/user/uploadCoverPhoto', {
+    static async updateUserInfo(userId, facebookToken) {
+        console.log(userId, facebookToken, "yooooooooo")
+        return await fetch(Global.SERVER_URL + '/user/updateFacebookToken', {
             method: 'POST',
             headers: {
-                'Content-Type': 'multipart/form-data',
-                userId: userId,
-                type: image.type,
-                fileName: userId + "coverPhoto"
+                'Content-Type': 'application/json'
             },
-            body: formData
+            body: JSON.stringify({
+                userId: userId,
+                facebookToken: (facebookToken)
+            })
         }).then(res => res.json())
-        return data
-    }
-
-    static async updateCoverPhoto(userId, facebookToken, image) {
-        let imageURL = await UserService.uploadCoverPhoto(userId, image)
-        let newFacebookToken = {
-            ...facebookToken,
-            coverPhotoURL: imageURL
-        }
-
-        return newFacebookToken
     }
     static async isSignedUp(facebookId) {
         let { data } = await fetch(Global.SERVER_URL + '/user/isRegistered', {

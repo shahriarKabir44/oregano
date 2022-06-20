@@ -12,31 +12,14 @@ import LocalStorageService from '../../../services/LocalStorageService';
 import { Ionicons } from '@expo/vector-icons';
 import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
 import Global from '../../../services/Globals';
+import UploadManager from '../../../services/UploadManager';
 
 function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
     async function handleUpload() {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [16, 9],
-            quality: 1,
-            base64: true
-        })
-        if (result) {
-            if (!result.cancelled) {
-                let imageUriSplit = result.uri.split(".")
-                let newImage = {
-                    body: result.uri,
-
-                    base64: `data:image/${imageUriSplit[imageUriSplit.length - 1]};base64,${result.base64}`,
-                    type: imageUriSplit[imageUriSplit.length - 1],
-                }
-                setTempCoverPhoto(newImage)
-                setImageUploadBottomSheetVisibility(true)
-
-            }
-        }
+        let tempCoverPhotoURI = await UploadManager.uploadImageFromDevice()
+        setTempCoverPhoto(tempCoverPhotoURI)
+        setImageUploadBottomSheetVisibility(true)
     }
 
 
@@ -70,10 +53,10 @@ function UserProfile(props) {
         setRefreshing(true)
         if (!props.route?.params?.id) {
             setCurrentUserFlag(true)
-            setUserInfo(rootContext.contextObject.currentUser)
+            setUserInfo(rootContext.getCurrentUser())
             rootContext.setHeaderString('Your profile')
-            getUserTagRatings(rootContext.contextObject.currentUser.id)
-            return UserService.getPosts(rootContext.contextObject.currentUser.id)
+            getUserTagRatings(rootContext.getCurrentUser().id)
+            return UserService.getPosts(rootContext.getCurrentUser().id)
                 .then(posts => {
                     setPostList(posts)
 
@@ -83,11 +66,11 @@ function UserProfile(props) {
                 })
 
         }
-        else if (rootContext.contextObject.currentUser.id != props.route?.params?.id) {
+        else if (rootContext.getCurrentUser().id != props.route?.params?.id) {
             setCurrentUserFlag(false)
             getUserTagRatings(props.route?.params?.id)
             return Promise.all([
-                UserService.isFollowing(rootContext.contextObject.currentUser.id, props.route?.params?.id)
+                UserService.isFollowing(rootContext.getCurrentUser().id, props.route?.params?.id)
                     .then((data) => {
                         setConnection(data)
                     }),
@@ -110,13 +93,13 @@ function UserProfile(props) {
 
 
         }
-        else if (rootContext.contextObject.currentUser.id == props.route?.params?.id) {
+        else if (rootContext.getCurrentUser().id == props.route?.params?.id) {
             getUserTagRatings(props.route?.params?.id)
 
             setCurrentUserFlag(true)
-            setUserInfo(rootContext.contextObject.currentUser)
+            setUserInfo(rootContext.getCurrentUser())
             rootContext.setHeaderString('Your profile')
-            return UserService.getPosts(rootContext.contextObject.currentUser.id)
+            return UserService.getPosts(rootContext.getCurrentUser().id)
                 .then(posts => {
                     setPostList(posts)
 
@@ -142,14 +125,14 @@ function UserProfile(props) {
     }, [isFocused])
     function follow() {
 
-        UserService.follow(props.route?.params?.id, rootContext.contextObject.currentUser.id, rootContext.contextObject.currentUser.facebookToken.name, UserProfileInfo.expoPushToken)
+        UserService.follow(props.route?.params?.id, rootContext.getCurrentUser().id, rootContext.getCurrentUser().facebookToken.name, UserProfileInfo.expoPushToken)
             .then(() => {
                 setConnection(true)
             })
     }
     function unFollow() {
 
-        UserService.unFollow(props.route?.params?.id, rootContext.contextObject.currentUser.id)
+        UserService.unFollow(props.route?.params?.id, rootContext.getCurrentUser().id)
             .then(() => {
                 setConnection(false)
             })
@@ -302,7 +285,7 @@ function UserProfile(props) {
 
 
 function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempImage, onUploadComplete }) {
-    const { contextObject, setCurrentUser } = React.useContext(RootContext)
+    const { getCurrentUser, setCurrentUser } = React.useContext(RootContext)
     return (<View>
         <BottomSheet visible={bottomSheetVisibility}
             onBackButtonPress={() => {
@@ -322,7 +305,7 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                             aspectRatio: 4 / 3,
                             borderWidth: 1,
                             borderColor: "black"
-                        }} source={{ uri: tempImage.body }} />
+                        }} source={{ uri: tempImage }} />
                     </ScrollView>
                     <View style={{
                         display: 'flex',
@@ -330,26 +313,32 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                         justifyContent: 'space-between',
                     }}>
                         <TouchableOpacity onPress={() => {
-                            UserService.updateCoverPhoto(contextObject.currentUser.id, contextObject.currentUser.facebookToken, tempImage)
-                                .then(data => {
-                                    const newUser = {
-                                        ...contextObject.currentUser,
-                                        facebookToken: data
-                                    }
 
-                                    LocalStorageService.store('currentUser', newUser)
-                                        .then(() => {
-                                            setCurrentUser(newUser)
-                                            popupBottomSheet(false)
-                                            onUploadComplete(newUser.facebookToken.coverPhotoURL)
-                                            ToastAndroid.showWithGravity(
-                                                "Image uploaded succesfully!",
-                                                ToastAndroid.SHORT,
-                                                ToastAndroid.BOTTOM
-                                            )
-                                        })
+                            UploadManager.manageFileUpload(tempImage, `${getCurrentUser().id}`, "coverPhotos", (url) => {
 
-                                })
+                                let newFacebookToken = {
+                                    ...getCurrentUser().facebookToken,
+                                    coverPhotoURL: url
+                                }
+                                console.log(newFacebookToken)
+                                UserService.updateUserInfo(getCurrentUser().id, newFacebookToken)
+                                    .then(data => {
+                                        const newUser = {
+                                            ...getCurrentUser(),
+                                            facebookToken: newFacebookToken
+                                        }
+                                        setCurrentUser(newUser)
+                                        popupBottomSheet(false)
+                                        onUploadComplete(newUser.facebookToken.coverPhotoURL)
+                                        ToastAndroid.showWithGravity(
+                                            "Image uploaded succesfully!",
+                                            ToastAndroid.SHORT,
+                                            ToastAndroid.BOTTOM
+                                        )
+                                    })
+
+                            })
+
                         }} style={{
                             padding: 10,
                             backgroundColor: "#c4c4c4",

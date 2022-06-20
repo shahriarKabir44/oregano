@@ -26,6 +26,7 @@ export default class UploadManager {
             task.on("state_changed", (snapshot) => { }, (err) => { }, () => {
                 task.snapshot.ref.getDownloadURL()
                     .then(url => {
+                        console.log(url)
                         onComplete(url)
                     })
             })

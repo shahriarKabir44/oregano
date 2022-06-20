@@ -225,24 +225,10 @@ function CreatePost(props) {
 										if (props.onComplete) props.onComplete()
 										setModalVisible(false);
 									})
-
-
-
 							}
 						)
 
 
-
-
-						// 
-						// 	.then(({ data }) => {
-						// 		PostService.uploadImages(images, newPost.postedBy, data._id, newPost.postedOn)
-						// 			.then(resp => {
-						// 				
-
-						// 			})
-						// 			
-						// 	})
 					})
 			}}>
 				<View style={{
