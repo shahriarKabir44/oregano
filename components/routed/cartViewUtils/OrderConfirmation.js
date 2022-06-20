@@ -6,6 +6,7 @@ import { RootContext } from '../../contexts/GlobalContext'
 import CartServices from '../../../services/CartServices'
 import LocationView from '../../shared/LocationView';
 import OrderServices from '../../../services/OrderServices';
+import SearchLocation from './SearchLocation';
 function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
     let { contextObject, updateContext } = React.useContext(RootContext)
@@ -15,9 +16,10 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
     const [mapViewVisibility, setMapViewVisibility] = React.useState(false)
     const [currentLocationCoords, setCurrentLocationCoords] = React.useState(null)
     const [hasLocationGeocodeLoaded, setLoadingStatus] = React.useState(false)
-    const [customLocationGeocode, setCustomLocationGeocode] = React.useState("Pick from map")
+    const [customLocationGeocode, setCustomLocationGeocode] = React.useState("Choose location")
     const [modalVisible, setModalVisible] = React.useState(false)
     const [orderCity, setOrderCity] = React.useState("")
+    const [searchLocationBottomSheetVisibility, setSearchLocationBottomSheetVisibility] = React.useState(false)
     React.useEffect(() => {
         (async function () {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -123,7 +125,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                             onPress={() => {
                                 setLocationType(2)
                                 setOrderLocation(customLocation)
-                                setMapViewVisibility(1 == 1)
+                                setSearchLocationBottomSheetVisibility(1 == 1)
                             }}
                         />
                         <Text style={{ fontSize: 20 }}>{limitText(customLocationGeocode)}</Text>
@@ -167,7 +169,9 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 </TouchableOpacity>
 
             </View>
-
+            <SearchLocation visibility={searchLocationBottomSheetVisibility} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(value) => {
+                console.log(value)
+            }} />
         </View>
     );
 }

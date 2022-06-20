@@ -1,4 +1,5 @@
 
+import Environment from "../Environment";
 import Global from "./Globals";
 const results = [
     {
@@ -53,6 +54,25 @@ const searchResultDetails = {
 }
 
 export default class SearchingServices {
+
+    static async searchLocation(query) {
+        let data = await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${query}&apiKey=${Environment.geoapifyAPIkey}`)
+            .then(response => response.json())
+
+        data = data.features
+        data = data.map((element, index) => {
+            return {
+                name: element.properties.formatted,
+                street: element.properties.street,
+                coords: {
+                    lat: element.properties.lat,
+                    lon: element.properties.lon,
+                },
+                city: element.properties.city
+            }
+        })
+        return data
+    }
 
     static async SearhcItems(itemName, currentUserId, region) {
         let { data } = await fetch(Global.searchServerURL + '/graphql', {

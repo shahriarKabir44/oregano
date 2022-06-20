@@ -5,7 +5,7 @@ export const RootContext = React.createContext()
 import LocalStorageService from '../../services/LocalStorageService'
 let users = [
     {
-        id: ("6236374dcf2e2a30d240b3c6"),
+        id: ("62aca83c670426ea47bbc747"),
         facebookToken: {
             name: "Shahriar Kabir",
             profileImageURL: "https://www.taxadvisermagazine.com/sites/default/files/styles/article_full/public/employee-Deepak%20Sethi.jpg?itok=ZKrPSHWR&c=957d9622c9a1717ee19018eff40a9919",
@@ -53,7 +53,7 @@ export default function GlobalContext({ children }) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
                         //   setCurrentUser(data)
-                        setCurrentUser(users[0])
+                        setCurrentUser(users[2])
                     })
             }
             // LocalStorageService.clearAll()
