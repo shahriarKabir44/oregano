@@ -12,6 +12,8 @@ import PostCard from './shared/PostCard';
 import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 import SearchBottomSheet from './shared/SearchBottomSheet';
 import Global from '../services/Globals';
+import SearchingServices from '../services/SearchingServices';
+import LocalItemsPostsRoot from './shared/localItemsWithPosts/LocalItemsPostsRoot';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -40,12 +42,12 @@ function Home(props) {
             }
         }
     }
-    const [isLoaded, setIsLoaded] = useState(false)
-    const [subscribedPosts, setSubscribedPosts] = useState([])
+
     const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
     const [localUsers, setLocalUsers] = React.useState([])
     const [localItems, setLocalItems] = React.useState([])
+    const [todayPostItems, setTodayPOstItems] = React.useState([])
     async function loadLocalItems(userId, region) {
         let { data } = await fetch(Global.searchServerURL + `/getLocalAvailableItems/${userId}/${region}`)
             .then(response => response.json())
@@ -55,7 +57,6 @@ function Home(props) {
         return Promise.all([
             UserService.getLocalUsers(location.region, rootContext.getCurrentUser().id)
                 .then(data => {
-
                     setLocalUsers(data);
                 }),
             PostService.findLocalPosts(location.city)
@@ -63,6 +64,10 @@ function Home(props) {
                     setIsLocalPostsLoaded(1 == 1)
                     setlocalPostList(data)
                 }),
+            SearchingServices.getTodayPostItems(location.city, rootContext.getCurrentUser().id)
+                .then(data => {
+                    setTodayPOstItems(data)
+                })
         ])
     }
 
@@ -71,13 +76,11 @@ function Home(props) {
 
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
-                loadLocalItems(rootContext.getCurrentUser().id, data.city)
-
-                loadLocalDatas(data)
-                    .then(() => setRefreshing(false));
+                return Promise.all([loadLocalItems(rootContext.getCurrentUser().id, data.city), loadLocalDatas(data)])
             })
-
-
+            .then(() => {
+                setRefreshing(false)
+            })
     }
 
     const onRefresh = React.useCallback(() => {
@@ -103,7 +106,8 @@ function Home(props) {
     }, [])
     return (
         <SafeAreaView style={{
-            flex: 1
+            flex: 1,
+
         }}>
             <SearchBottomSheet {...props} popupBottomSheet={setBottomsheetVisible} bottomSheetVisibility={searchBottomSheet} />
             <ScrollView
@@ -131,10 +135,8 @@ function Home(props) {
                             marginVertical: 5,
                             paddingLeft: 5
                         }}
-                    >Posts from your area</Text>
-                    {!isLocalPostsLoaded && <PostCard post={initialPost} />}
-                    {isLocalPostsLoaded && <PostCardRoot {...props} postList={localPostList.filter(post => post.owner.id != rootContext.contextObject.currentUser.id)} />}
-
+                    >Posts from people near you</Text>
+                    <LocalItemsPostsRoot {...props} data={todayPostItems} />
                     <View style={{
                         display: 'flex',
                         flexDirection: 'row',
@@ -205,22 +207,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
     },
-    titleStyle: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        padding: 10,
-    },
-    textStyle: {
-        fontSize: 16,
-        textAlign: 'center',
-        padding: 10,
-    },
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-    },
+
+
 })
 
 export default Home;

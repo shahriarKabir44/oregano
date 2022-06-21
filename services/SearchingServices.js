@@ -148,4 +148,61 @@ export default class SearchingServices {
         }).then(res => res.json())
         return data.getItemDetails
     }
+
+    static async getTodayPostItems(region, userId) {
+        let day = Math.floor(((new Date()) * 1) / (24 * 3600 * 1000))
+        let { data } = await fetch(`${Global.searchServerURL}/graphql`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: `query{
+                        getLocalItemsInfo(day:${day},region:"${region}"){
+                          itemName
+                          unitPrice
+                          getTodayPosts{
+                            images
+                            postedOn
+                            id
+                          }
+                          vendor{
+                            id
+                            personalInfo{
+                              name
+                              profileImageURL
+                              
+                            }
+                          }
+                           
+                        }
+                      }`
+            })
+
+        }).then(res => res.json())
+        data = data.getLocalItemsInfo
+        let uniqueItems = {}
+        for (let item of data) {
+            if (item.getTodayPosts.length != 0) {
+                if (item.vendor.id == userId) continue
+                if (uniqueItems[item.itemName] == null) uniqueItems[item.itemName] = []
+
+                let content = {
+                    vendor: item.vendor,
+                    posts: item.getTodayPosts,
+                    unitPrice: item.unitPrice
+                }
+                uniqueItems[item.itemName].push(content)
+            }
+        }
+        let categorizedData = []
+        for (let category in uniqueItems) {
+            categorizedData.push({
+                itemName: category,
+                info: uniqueItems[category]
+            })
+        }
+        return categorizedData
+
+    }
 }
