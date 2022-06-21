@@ -11,13 +11,11 @@ const CartServices = {
 
     },
     isAddedToCart: async function (cookId, lowerCasedName) {
-
         for (let item of this.storedItems) {
-            if (item.lowerCasedName === lowerCasedName && item.vendor.Id == cookId) {
+            if (item.lowerCasedName === lowerCasedName && item.vendor.id == cookId) {
                 return item.amount
             }
         }
-
         return null
     },
     addItem: async function (cook, item, amount) {

@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, ScrollView, Button, Dimensions, Modal, ToastAndroid } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import Tags from '../shared/Tags';
+import ResultBottomSheet from './search/ResultBottomSheet';
+
 import { TouchableOpacity } from 'react-native';
-import { BottomSheet } from 'react-native-btr';
-import AddTocart from '../shared/AddTocart';
 import CartServices from '../../services/CartServices';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootContext } from '../contexts/GlobalContext'
@@ -16,6 +13,7 @@ import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
 import SimilarItemViewRoot from './postDetailsUtils/SimilarItemViewRoot';
 import LocationService from '../../services/LocationService';
+import SearchingServices from '../../services/SearchingServices';
 
 function PostDetails(props) {
     const [isOwnPost, setOwnershipStatus] = React.useState(false)
@@ -24,13 +22,14 @@ function PostDetails(props) {
         unitPrice: 0
     })
     const [postLocationName, setPostLocationName] = React.useState("Loading..")
+    const [selectedSearchResult, setSearchResultItem] = React.useState(null)
+    const [dropDownVisibility, popupBottomSheet] = React.useState(false)
 
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
     const { getCurrentUser, setHeaderString } = useContext(RootContext)
     const postId = props.route.params.postId
     const [post, setCurrentPost] = useState(null)
-    const [canShowModal, toggleModal] = useState(false)
     const [currentUserRating, setCurrentUserRating] = useState(0)
     const [cartInfo, setCartInfo] = useState({
         amount: 0
@@ -38,9 +37,7 @@ function PostDetails(props) {
     const [ratingList, setRatingList] = useState([])
     const [images, setImageList] = useState([{ url: "abcd", props: "" }])
     const [isAddedToCart, setCartStatus] = useState(false)
-    const toggleBottomNavigationView = () => {
-        toggleModal(!canShowModal);
-    }
+
     function addToCart() {
         setCartStatus(true)
         updateCartInfo(post)
@@ -49,7 +46,6 @@ function PostDetails(props) {
     function updateCartInfo(postInfo) {
         CartServices.isAddedToCart(postInfo.postedBy, postInfo.lowerCasedName).then(carts => {
             try {
-
                 if (!carts) setCartStatus(false)
 
                 else {
@@ -362,7 +358,24 @@ function PostDetails(props) {
                 {!isOwnPost && <View>
                     {(!isAddedToCart && itemAvailability.isAvailable == 1) && <View style={styles.footer}>
                         <TouchableOpacity onPress={() => {
-                            toggleBottomNavigationView()
+                            SearchingServices.getDetails(post.postedBy, post.itemName)
+                                .then(searchResultInfo => {
+                                    setSearchResultItem(searchResultInfo)
+                                    return searchResultInfo
+                                }).then((searchResultInfo) => {
+                                    CartServices.isAddedToCart(post.postedBy + "", post.itemName)
+                                        .then(cartData => {
+                                            setSearchResultItem({ ...searchResultInfo, amount: null })
+                                            if (cartData) {
+                                                setSearchResultItem({ ...searchResultInfo, amount: cartData })
+                                            }
+                                        })
+                                        .then(() => {
+                                            popupBottomSheet(true)
+                                        })
+                                    // LocalStorageService.removeItem('storedCookDatas')
+                                    // LocalStorageService.removeItem('storedItems')
+                                })
 
                         }}>
                             <Text style={{
@@ -407,15 +420,7 @@ function PostDetails(props) {
 
 
 
-                <BottomSheet
-                    visible={canShowModal}
-                    onBackButtonPress={toggleBottomNavigationView}
-                    onBackdropPress={toggleBottomNavigationView}
-                >
-                    <View style={styles.bottomNavigationView}>
-                        <AddTocart unitPrice={itemAvailability.unitPrice} togglePopup={toggleBottomNavigationView} addToCart={addToCart} post={post} />
-                    </View>
-                </BottomSheet>
+
                 <Modal visible={canPopUpImageModal} transparent={true}>
                     <ImageViewer onDoubleClick={() => {
                         setImageModalVisibility(false)
@@ -426,6 +431,9 @@ function PostDetails(props) {
 
             </View>
             }
+            <ResultBottomSheet onChange={() => {
+                updateCartInfo(post)
+            }} {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
 
         </View>
     );
