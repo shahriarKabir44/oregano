@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import CartServices from '../../services/CartServices'
-function AddTocart({ post, togglePopup, addToCart }) {
+function AddTocart({ post, togglePopup, addToCart, unitPrice }) {
     const [cartList, setCartList] = useState([])
     useEffect(() => {
         // CartServices.getCartList().then(carts => {
@@ -10,7 +10,7 @@ function AddTocart({ post, togglePopup, addToCart }) {
     }, [])
     const [itemChosen, setItemChosen] = useState(1)
     function updateAmount(type) {
-        setItemChosen(Math.min(Math.max(1, itemChosen + type), post.amountProduced))
+        setItemChosen(Math.min(Math.max(1, itemChosen + type), 100))
     }
     return (
         <View style={{
@@ -88,7 +88,7 @@ function AddTocart({ post, togglePopup, addToCart }) {
                     <Text style={{
                         fontSize: 20,
                         fontWeight: "bold"
-                    }}> Tk {itemChosen * post.unitPrice} </Text>
+                    }}> Tk {itemChosen * unitPrice} </Text>
                 </View>
             </ScrollView>
             <TouchableOpacity onPress={() => {

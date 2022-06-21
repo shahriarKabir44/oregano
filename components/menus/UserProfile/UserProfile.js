@@ -320,7 +320,6 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                                     ...getCurrentUser().facebookToken,
                                     coverPhotoURL: url
                                 }
-                                console.log(newFacebookToken)
                                 UserService.updateUserInfo(getCurrentUser().id, newFacebookToken)
                                     .then(data => {
                                         const newUser = {

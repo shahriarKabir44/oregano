@@ -80,7 +80,6 @@ function PostDetails(props) {
                         longitude: postInfo.longitude
                     }).then(data => {
                         let locationName = `${data[0]?.city},${data[0]?.district},${data[0]?.subregion},${data[0]?.region}`
-                        console.log(locationName)
                         setPostLocationName(locationName)
                     })
 
@@ -391,7 +390,7 @@ function PostDetails(props) {
                     }]}>
                         <View>
                             <Text>Amount:{cartInfo.amount}</Text>
-                            <Text>Tk.{cartInfo.amount * post.unitPrice}</Text>
+                            <Text>Tk.{cartInfo.amount * itemAvailability.unitPrice}</Text>
                         </View>
 
                         <FontAwesome5 onPress={() => {
@@ -414,7 +413,7 @@ function PostDetails(props) {
                     onBackdropPress={toggleBottomNavigationView}
                 >
                     <View style={styles.bottomNavigationView}>
-                        <AddTocart togglePopup={toggleBottomNavigationView} addToCart={addToCart} post={post} />
+                        <AddTocart unitPrice={itemAvailability.unitPrice} togglePopup={toggleBottomNavigationView} addToCart={addToCart} post={post} />
                     </View>
                 </BottomSheet>
                 <Modal visible={canPopUpImageModal} transparent={true}>

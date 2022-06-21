@@ -256,7 +256,6 @@ export default class UserService {
     }
 
     static async updateUserInfo(userId, facebookToken) {
-        console.log(userId, facebookToken, "yooooooooo")
         return await fetch(Global.SERVER_URL + '/user/updateFacebookToken', {
             method: 'POST',
             headers: {

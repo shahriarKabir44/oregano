@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, Image, Button } from 'react-native'
 
 function LocalItemsPostsRoot(props) {
 
@@ -28,7 +28,7 @@ function ItemPostRoot(props) {
     }}>
         <View style={{
             position: "absolute",
-            top: -15,
+            top: -20,
             left: 5,
             zIndex: 100,
             backgroundColor: "#f2f2f2"
@@ -93,17 +93,12 @@ function VendorsListRoot(props) {
 }
 
 function RelatedPostsCard(props) {
-    return <TouchableOpacity style={{
+    return <View style={{
         margin: 5,
         padding: 10,
         backgroundColor: "#C1F2FB",
         borderRadius: 5
-    }} onPress={() => {
-        props.stackNav.push('Post details', {
-            postId: props.data.id,
-
-        })
-    }} >
+    }}>
         <Image source={{
             uri: JSON.parse(props.data.images)[[0]]
         }} style={{
@@ -111,9 +106,15 @@ function RelatedPostsCard(props) {
             aspectRatio: 16 / 9
         }} />
         <Text style={{
-            fontSize: 10
+            fontSize: 15
         }}> {(new Date(props.data.postedOn).toLocaleTimeString())}, {(new Date(props.data.postedOn).toLocaleDateString())} </Text>
-    </TouchableOpacity>
+        <Button onPress={() => {
+            props.stackNav.push('Post details', {
+                postId: props.data.id,
+
+            })
+        }} title="View details" />
+    </View>
 }
 
 export default LocalItemsPostsRoot;

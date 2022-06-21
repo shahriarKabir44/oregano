@@ -32,7 +32,6 @@ function CreatePost(props) {
 		postedBy: "",
 	})
 	function checkValidity(numImages, isNameFixed) {
-		console.log(numImages, isNameFixed)
 		if (isNameFixed == false) { setPostValidity(false); return }
 		if (numImages == 0) { setPostValidity(false); return }
 		else setPostValidity(1 == 1)
