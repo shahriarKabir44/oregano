@@ -14,8 +14,14 @@ function SimilarItemViewRoot(props) {
             })
     }, [])
     return (
-        <View>
-            <Text>Similar items available from other users</Text>
+        <View style={{
+            padding: 10,
+            backgroundColor: "#FBF0F5"
+        }}>
+            <Text style={{
+                fontSize: 20,
+                fontFamily: "sans-serif"
+            }}>Similar items available from other users</Text>
             <FlatList
                 horizontal={true}
                 data={similarItemList}

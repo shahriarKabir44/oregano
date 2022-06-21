@@ -15,6 +15,7 @@ import { RootContext } from '../contexts/GlobalContext'
 import LocationView from '../shared/LocationView';
 import PostService from '../../services/PostService';
 import SimilarItemViewRoot from './postDetailsUtils/SimilarItemViewRoot';
+import LocationService from '../../services/LocationService';
 
 function PostDetails(props) {
     const [isOwnPost, setOwnershipStatus] = React.useState(false)
@@ -22,9 +23,11 @@ function PostDetails(props) {
         isAvailable: 0,
         unitPrice: 0
     })
+    const [postLocationName, setPostLocationName] = React.useState("Loading..")
+
     const [mapVisibility, setMapVisibility] = useState(false)
     const isFocused = useIsFocused()
-    const rootContext = useContext(RootContext)
+    const { getCurrentUser, setHeaderString } = useContext(RootContext)
     const postId = props.route.params.postId
     const [post, setCurrentPost] = useState(null)
     const [canShowModal, toggleModal] = useState(false)
@@ -32,11 +35,8 @@ function PostDetails(props) {
     const [cartInfo, setCartInfo] = useState({
         amount: 0
     })
-    const [hasUserRated, setRatingRelation] = React.useState(false)
-    const [isRatingChanged, detectChange] = useState(false)
     const [ratingList, setRatingList] = useState([])
     const [images, setImageList] = useState([{ url: "abcd", props: "" }])
-    const [isCartUpdated, setCartUpdateStatus] = useState(false)
     const [isAddedToCart, setCartStatus] = useState(false)
     const toggleBottomNavigationView = () => {
         toggleModal(!canShowModal);
@@ -70,23 +70,32 @@ function PostDetails(props) {
 
         if (isFocused) {
 
-            rootContext.setHeaderString("")
+            setHeaderString("")
 
             PostService.findPost(postId)
                 .then(postInfo => {
+
+                    LocationService.getLocationGeocode({
+                        latitude: postInfo.latitude,
+                        longitude: postInfo.longitude
+                    }).then(data => {
+                        let locationName = `${data[0]?.city},${data[0]?.district},${data[0]?.subregion},${data[0]?.region}`
+                        console.log(locationName)
+                        setPostLocationName(locationName)
+                    })
+
                     PostService.getPostRatings(postInfo.lowerCasedName, postInfo.postedBy)
                         .then(data => {
                             for (let ratingInfo of data) {
-                                if (ratingInfo.getUser.id == rootContext.getCurrentUser().id) {
-                                    setRatingRelation(true)
+                                if (ratingInfo.getUser.id == getCurrentUser().id) {
                                     setCurrentUserRating(ratingInfo.rating)
                                 }
                             }
                             setRatingList(data)
                         })
                     setCurrentPost(postInfo)
-                    setOwnershipStatus(postInfo.owner.id == rootContext.contextObject.currentUser.id)
-                    if (postInfo.owner.id == rootContext.contextObject.currentUser.id) {
+                    setOwnershipStatus(postInfo.owner.id == getCurrentUser().id)
+                    if (postInfo.owner.id == getCurrentUser().id) {
                         PostService.getOrderList(postId)
                             .then(data => {
                                 setOrderList(data);
@@ -98,7 +107,7 @@ function PostDetails(props) {
                                 setItemAvailability(data)
                             })
                     }
-                    rootContext.setHeaderString(`${postInfo.owner.id == rootContext.contextObject.currentUser.id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}`)
+                    setHeaderString(`${postInfo.owner.id == getCurrentUser().id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}`)
                     let images = []
                     for (let image of postInfo.images) {
                         images.push({
@@ -167,7 +176,7 @@ function PostDetails(props) {
                                 paddingVertical: 10
                             }}> Prepared By: </Text>
                             <TouchableOpacity onPress={() => {
-                                rootContext.updateContext({ ...rootContext.contextObject, headerString: '' })
+                                setHeaderString('')
                                 props.navigation.push('profile', {
                                     id: post.owner.id
                                 })
@@ -225,6 +234,7 @@ function PostDetails(props) {
                             <Text style={styles.infoText}>{(new Date(post.postedOn)).toLocaleTimeString()},{(new Date(post.postedOn)).toLocaleDateString()}</Text>
 
                         </View>
+                        <Text>{postLocationName}</Text>
                         <View style={{
                             display: "flex",
                             flexDirection: "row",
@@ -282,8 +292,8 @@ function PostDetails(props) {
                                     }} source={{ uri: rating.getUser.personalInfo.profileImageURL }} />
                                     <View>
                                         <Text>{rating.getUser.personalInfo.name}</Text>
-                                        {rating.getUser.id != rootContext.contextObject.currentUser.id && <Text>{rating.rating}⭐</Text>}
-                                        {rating.getUser.id == rootContext.contextObject.currentUser.id && <Text>{currentUserRating}⭐</Text>}
+                                        {rating.getUser.id != getCurrentUser().id && <Text>{rating.rating}⭐</Text>}
+                                        {rating.getUser.id == getCurrentUser().id && <Text>{currentUserRating}⭐</Text>}
 
                                     </View>
                                 </View>
