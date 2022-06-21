@@ -88,6 +88,10 @@ export default class SearchingServices {
                     name
                     facebookToken 
                     expoPushToken
+                    personalInfo{
+                       
+                        profileImageURL
+                      }
                   }
                   getRatings
                   rating

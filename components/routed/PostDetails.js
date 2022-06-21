@@ -245,7 +245,7 @@ function PostDetails(props) {
                         </View>
 
                     </View>
-                    <SimilarItemViewRoot {...props} itemName={post.lowerCasedName} />
+                    <SimilarItemViewRoot {...props} itemName={post.lowerCasedName} currentPostOwnerId={post.postedBy} />
                     {!ratingList.length && <View>
                         <Text style={{
                             fontSize: 15,

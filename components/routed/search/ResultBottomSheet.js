@@ -1,13 +1,8 @@
 import React from 'react';
 import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
-import LocationView from '../../shared/LocationView'
-import { Ionicons } from '@expo/vector-icons';
-import Collapsible from 'react-native-collapsible';
-import LocationService from '../../../services/LocationService'
 import CartServices from '../../../services/CartServices'
 import { FontAwesome5 } from '@expo/vector-icons';
-import Global from '../../../services/Globals';
 
 function ResultBottomSheet(props) {
 

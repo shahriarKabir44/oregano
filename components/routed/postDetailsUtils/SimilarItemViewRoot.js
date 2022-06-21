@@ -1,13 +1,109 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-
+import { Text, TouchableOpacity, View, Image, FlatList } from 'react-native';
+import SearchingServices from '../../../services/SearchingServices'
+import { RootContext } from '../../contexts/GlobalContext';
+import ResultBottomSheet from '../search/ResultBottomSheet'
+import CartServices from '../../../services/CartServices';
 function SimilarItemViewRoot(props) {
+    const { getCurrentUser, getCurrentLocationGeocode } = React.useContext(RootContext)
+    const [similarItemList, setSimilarItemList] = React.useState([])
+    React.useEffect(() => {
+        SearchingServices.SearhcItems(props.itemName, getCurrentUser().id, getCurrentLocationGeocode().city)
+            .then(data => {
+                setSimilarItemList(data.filter(item => item.vendor.id != props.currentPostOwnerId))
+            })
+    }, [])
     return (
         <View>
             <Text>Similar items available from other users</Text>
-
+            <FlatList
+                horizontal={true}
+                data={similarItemList}
+                keyExtractor={(item, index) => index}
+                renderItem={(item) => <SimilarItemCard {...props} item={item.item} />}
+            />
         </View>
     );
+}
+
+
+function SimilarItemCard(props) {
+    const [selectedSearchResult, setSearchResultItem] = React.useState(null)
+    const [dropDownVisibility, popupBottomSheet] = React.useState(false)
+    return (<View>
+        <ResultBottomSheet bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
+        <TouchableOpacity style={{
+            width: 200,
+            borderRadius: 10,
+            padding: 10,
+            backgroundColor: "#D1E8F3"
+        }} onPress={() => {
+            SearchingServices.getDetails(props.item.vendor.id, props.item.itemName)
+                .then(searchResultInfo => {
+                    setSearchResultItem(searchResultInfo)
+
+                    return searchResultInfo
+                }).then((searchResultInfo) => {
+                    CartServices.isAddedToCart(props.item.vendor.id + "", props.item.itemName)
+                        .then(cartData => {
+
+                            setSearchResultItem({ ...searchResultInfo, amount: null })
+                            if (cartData) {
+                                setSearchResultItem({ ...searchResultInfo, amount: cartData })
+                            }
+
+                        })
+                        .then(() => {
+
+                            popupBottomSheet(true)
+                        })
+                    // LocalStorageService.removeItem('storedCookDatas')
+                    // LocalStorageService.removeItem('storedItems')
+                })
+
+        }}>
+            <Image
+                source={{
+                    uri: JSON.parse(props.item.getLastPost.images)[0]
+                }}
+                style={{
+                    width: "100%",
+                    aspectRatio: 16 / 9
+                }}
+            />
+            <View style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignContent: "center",
+                alignItems: "center"
+            }}>
+                <Image
+                    source={{
+                        uri: props.item.vendor.personalInfo.profileImageURL
+                    }}
+                    style={{
+                        width: 50,
+                        aspectRatio: 1 / 1,
+                        borderRadius: 50,
+                        margin: 5
+                    }}
+                />
+                <View>
+                    <Text>Prepared by:</Text>
+                    <Text>{props.item.vendor.name} </Text>
+                    <View style={{
+
+                    }}>
+                        <Text >Tk. {props.item.unitPrice}</Text>
+                        <Text >rating: {props.item.getRatings == 0 ? "unrated" : `${props.item.getRatings}⭐`}</Text>
+
+                    </View>
+                </View>
+            </View>
+
+        </TouchableOpacity></View>
+    )
 }
 
 export default SimilarItemViewRoot;
