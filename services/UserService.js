@@ -1,4 +1,3 @@
-import postList from "../components/postList";
 import Global from "./Globals";
 
 export default class UserService {
@@ -133,9 +132,7 @@ export default class UserService {
         return data
 
     }
-    static async getLastPost(id) {
-        return postList[0]
-    }
+
     static async getFollowers(id) {
         let data = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',

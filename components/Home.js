@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import PostCardRoot from './shared/PostCardRoot';
-import { SafeAreaView, ScrollView, RefreshControl, Text, View, StyleSheet, LogBox, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, RefreshControl, Text, View, StyleSheet } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { AntDesign } from '@expo/vector-icons';
@@ -9,12 +9,8 @@ import PostService from '../services/PostService';
 import UserService from '../services/UserService';
 import AvailableTags from './shared/AvailableTags';
 import PostCard from './shared/PostCard';
-import ActionButton from 'react-native-circular-action-menu';
 import LocalUsersRoot from './shared/LocalUsers/LocalUsersRoot';
 import SearchBottomSheet from './shared/SearchBottomSheet';
-import CreatePostBottomSheet from './shared/CreatePostBottomSheet';
-import Icon from 'react-native-vector-icons/Ionicons';
-import MarkAvailableItemsBottomSheet from './shared/MarkAvailableItemsBottomSheet';
 import Global from '../services/Globals';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -27,12 +23,9 @@ Notifications.setNotificationHandler({
 
 function Home(props) {
 
-    const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
-
-
     const rootContext = React.useContext(RootContext)
 
     const [localPostList, setlocalPostList] = useState([])
@@ -76,7 +69,6 @@ function Home(props) {
     async function loadData() {
         setRefreshing(true)
 
-        loadPosts()
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
                 loadLocalItems(rootContext.getCurrentUser().id, data.city)
@@ -87,19 +79,7 @@ function Home(props) {
 
 
     }
-    async function loadPosts() {
 
-        return Promise.all([
-            UserService.getFolloweesPosts(rootContext.getCurrentUser().id)
-                .then(data => {
-
-                    setSubscribedPosts(data)
-                    setIsLoaded(true)
-                })
-
-        ])
-
-    }
     const onRefresh = React.useCallback(() => {
         loadData()
 
@@ -108,7 +88,6 @@ function Home(props) {
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => {
             rootContext.updatePushToken(token)
-            setExpoPushToken(token)
         });
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
 
@@ -178,17 +157,7 @@ function Home(props) {
                         }} name="search1" size={24} color="black" />
                     </View>
                     <LocalUsersRoot {...props} users={localUsers} />
-                    <View>
-                        {subscribedPosts.length > 0 && <Text
-                            style={{
-                                fontSize: 20,
-                                paddingLeft: 5,
-                                padding: 10
-                            }}
-                        >From people you follow</Text>}
-                    </View>
-                    {!isLoaded && <PostCard post={initialPost} />}
-                    {isLoaded && <PostCardRoot {...props} postList={subscribedPosts} />}
+
                 </View>
             </ScrollView>
         </SafeAreaView>
