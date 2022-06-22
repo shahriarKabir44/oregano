@@ -12,7 +12,7 @@ const CartServices = {
     },
     isAddedToCart: async function (cookId, lowerCasedName) {
         for (let item of this.storedItems) {
-            if (item.lowerCasedName === lowerCasedName && item.vendor.id == cookId) {
+            if (item.lowerCasedName === lowerCasedName && item.vendorId == cookId) {
                 return item.amount
             }
         }
@@ -20,8 +20,10 @@ const CartServices = {
     },
     addItem: async function (cook, item, amount) {
         let isFound = 0
+        item.vendorId = item.vendor.id
+        item.vendor = null
         for (let cookInfo of this.storedCookDatas) {
-            if (cookInfo.Id == cook.Id) {
+            if (cookInfo.id == cook.id) {
                 isFound = 1
                 break
             }
@@ -33,14 +35,13 @@ const CartServices = {
             amount: amount
         })
 
-
     },
     delete: async function (cookId, lowerCasedName) {
-        this.storedItems = this.storedItems.filter(item => !(item.lowerCasedName == lowerCasedName && item.vendor.Id == cookId))
+        this.storedItems = this.storedItems.filter(item => !(item.lowerCasedName == lowerCasedName && item.vendorId == cookId))
         for (let item of this.storedItems) {
-            if (item.vendor.Id == cookId) return
+            if (item.vendorId == cookId) return
         }
-        this.storedCookDatas = this.storedCookDatas.filter(item => !(item.Id == cookId))
+        this.storedCookDatas = this.storedCookDatas.filter(item => !(item.id == cookId))
     },
     getcartItems: async function () {
 

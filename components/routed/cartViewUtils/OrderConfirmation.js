@@ -10,6 +10,7 @@ import SearchLocation from './SearchLocation';
 import LocationService from '../../../services/LocationService';
 function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
+    console.log((orderItems))
     let { getCurrentUser } = React.useContext(RootContext)
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("Loading..")
     const [selectedLocationCoords, setSelectedLocationCoords] = React.useState(null)
@@ -147,7 +148,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 </TouchableOpacity>
 
             </View>
-            <SearchLocation visibility={searchLocationBottomSheetVisibility} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(selectedLocation) => {
+            <SearchLocation visibility={searchLocationBottomSheetVisibility} currentCity={""} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(selectedLocation) => {
                 setCustomLocationGeocode(selectedLocation.name)
                 setSelectedLocationCoords(selectedLocation.coords)
                 setOrderCity(selectedLocation.city)

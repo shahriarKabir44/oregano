@@ -188,7 +188,7 @@ function SearchDetails(props) {
                         </View>
 
                         <FontAwesome5 onPress={() => {
-                            CartServices.delete(selectedSearchResult.vendor.Id, selectedSearchResult.lowerCasedName)
+                            CartServices.delete(selectedSearchResult.vendor.id, selectedSearchResult.lowerCasedName)
                                 .then(() => {
                                     setSearchResultItem({
                                         ...selectedSearchResult, amount: null

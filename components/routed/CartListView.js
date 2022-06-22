@@ -26,7 +26,7 @@ function CartListView(props) {
             for (let cook of cooks) {
                 cook.items = []
                 for (let item of items) {
-                    if (item.vendor.Id == cook.Id) {
+                    if (item.vendorId == cook.id) {
 
                         cook.items.push(item)
                     }
