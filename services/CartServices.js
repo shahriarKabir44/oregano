@@ -20,6 +20,7 @@ const CartServices = {
     },
     addItem: async function (cook, item, amount) {
         let isFound = 0
+        cook.region = item.region
         item.vendorId = item.vendor.id
         item.vendor = null
         for (let cookInfo of this.storedCookDatas) {

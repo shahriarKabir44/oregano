@@ -170,8 +170,8 @@ export default class OrderServices {
     }
 
 
-    static async createOrder(cookId, orderLocationInfo, buyerName, buyerId, itemsCount, orderCity) {
-        let userData = await UserService.findUser(cookId)
+    static async createOrder(cookInfo, orderLocationInfo, buyerName, buyerId, itemsCount, orderCity) {
+
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
         let orderInfo = await fetch(Global.SERVER_URL + '/orders/createNewOrder', {
             method: 'POST',
@@ -183,15 +183,15 @@ export default class OrderServices {
                 drop_long: orderLocationInfo.longitude,
                 dropLocationGeocode: orderLocationInfo.dropLocationGeocode,
                 buyerId: buyerId,
-                sellerId: cookId,
+                sellerId: cookInfo.id,
                 riderId: null,
                 status: 0,
                 charge: 30,
                 city: orderCity,
                 time: (new Date()) * 1,
-                pickupLat: userData.currentLatitude,
-                pickupLong: userData.currentLongitude,
-                pickupLocationGeocode: `${userData.locationInfoJson.city} , ${userData.locationInfoJson.district} , ${userData.locationInfoJson.subregion} , ${userData.locationInfoJson.region}`,
+                pickupLat: cookInfo.currentLatitude,
+                pickupLong: cookInfo.currentLongitude,
+                pickupLocationGeocode: `${cookInfo.locationInfoJson.city} , ${cookInfo.locationInfoJson.district} , ${cookInfo.locationInfoJson.subregion} , ${cookInfo.locationInfoJson.region}`,
                 notificationMessage: notificationMessage,
                 itemsCount: itemsCount,
 
@@ -224,7 +224,13 @@ export default class OrderServices {
     }
     static async placeOrders(orderItems, orderLocationInfo, buyerName, buyerId, orderCity) {
         for (let group of orderItems) {
-            let newOrderId = await OrderServices.createOrder(group.id, orderLocationInfo, buyerName, buyerId, group.items.length, orderCity)
+            let newOrderId = await OrderServices.createOrder({
+                "id": group.id,
+                "locationInfoJson": group.locationInfoJson,
+                "currentLatitude": group.currentLatitude,
+                "currentLongitude": group.currentLongitude,
+                "region": group.region
+            }, orderLocationInfo, buyerName, buyerId, group.items.length, orderCity)
             let promises = []
             for (let item of group.items) {
                 promises.push(OrderServices.createOrderItem(item, newOrderId._id))

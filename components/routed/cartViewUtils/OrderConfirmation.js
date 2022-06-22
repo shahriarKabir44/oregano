@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Modal, TouchableOpacity, ToastAndroid } from 'react-native'
-import { RadioButton, TextInput } from 'react-native-paper';
-import * as Location from 'expo-location';
+import { RadioButton } from 'react-native-paper';
 import { RootContext } from '../../contexts/GlobalContext'
 import CartServices from '../../../services/CartServices'
-import LocationView from '../../shared/LocationView';
 import OrderServices from '../../../services/OrderServices';
 import SearchLocation from './SearchLocation';
 import LocationService from '../../../services/LocationService';
 function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBottomSheetVisibility }) {
     const [locationType, setLocationType] = React.useState(0)
-    console.log((orderItems))
     let { getCurrentUser } = React.useContext(RootContext)
     const [currentLocationGeoCode, setCurrentLocationGeoCode] = React.useState("Loading..")
     const [selectedLocationCoords, setSelectedLocationCoords] = React.useState(null)
@@ -103,7 +100,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                             value={customLocationGeocode}
                             status={locationType === 2 ? 'checked' : 'unchecked'}
                             onPress={() => {
-                                setLocationType(2)
+
                                 setSearchLocationBottomSheetVisibility(1 == 1)
                             }}
                         />
@@ -112,8 +109,11 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
 
                 </View>
             </ScrollView>
-            <View style={styles.footer}>
+            <View style={[styles.footer, {
+                backgroundColor: locationType == 0 ? "#BDF0F6" : "#FFA500"
+            }]}>
                 <TouchableOpacity onPress={() => {
+                    if (locationType == 0) return
                     setModalVisible(true)
 
                     OrderServices.placeOrders(orderItems, {
@@ -142,8 +142,9 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
 
                 }}>
                     <Text style={{
-                        fontSize: 20
-                    }}> Confirm Order </Text>
+                        fontSize: 15,
+                        fontFamily: "sans-serif"
+                    }}> CONFIRM ORDER </Text>
 
                 </TouchableOpacity>
 
@@ -152,7 +153,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 setCustomLocationGeocode(selectedLocation.name)
                 setSelectedLocationCoords(selectedLocation.coords)
                 setOrderCity(selectedLocation.city)
-
+                setLocationType(2)
             }} />
         </View>
     );

@@ -118,6 +118,7 @@ export default class SearchingServices {
                     getItemDetails(tag:"${itemName}" ,userId:"${sellerId}"){
                       itemName
                       lowerCasedName
+                      region
                       vendor{
                         name
                         id
@@ -129,6 +130,7 @@ export default class SearchingServices {
                           district
                           street
                           region
+                          subregion
                         }
                         currentLatitude
                         currentLongitude
