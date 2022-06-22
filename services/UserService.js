@@ -1,4 +1,6 @@
 import Global from "./Globals";
+import PostService from "./PostService";
+import RatingServices from "./RatingServices";
 
 export default class UserService {
     static async logout(userId) {
@@ -224,13 +226,17 @@ export default class UserService {
         return postList
     }
     static async getPosts(userId) {
-        let data = await fetch(Global.SERVER_URL + '/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `query{
+        let posts;
+        let availableItems;
+        let ratings = []
+        let promises = [
+            fetch(Global.SERVER_URL + '/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `query{
                     getCreatedPosts(id:"${userId}"){
                         images
                         itemName
@@ -244,15 +250,69 @@ export default class UserService {
                         postedOn
                   }
                 }`
-            })
-        }).then(res => res.json())
+                })
+            }).then(res => res.json())
+                .then(({ data }) => {
+                    posts = data
+                }),
+            PostService.getAvailableItemsToday(userId)
+                .then(data => {
+                    availableItems = data
+                }),
+            RatingServices.getTagRatings(userId)
+                .then(data => {
+                    ratings = data
+                })
+        ]
+        await Promise.all(promises)
 
-        for (let post of data.data.getCreatedPosts) {
+
+
+
+        for (let post of posts.getCreatedPosts) {
             post.images = JSON.parse(post.images)
-            post.tags = JSON.parse(post.tags)
-        }
 
-        return data.data.getCreatedPosts
+        }
+        posts = posts.getCreatedPosts
+        let classedByName = []
+        for (let item of posts) {
+            let isFound = false
+            let lastGroup = null;
+            for (let group of classedByName) {
+                if (isFound) break
+                if (group.groupName == item.itemName) {
+                    group.posts.push(item)
+                    lastGroup = group
+                    isFound = true
+
+                }
+            }
+            if (!isFound) {
+                let newGroup = {
+                    groupName: item.itemName,
+                    posts: [item]
+                }
+                lastGroup = newGroup
+                classedByName.push(newGroup)
+            }
+            lastGroup.isAvailable = false
+            lastGroup.rating = 0
+            for (let availableItem of availableItems) {
+                if (availableItem.tag == lastGroup.groupName) {
+                    lastGroup.isAvailable = true
+                    lastGroup.unitPrice = availableItem.unitPrice
+                    break
+                }
+            }
+            for (let ratedItem of ratings) {
+                if (ratedItem.tagName == lastGroup.groupName) {
+                    lastGroup.rating = ratedItem.avg_rating
+                    break
+                }
+            }
+        }
+        return classedByName
+
     }
 
     static async updateUserInfo(userId, facebookToken) {
@@ -266,6 +326,7 @@ export default class UserService {
                 facebookToken: (facebookToken)
             })
         }).then(res => res.json())
+
     }
     static async isSignedUp(facebookId) {
         let { data } = await fetch(Global.SERVER_URL + '/user/isRegistered', {

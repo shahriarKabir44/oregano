@@ -248,7 +248,7 @@ export default class PostService {
         }).then(response => response.json())
         let res = []
         for (let item of data) {
-            res.push({ tag: item.tag, unitPrice: item.unitPrice })
+            res.push({ tag: item.tag, unitPrice: item.unitPrice, rating: item.rating })
         }
         return res
     }

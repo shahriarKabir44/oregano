@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid } from 'react-native';
-import RatingServices from '../../../services/RatingServices'
 import { RootContext } from '../../contexts/GlobalContext';
 import { Entypo } from '@expo/vector-icons';
 import PostCardRootProfile from './PostCardRootProfile';
 import UserService from '../../../services/UserService';
 import { useIsFocused } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
 import { BottomSheet } from 'react-native-btr';
-import LocalStorageService from '../../../services/LocalStorageService';
 import { Ionicons } from '@expo/vector-icons';
 import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
-import Global from '../../../services/Globals';
 import UploadManager from '../../../services/UploadManager';
 
 function UserProfile(props) {
@@ -45,7 +41,6 @@ function UserProfile(props) {
     const isFocused = useIsFocused()
     const [userPosts, setPostList] = useState([])
     const [isLoaded, setLoadedStatus] = useState(false)
-    const [tagRatingList, setTagRatingList] = React.useState([])
     const [createPostBottomSheetVisibility, popupCreatePostBottomSheet] = React.useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -55,11 +50,9 @@ function UserProfile(props) {
             setCurrentUserFlag(true)
             setUserInfo(rootContext.getCurrentUser())
             rootContext.setHeaderString('Your profile')
-            getUserTagRatings(rootContext.getCurrentUser().id)
             return UserService.getPosts(rootContext.getCurrentUser().id)
                 .then(posts => {
                     setPostList(posts)
-
                 })
                 .then(() => {
                     setLoadedStatus(true)
@@ -68,7 +61,7 @@ function UserProfile(props) {
         }
         else if (rootContext.getCurrentUser().id != props.route?.params?.id) {
             setCurrentUserFlag(false)
-            getUserTagRatings(props.route?.params?.id)
+
             return Promise.all([
                 UserService.isFollowing(rootContext.getCurrentUser().id, props.route?.params?.id)
                     .then((data) => {
@@ -81,7 +74,6 @@ function UserProfile(props) {
 
                         UserService.getPosts(props.route?.params?.id)
                             .then(posts => {
-
                                 setPostList(posts)
 
                             })
@@ -94,7 +86,6 @@ function UserProfile(props) {
 
         }
         else if (rootContext.getCurrentUser().id == props.route?.params?.id) {
-            getUserTagRatings(props.route?.params?.id)
 
             setCurrentUserFlag(true)
             setUserInfo(rootContext.getCurrentUser())
@@ -110,16 +101,14 @@ function UserProfile(props) {
         }
     }
 
-    function getUserTagRatings(userId) {
-        RatingServices.getTagRatings(userId)
-            .then(data => {
-                setTagRatingList(data)
-            })
-    }
+
     useEffect(() => {
-        loadData().then(() => {
-            setRefreshing(1 == 0)
-        })
+        if (isFocused) {
+            loadData().then(() => {
+                setRefreshing(1 == 0)
+            })
+        }
+
 
 
     }, [isFocused])
@@ -226,38 +215,7 @@ function UserProfile(props) {
                         </View>
                     </View>
 
-                    <View style={{
-                        padding: 10
-                    }}>
-                        <Text style={{
-                            fontSize: 20
-                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} stars </Text>
-                        <View style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            flexWrap: "wrap",
-                            justifyContent: "space-around"
-                        }}>
-                            {tagRatingList.map((entry, index) => {
-                                return <TouchableOpacity onPress={() => {
-                                    props.stackNav.push('searchResult', {
-                                        tag: entry.tagName
-                                    })
-                                }} key={index} style={[styles.horizontalAlign, {
-                                    margin: 5,
-                                    padding: 10,
-                                    borderRadius: 10,
-                                    borderWidth: 1,
-                                    borderColor: "black",
-                                    width: '45%'
-                                }]}>
-                                    <Text>{entry.tagName}</Text>
-                                    <Text>{Math.floor(entry.avg_rating * 100) / 100}⭐</Text>
-                                </TouchableOpacity >
-                            })}
-                        </View>
 
-                    </View>
                     <View style={[styles.horizontalAlign, {
                         justifyContent: "flex-start",
                         alignItems: "center",
@@ -266,7 +224,7 @@ function UserProfile(props) {
                         <Text style={{
                             fontSize: 20,
                             padding: 10
-                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} Posts </Text>
+                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo.facebookToken.name}'s`} Posts and activities </Text>
                         {isCurrentUser && <Ionicons onPress={() => {
                             popupCreatePostBottomSheet(1 == 1)
                         }} name="add-circle-outline" size={24} color="black" />}
@@ -274,7 +232,7 @@ function UserProfile(props) {
                     <View style={{
                         padding: 10
                     }}>
-                        <PostCardRootProfile {...props} postList={userPosts} />
+                        <PostCardRootProfile isCurrentUser={isCurrentUser} {...props} postList={userPosts} />
                     </View>
                 </ScrollView>
             </View>}

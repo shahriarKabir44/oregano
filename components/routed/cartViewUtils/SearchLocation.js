@@ -5,11 +5,13 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
+    ToastAndroid,
 } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import { BottomSheet } from 'react-native-btr';
 import { TextInput } from 'react-native-paper';
 import SearchingServices from '../../../services/SearchingServices';
+import LocationService from '../../../services/LocationService';
 
 function SearchLocation(props) {
     const [query, setQuery] = React.useState("")
@@ -71,7 +73,7 @@ function SearchLocation(props) {
                             setSearchResults([{
                                 name: "Loading...",
                                 street: "",
-                                notSelectasble: 1
+                                notSelectable: 1
                             }])
                             SearchingServices.searchLocation(query)
                                 .then(data => {
@@ -88,9 +90,28 @@ function SearchLocation(props) {
                     <ScrollView>
                         {searchResulsts.map((item, index) => {
                             return <TouchableOpacity onPress={() => {
-                                if (item.notSelectasble) return
+                                if (item.notSelectable) return
+                                let productLocation = props.orderItems[0].region
                                 props.setVisibility(false);
                                 props.onSelect(item)
+                                // LocationService.getLocationGeocode(item.coords)
+                                //     .then(data => {
+                                //         console.log(JSON.stringify(item))
+                                //         if (data[0]) {
+                                //             if (data[0].city?.toLowerCase() == productLocation.toLowerCase()) {
+
+                                //                 return
+                                //             }
+                                //         }
+                                //         ToastAndroid.showWithGravity(
+                                //             `Order location must be inside of ${productLocation}`,
+                                //             ToastAndroid.SHORT,
+                                //             ToastAndroid.BOTTOM
+                                //         )
+                                //     })
+
+
+
                             }} key={index} style={{
                                 margin: 1,
                                 padding: 5,

@@ -149,7 +149,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 </TouchableOpacity>
 
             </View>
-            <SearchLocation visibility={searchLocationBottomSheetVisibility} currentCity={""} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(selectedLocation) => {
+            <SearchLocation visibility={searchLocationBottomSheetVisibility} orderItems={orderItems} setVisibility={setSearchLocationBottomSheetVisibility} onSelect={(selectedLocation) => {
                 setCustomLocationGeocode(selectedLocation.name)
                 setSelectedLocationCoords(selectedLocation.coords)
                 setOrderCity(selectedLocation.city)
