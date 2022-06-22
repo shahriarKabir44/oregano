@@ -111,7 +111,6 @@ function RelatedPostsCard(props) {
         <Button onPress={() => {
             props.stackNav.push('Post details', {
                 postId: props.data.id,
-
             })
         }} title="View details" />
     </View>

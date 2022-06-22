@@ -37,7 +37,7 @@ function SimilarItemCard(props) {
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)
     const [dropDownVisibility, popupBottomSheet] = React.useState(false)
     return (<View>
-        <ResultBottomSheet bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
+        <ResultBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
         <TouchableOpacity style={{
             width: 200,
             borderRadius: 10,
