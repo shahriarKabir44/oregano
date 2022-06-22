@@ -39,7 +39,7 @@ function PostGroup(props) {
         <View style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-around",
+
 
             alignItems: "center"
         }}>
@@ -48,15 +48,7 @@ function PostGroup(props) {
                 <Text>{props.group.isAvailable ? "Available today" : "Unavailable for now"}</Text>
                 <Text>{props.group.rating == 0 ? "Unrated" : `${props.group.rating}⭐`} </Text>
             </View>
-            <View  >
-                {!props.isCurrentUser && <TouchableOpacity style={{
-                    backgroundColor: "#88FC9A",
-                    padding: 10,
-                    borderRadius: 4
-                }}>
-                    <Text>ADD TO CART</Text>
-                </TouchableOpacity>}
-            </View>
+
         </View>
         <View>
             <FlatList
@@ -78,9 +70,11 @@ function PostGroup(props) {
 function RelatedPostsCard(props) {
     return <View style={{
         margin: 5,
-        padding: 10,
+        paddingHorizontal: 10,
         backgroundColor: "#C1F2FB",
-        borderRadius: 5
+        borderRadius: 5,
+        paddingBottom: 50,
+        paddingTop: 10
     }}>
         <Image source={{
             uri: (props.data.images)[[0]]
@@ -91,11 +85,25 @@ function RelatedPostsCard(props) {
         <Text style={{
             fontSize: 15
         }}> {(new Date(props.data.postedOn).toLocaleTimeString())}, {(new Date(props.data.postedOn).toLocaleDateString())} </Text>
-        <Button onPress={() => {
-            props.stackNav.push('Post details', {
-                postId: props.data.id,
 
-            })
-        }} title="View details" />
+        <View>
+            <View style={{
+                position: "relative"
+            }}>
+                <TouchableOpacity onPress={() => {
+                    props.stackNav.push('Post details', {
+                        postId: props.data.id,
+
+                    })
+                }} style={{
+                    backgroundColor: "#C4FDCC",
+                    position: "absolute",
+                    padding: 10,
+                    borderRadius: 5
+                }}>
+                    <Text>View details</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     </View>
 }
