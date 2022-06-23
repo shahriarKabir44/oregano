@@ -29,19 +29,23 @@ function ItemDetailsBottomSheet(props) {
 
 function SearchDetails(props) {
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)
-
+    const [isLoaded, setIsLoaded] = React.useState(false)
     React.useEffect(() => {
-        SearchingServices.getDetails(props.vendorId, props.itemName)
+        SearchingServices.getDetails(props.selectedSearchResult.vendorId, props.selectedSearchResult.itemName)
             .then((searchResultInfo) => {
                 setSearchResultItem(searchResultInfo)
                 return searchResultInfo
             }).then((searchResultInfo) => {
-                CartServices.isAddedToCart(props.vendorId, props.itemName)
+                CartServices.isAddedToCart(props.selectedSearchResult.vendorId, props.selectedSearchResult.itemName)
                     .then(cartData => {
+                        console.log(searchResultInfo)
                         setSearchResultItem({ ...searchResultInfo, amount: null })
                         if (cartData) {
                             setSearchResultItem({ ...searchResultInfo, amount: cartData })
                         }
+                    })
+                    .then(() => {
+                        setIsLoaded(true)
                     })
             })
     }, [])
@@ -50,182 +54,186 @@ function SearchDetails(props) {
         setAmount(Math.max(1, Math.min(amount + inc, 100)))
     }
     const placeHolderImage = "https://previews.123rf.com/images/takasumi/takasumi1510/takasumi151000226/46196249-%E3%83%87%E3%82%A3%E3%83%8A%E3%83%BC%E7%9A%BF%E3%80%81%E3%83%8A%E3%82%A4%E3%83%95%E3%80%81%E3%82%B9%E3%83%97%E3%83%BC%E3%83%B3%E3%80%81%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88-%E3%83%90%E3%83%83%E3%82%AF-%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%AB%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AF.jpg"
-    const vendorLocationInfo = selectedSearchResult.vendor.locationInfoJson
     return (
         <View style={{
             flex: 1
         }} >
-            <View style={{
-                flex: 1,
-                padding: 10
-            }}>
-                <Text style={{
-                    fontSize: 24
-                }}>{selectedSearchResult.itemName}</Text>
-                <View style={[styles.alighnHorizontal, {
-
-                    alignItems: "center",
-                    alignContent: "center",
-                    justifyContent: "space-between"
-                }]}>
+            {isLoaded && <View style={{
+                flex: 1
+            }} >
+                <View style={{
+                    flex: 1,
+                    padding: 10
+                }}>
+                    <Text style={{
+                        fontSize: 24
+                    }}>{selectedSearchResult.lowerCasedName}</Text>
                     <View style={[styles.alighnHorizontal, {
 
                         alignItems: "center",
-                        alignContent: "center"
+                        alignContent: "center",
+                        justifyContent: "space-between"
                     }]}>
-                        <Image style={{
-                            width: 80,
-                            aspectRatio: 1,
-                            borderRadius: 50,
-                        }} source={{
-                            uri: selectedSearchResult.relatedPost.length ? JSON.parse(selectedSearchResult.relatedPost[0].images)[0] : placeHolderImage
-                        }} />
-                        <View style={{
-                            marginLeft: 20
-                        }}>
-
-                            <Text>⭐{selectedSearchResult.getRatings}</Text>
-
-                            <Text>💰Tk.{selectedSearchResult.unitPrice}</Text>
-                        </View>
-                    </View>
-
-                    <View>
-                        <Text>By:</Text>
                         <View style={[styles.alighnHorizontal, {
 
                             alignItems: "center",
-                            alignContent: "center",
-
+                            alignContent: "center"
                         }]}>
                             <Image style={{
-                                height: 40,
+                                width: 80,
                                 aspectRatio: 1,
-                                borderRadius: 40,
-                                marginRight: 10
-                            }} source={{ uri: selectedSearchResult.vendor.personalInfo.profileImageURL }} />
-                            <Text>{selectedSearchResult.vendor.name}</Text>
+                                borderRadius: 50,
+                            }} source={{
+                                uri: selectedSearchResult.relatedPost.length ? JSON.parse(selectedSearchResult.relatedPost[0].images)[0] : placeHolderImage
+                            }} />
+                            <View style={{
+                                marginLeft: 20
+                            }}>
+
+                                <Text>⭐{selectedSearchResult.getRatings}</Text>
+
+                                <Text>💰Tk.{selectedSearchResult.unitPrice}</Text>
+                            </View>
                         </View>
 
+                        <View>
+                            <Text>By:</Text>
+                            <View style={[styles.alighnHorizontal, {
 
+                                alignItems: "center",
+                                alignContent: "center",
+
+                            }]}>
+                                <Image style={{
+                                    height: 40,
+                                    aspectRatio: 1,
+                                    borderRadius: 40,
+                                    marginRight: 10
+                                }} source={{ uri: selectedSearchResult.vendor.personalInfo.profileImageURL }} />
+                                <Text>{selectedSearchResult.vendor.name}</Text>
+                            </View>
+
+
+                        </View>
                     </View>
+
+                    <Text>Recent posts</Text>
+                    <ScrollView>
+                        {selectedSearchResult.relatedPost.map((item, index) => {
+                            return <RenderPost {...props} item={item} key={index} />
+                        })}
+
+
+                    </ScrollView>
                 </View>
 
-                <Text>Recent posts</Text>
-                <ScrollView>
-                    {selectedSearchResult.relatedPost.map((item, index) => {
-                        return <RenderPost {...props} item={item} key={index} />
-                    })}
+                <View style={styles.footer}>
+                    <Text style={{
+                        fontSize: 12
+                    }}>Location:{selectedSearchResult.vendor.locationInfoJson.street},{selectedSearchResult.vendor.locationInfoJson.district},{selectedSearchResult.vendor.locationInfoJson.city}</Text>
 
-
-                </ScrollView>
-            </View>
-
-            <View style={styles.footer}>
-                <Text style={{
-                    fontSize: 12
-                }}>Location:{vendorLocationInfo.street},{vendorLocationInfo.district},{vendorLocationInfo.city}</Text>
-
-                <View style={[styles.alighnHorizontal, {
-                    padding: 20,
-                    justifyContent: "space-between",
-                    width: "100%"
-                }]}>
-
-
-                    {!selectedSearchResult.amount && <TouchableOpacity style={{
-                        paddingVertical: 10,
-                        paddingHorizontal: 60,
-                        backgroundColor: "#77cf8e",
-                        borderRadius: 10,
-                        marginHorizontal: 10
-                    }} onPress={() => {
-                        CartServices.addItem(selectedSearchResult.vendor, { ...selectedSearchResult }, amount)
-                            .then(() => {
-                                setSearchResultItem({
-                                    ...selectedSearchResult, amount: amount
-                                })
-                                props.setSearchResultItem({
-                                    ...selectedSearchResult, amount: amount
-                                })
-                                return
-                            })
-                            .then(() => {
-                                if (props.onChange) props.onChange()
-                                // add toastAndroid
-                            })
-
-                    }} >
-                        <Text>Add to cart</Text>
-                    </TouchableOpacity>}
-
-                    {!selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
-                        marginHorizontal: 5,
-                        justifyContent: "space-between"
-                    }]}>
-                        <TouchableOpacity onPress={() => {
-                            updatecartAmount(1)
-
-                        }} >
-                            <View style={styles.updateAmountBtn}>
-                                <Text style={{
-                                    fontSize: 20
-                                }}>+</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <View style={[styles.updateAmountBtn, {
-                            backgroundColor: "#C4C4C4"
-                        }]}>
-                            <Text style={{
-                                fontSize: 20
-                            }}>{amount}</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => {
-                            updatecartAmount(-1)
-
-
-                        }}>
-                            <View style={styles.updateAmountBtn}>
-                                <Text style={{
-                                    fontSize: 20
-                                }}>-</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>}
-
-                    {selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
+                    <View style={[styles.alighnHorizontal, {
+                        padding: 20,
                         justifyContent: "space-between",
                         width: "100%"
                     }]}>
-                        <View>
-                            <Text>Amount:{selectedSearchResult.amount}</Text>
-                            <Text>Tk.{selectedSearchResult.amount * selectedSearchResult.unitPrice}</Text>
-                        </View>
 
-                        <FontAwesome5 onPress={() => {
-                            CartServices.delete(selectedSearchResult.vendor.id, selectedSearchResult.lowerCasedName)
+
+                        {!selectedSearchResult.amount && <TouchableOpacity style={{
+                            paddingVertical: 10,
+                            paddingHorizontal: 60,
+                            backgroundColor: "#77cf8e",
+                            borderRadius: 10,
+                            marginHorizontal: 10
+                        }} onPress={() => {
+                            CartServices.addItem(selectedSearchResult.vendor, { ...selectedSearchResult }, amount)
                                 .then(() => {
                                     setSearchResultItem({
-                                        ...selectedSearchResult, amount: null
+                                        ...selectedSearchResult, amount: amount
                                     })
                                     props.setSearchResultItem({
-                                        ...selectedSearchResult, amount: null
+                                        ...selectedSearchResult, amount: amount
                                     })
                                     return
                                 })
                                 .then(() => {
                                     if (props.onChange) props.onChange()
-
                                     // add toastAndroid
                                 })
-                        }} name="trash" size={24} color="black" />
+
+                        }} >
+                            <Text>Add to cart</Text>
+                        </TouchableOpacity>}
+
+                        {!selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
+                            marginHorizontal: 5,
+                            justifyContent: "space-between"
+                        }]}>
+                            <TouchableOpacity onPress={() => {
+                                updatecartAmount(1)
+
+                            }} >
+                                <View style={styles.updateAmountBtn}>
+                                    <Text style={{
+                                        fontSize: 20
+                                    }}>+</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <View style={[styles.updateAmountBtn, {
+                                backgroundColor: "#C4C4C4"
+                            }]}>
+                                <Text style={{
+                                    fontSize: 20
+                                }}>{amount}</Text>
+                            </View>
+                            <TouchableOpacity onPress={() => {
+                                updatecartAmount(-1)
 
 
-                    </View>}
+                            }}>
+                                <View style={styles.updateAmountBtn}>
+                                    <Text style={{
+                                        fontSize: 20
+                                    }}>-</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>}
+
+                        {selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
+                            justifyContent: "space-between",
+                            width: "100%"
+                        }]}>
+                            <View>
+                                <Text>Amount:{selectedSearchResult.amount}</Text>
+                                <Text>Tk.{selectedSearchResult.amount * selectedSearchResult.unitPrice}</Text>
+                            </View>
+
+                            <FontAwesome5 onPress={() => {
+                                CartServices.delete(selectedSearchResult.vendor.id, selectedSearchResult.lowerCasedName)
+                                    .then(() => {
+                                        setSearchResultItem({
+                                            ...selectedSearchResult, amount: null
+                                        })
+                                        props.setSearchResultItem({
+                                            ...selectedSearchResult, amount: null
+                                        })
+                                        return
+                                    })
+                                    .then(() => {
+                                        if (props.onChange) props.onChange()
+
+                                        // add toastAndroid
+                                    })
+                            }} name="trash" size={24} color="black" />
+
+
+                        </View>}
+
+                    </View>
 
                 </View>
 
-            </View>
+            </View>}
         </View>
     )
 }

@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
 import UploadManager from '../../../services/UploadManager';
 import { FontAwesome } from '@expo/vector-icons';
+import CreateActivity from './CreateActivity';
 function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
     async function handleUpload() {
@@ -20,13 +21,13 @@ function UserProfile(props) {
 
 
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
-    const [isFollowing, setConnection] = React.useState(true)
+    const [isCollapsed, setCollapseStatus] = React.useState(false)
     const rootContext = React.useContext(RootContext)
     const [UserProfileInfo, setUserInfo] = useState({
         "facebookToken": {
             "name": "",
-            "profileImageURL": "https://www.camc.org/sites/default/files/styles/800x600/public/2020-09/employee%20wellness%20center_hero.jpg?itok=9qCcPtUE",
-            coverPhotoURL: "https://www.camc.org/sites/default/files/styles/800x600/public/2020-09/employee%20wellness%20center_hero.jpg?itok=9qCcPtUE",
+            "profileImageURL": "rgreg",
+            coverPhotoURL: "eerger",
             email: "",
             phone: "",
             address: ""
@@ -64,13 +65,13 @@ function UserProfile(props) {
             loadPosts(userId),
             loadPersonalInfo(userId)
         ])
-        setRefreshing(false)
-        setLoadedStatus(true)
+
+
     }
     async function loadPersonalInfo(userId) {
         UserService.findUser(userId)
             .then(data => {
-                console.log(data)
+                // console.log(data)
                 setUserInfo(data)
             })
     }
@@ -84,6 +85,7 @@ function UserProfile(props) {
         if (isFocused) {
             loadData().then(() => {
                 setRefreshing(1 == 0)
+                setLoadedStatus(true)
             })
         }
     }, [isFocused])
@@ -93,6 +95,8 @@ function UserProfile(props) {
         loadData()
             .then(() => {
                 setRefreshing(1 == 0)
+                setLoadedStatus(true)
+
             })
     }, []);
     return (
@@ -169,7 +173,7 @@ function UserProfile(props) {
                             }}>
                                 <FontAwesome name="home" size={24} color="black" />
                                 <Text>
-                                    {UserProfileInfo.locationInfoJson.district} {UserProfileInfo.locationInfoJson.city} {UserProfileInfo.locationInfoJson.subregion} {UserProfileInfo.locationInfoJson.region}
+                                    {UserProfileInfo.locationInfoJson?.district} {UserProfileInfo.locationInfoJson?.city} {UserProfileInfo.locationInfoJson?.subregion} {UserProfileInfo.locationInfoJson?.region}
                                 </Text>
                             </View>
 
