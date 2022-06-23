@@ -3,10 +3,9 @@ import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, 
 import { BottomSheet } from 'react-native-btr';
 import CartServices from '../../services/CartServices'
 import { FontAwesome5 } from '@expo/vector-icons';
+import SearchingServices from '../../services/SearchingServices';
 
 function ItemDetailsBottomSheet(props) {
-
-
     return (
         <View>
             {props.selectedSearchResult && <BottomSheet visible={props.bottomSheetVisibility}
@@ -29,7 +28,23 @@ function ItemDetailsBottomSheet(props) {
 
 
 function SearchDetails(props) {
-    const [selectedSearchResult, setSearchResultItem] = React.useState(props.selectedSearchResult)
+    const [selectedSearchResult, setSearchResultItem] = React.useState(null)
+
+    React.useEffect(() => {
+        SearchingServices.getDetails(props.vendorId, props.itemName)
+            .then((searchResultInfo) => {
+                setSearchResultItem(searchResultInfo)
+                return searchResultInfo
+            }).then((searchResultInfo) => {
+                CartServices.isAddedToCart(props.vendorId, props.itemName)
+                    .then(cartData => {
+                        setSearchResultItem({ ...searchResultInfo, amount: null })
+                        if (cartData) {
+                            setSearchResultItem({ ...searchResultInfo, amount: cartData })
+                        }
+                    })
+            })
+    }, [])
     const [amount, setAmount] = React.useState(1)
     function updatecartAmount(inc) {
         setAmount(Math.max(1, Math.min(amount + inc, 100)))
@@ -145,7 +160,7 @@ function SearchDetails(props) {
                     </TouchableOpacity>}
 
                     {!selectedSearchResult.amount && <View style={[styles.alighnHorizontal, {
-                        marginHorizontal: 10,
+                        marginHorizontal: 5,
                         justifyContent: "space-between"
                     }]}>
                         <TouchableOpacity onPress={() => {

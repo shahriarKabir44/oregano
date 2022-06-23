@@ -44,28 +44,12 @@ function SimilarItemCard(props) {
             padding: 10,
             backgroundColor: "#D1E8F3"
         }} onPress={() => {
-            SearchingServices.getDetails(props.item.vendor.id, props.item.itemName)
-                .then(searchResultInfo => {
-                    setSearchResultItem(searchResultInfo)
+            setSearchResultItem({
+                vendorId: props.item.vendor.id,
+                itemName: props.item.itemName
+            })
+            popupBottomSheet(true)
 
-                    return searchResultInfo
-                }).then((searchResultInfo) => {
-                    CartServices.isAddedToCart(props.item.vendor.id + "", props.item.itemName)
-                        .then(cartData => {
-
-                            setSearchResultItem({ ...searchResultInfo, amount: null })
-                            if (cartData) {
-                                setSearchResultItem({ ...searchResultInfo, amount: cartData })
-                            }
-
-                        })
-                        .then(() => {
-
-                            popupBottomSheet(true)
-                        })
-                    // LocalStorageService.removeItem('storedCookDatas')
-                    // LocalStorageService.removeItem('storedItems')
-                })
 
         }}>
             <Image

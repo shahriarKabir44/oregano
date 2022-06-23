@@ -54,24 +54,12 @@ function SearhcItemsRoot(props) {
                 <ScrollView>
                     {searchResult.map((result, index) => {
                         return (<TouchableOpacity onPress={() => {
-                            SearchingServices.getDetails(result.vendor.id, result.itemName)
-                                .then(searchResultInfo => {
-                                    setSearchResultItem(searchResultInfo)
-                                    return searchResultInfo
-                                }).then((searchResultInfo) => {
-                                    CartServices.isAddedToCart(result.vendor.id + "", result.itemName)
-                                        .then(cartData => {
-                                            setSearchResultItem({ ...searchResultInfo, amount: null })
-                                            if (cartData) {
-                                                setSearchResultItem({ ...searchResultInfo, amount: cartData })
-                                            }
-                                        })
-                                        .then(() => {
-                                            popupBottomSheet(true)
-                                        })
-                                    // LocalStorageService.removeItem('storedCookDatas')
-                                    // LocalStorageService.removeItem('storedItems')
-                                })
+                            setSearchResultItem({
+                                vendorId: result.vendor.id,
+                                itemName: result.itemName
+                            });
+                            popupBottomSheet(true)
+
 
                         }} style={[styles.horizontalAlign, {
                             backgroundColor: "#EBFDEF",

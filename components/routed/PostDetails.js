@@ -358,25 +358,11 @@ function PostDetails(props) {
                 {!isOwnPost && <View>
                     {(!isAddedToCart && itemAvailability.isAvailable == 1) && <View style={styles.footer}>
                         <TouchableOpacity onPress={() => {
-                            SearchingServices.getDetails(post.postedBy, post.itemName)
-                                .then(searchResultInfo => {
-                                    setSearchResultItem(searchResultInfo)
-                                    return searchResultInfo
-                                }).then((searchResultInfo) => {
-                                    CartServices.isAddedToCart(post.postedBy + "", post.itemName)
-                                        .then(cartData => {
-                                            setSearchResultItem({ ...searchResultInfo, amount: null })
-                                            if (cartData) {
-                                                setSearchResultItem({ ...searchResultInfo, amount: cartData })
-                                            }
-                                        })
-                                        .then(() => {
-                                            popupBottomSheet(true)
-                                        })
-                                    // LocalStorageService.removeItem('storedCookDatas')
-                                    // LocalStorageService.removeItem('storedItems')
-                                })
-
+                            setSearchResultItem({
+                                vendorId: post.postedBy,
+                                itemName: post.itemName
+                            })
+                            popupBottomSheet(true)
                         }}>
                             <Text style={{
                                 fontSize: 15

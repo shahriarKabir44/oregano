@@ -83,6 +83,7 @@ export default class UserService {
                 query: `query{findUser(id:"${id}"){
                     facebookToken
                     id
+                    phone
                     expoPushToken
                     currentLatitude
                     currentLongitude

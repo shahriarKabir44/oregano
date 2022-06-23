@@ -82,7 +82,12 @@ function CartListView(props) {
 
                         </View>
                         {group.items.map((item, index1) => <TouchableOpacity key={index1} onPress={() => {
-                            setSelectedCartItem(item)
+
+                            setSelectedCartItem({
+                                itemName: item.itemName.toLowerCase(),
+                                vendorId: item.vendorId
+                            })
+
                             popupBottomSheet(true)
 
                         }}>
@@ -127,7 +132,7 @@ function CartListView(props) {
             </BottomSheet>
             <ItemDetailsBottomSheet {...props} onChange={() => {
                 updateCartList()
-            }} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedcartItem} setSearchResultItem={() => { }} />
+            }} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedcartItem} setSearchResultItem={setSelectedCartItem} />
 
         </View>
 

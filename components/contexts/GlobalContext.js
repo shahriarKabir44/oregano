@@ -5,44 +5,63 @@ export const RootContext = React.createContext()
 import LocalStorageService from '../../services/LocalStorageService'
 let users = [
     {
-        id: ("62aca83c670426ea47bbc747"),
-        facebookToken: {
-            name: "Shahriar Kabir",
-            profileImageURL: "https://www.taxadvisermagazine.com/sites/default/files/styles/article_full/public/employee-Deepak%20Sethi.jpg?itok=ZKrPSHWR&c=957d9622c9a1717ee19018eff40a9919",
-            coverPhotoURL: "https://www.glassdoor.com/employers/app/uploads/sites/2/2018/09/resources-benefits-employees-want-most-min-768x483-1-e1540508225245.jpg",
-            email: "shahriar@gmail.com",
-            phone: "017123432784"
-        },
-        phone: '017123432784',
-        currentLatitude: 37.413200093902745,
-        currentLongitude: -122.0894346133671,
-        isRider: 0,
-        rating: 4.4,
-        currentCity: '716 Sierra Vista Ave',
-    },
-    {
-        "facebookToken": JSON.parse("{\"name\":\"Nusrat jahan\",\"profileImageURL\":\"https://imageio.forbes.com/specials-images/imageserve/6109550f1aa8564670194ad4/Close-up-smiling-businesswoman-holding-computer-tablet--looking-to-side/960x0.jpg?fit=bounds&format=jpg&width=960\",\"coverPhotoURL\":\"https://cdnimg.webstaurantstore.com/images/articles/359/blog-chefs-header.jpg\",\"email\":\"nusrat@gmail.com\",\"phone\":\"01234567891\",\"address\":\"Nirala, Khulna\"}"),
         "id": "6233763287e53dc7547b702c",
-        "rating": 3.5,
+        "__v": 0,
         "currentCity": "2425 Garcia Ave, Mountain View",
-        "currentLatitude": 22.803272881875372,
-        "currentLongitude": 89.5545602022129
+        "currentLatitude": 23.1513269,
+        "currentLongitude": 89.2024836,
+        "facebookToken": JSON.parse("{\"name\":\"Nusrat Jahan\",\"profileImageURL\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN_wHjuRlqs0B2niLg6q092Lyrjbuv6MPHRg&usqp=CAU\",\"coverPhotoURL\":\"https://cdnimg.webstaurantstore.com/images/articles/359/blog-chefs-header.jpg\",\"email\":\"nusrat@gmail.com\",\"phone\":\"01234567891\",\"address\":\"Nirala, Khulna\"}"),
+        "isRider": 0,
+        "locationInfo": "{\"postalCode\":null,\"isoCountryCode\":\"BD\",\"subregion\":\"Jessore District\",\"district\":null,\"name\":\"Unnamed Road\",\"region\":\"Khulna Division\",\"city\":\"Jessore\",\"country\":\"Bangladesh\",\"street\":\"Unnamed Road\",\"timezone\":null}",
+        "phone": "01934567891",
+        "rating": 3.5,
+        "expoPushToken": "ExponentPushToken[q6zBvsLlChPKMdBVZQRhEN]",
+        "region": "Khulna Division",
+        "name": "Nusrat Jahan"
     },
     {
         "id": "62337746e01e7759847f1d8d",
-        "facebookToken": {
-            name: 'Musfiq Rahman',
-            profileImageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAPqv9XyrSDyn0GcBiCmKj7WzhH_nzgDJ-tw&usqp=CAU',
-            coverPhotoURL: 'https://image.shutterstock.com/image-photo/chef-hands-keep-wok-fire-260nw-1758966962.jpg',
-            email: 'musfiq@gmail.com',
-            phone: '01712345623'
-        },
-        "phone": "01712345623",
-        "currentLatitude": 37.423596213254115,
-        "currentLongitude": -122.09753731238035,
+        "__v": 0,
+        "currentCity": "2470 Charleston Rd",
+        "currentLatitude": 23.1513397,
+        "currentLongitude": 89.2024746,
+        "facebookToken": JSON.parse("{\"name\":\"Musfiq Rahman\",\"profileImageURL\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAPqv9XyrSDyn0GcBiCmKj7WzhH_nzgDJ-tw&usqp=CAU\",\"coverPhotoURL\":\"http://192.168.43.90:3000/userImages/62337746e01e7759847f1d8d/62337746e01e7759847f1d8dcoverPhoto1655549251555.jpg\",\"email\":\"drew@gmail.com\",\"phone\":\"01712345623\"}"),
         "isRider": 1,
+        "locationInfo": "{\"postalCode\":null,\"isoCountryCode\":\"BD\",\"subregion\":\"Jessore District\",\"district\":null,\"name\":\"Unnamed Road\",\"region\":\"Khulna Division\",\"city\":\"Jessore\",\"country\":\"Bangladesh\",\"street\":\"Unnamed Road\",\"timezone\":null}",
+        "phone": "01712345623",
         "rating": 2.5,
-        "currentCity": "2470 Charleston Rd"
+        "expoPushToken": "ExponentPushToken[q6zBvsLlChPKMdBVZQRhEN]",
+        "region": "Khulna Division",
+        "name": "Musfiq Rahman"
+    },
+    {
+        "id": "6233777c0d381190fab490d9",
+        "__v": 0,
+        "currentCity": "2014 Colony St",
+        "currentLatitude": 37.41624375174636,
+        "currentLongitude": -122.09178197457045,
+        "facebookToken": JSON.parse("{\"name\":\"Tarif Hasan\",\"profileImageURL\":\"https://www.patriotsoftware.com/wp-content/uploads/2019/04/examples-requirements-statutory-employees.jpg\",\"coverPhotoURL\":\"https://image.shutterstock.com/image-photo/chef-hands-keep-wok-fire-260nw-1758966962.jpg\",\"email\":\"mitch@gmail.com\",\"phone\":\"01811234543\"}"),
+        "isRider": 1,
+        "locationInfo": "{\"0\":{\"postalCode\":null,\"isoCountryCode\":\"BD\",\"subregion\":\"খুলনা জেলা\",\"district\":\"Krishna Nagar\",\"name\":\"খুলনা জেলা\",\"region\":\"খুলনা বিভাগ\",\"city\":\"খুলনা\",\"country\":\"Bangladesh\",\"street\":null,\"timezone\":null}}",
+        "phone": "01811234543",
+        "rating": 0,
+        "expoPushToken": "ExponentPushToken[Cdr8LpDjQtHUUI1Ri-85P7]",
+        "region": "Khulna Division",
+        "name": "Tarif Hasan"
+    },
+    {
+        "id": "62aca83c670426ea47bbc747",
+        "facebookToken": JSON.parse("{\"name\":\"Shahriar Kabir\",\"profileImageURL\":\"https://graph.facebook.com/651644265934358/picture?type=large\",\"coverPhotoURL\":\"abcd\"}"),
+        "phone": "01631560063",
+        "isRider": 0,
+        "name": "Shahriar Kabir",
+        "facebookId": 651644265934358,
+        "__v": 0,
+        "currentLatitude": 23.1513247,
+        "currentLongitude": 89.2024816,
+        "locationInfo": "{\"postalCode\":null,\"isoCountryCode\":\"BD\",\"subregion\":\"Jessore District\",\"district\":null,\"name\":\"Unnamed Road\",\"region\":\"Khulna Division\",\"city\":\"Jessore\",\"country\":\"Bangladesh\",\"street\":\"Unnamed Road\",\"timezone\":null}",
+        "region": "Khulna Division",
+        "expoPushToken": "ExponentPushToken[q6zBvsLlChPKMdBVZQRhEN]"
     }
 ]
 
@@ -85,7 +104,7 @@ export default function GlobalContext({ children }) {
         LocalStorageService.store('currentUser', user)
             .then(() => {
                 setGlobalObject({ ...globalObject, currentUser: user })
-
+                return user
             })
     }
 
@@ -128,6 +147,7 @@ export default function GlobalContext({ children }) {
         let geocode = {}
         if (geocodeData.length) {
             geocode = { ...geocodeData[0] }
+            //setCurrentUser({ ...globalObject.currentUser, locationInfo: JSON.stringify(geocodeData[0]) })
         }
         let locationData = {
             ...locationInfo,

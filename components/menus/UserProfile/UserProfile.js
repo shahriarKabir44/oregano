@@ -9,7 +9,7 @@ import { BottomSheet } from 'react-native-btr';
 import { Ionicons } from '@expo/vector-icons';
 import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
 import UploadManager from '../../../services/UploadManager';
-
+import { FontAwesome } from '@expo/vector-icons';
 function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
     async function handleUpload() {
@@ -43,89 +43,51 @@ function UserProfile(props) {
     const [isLoaded, setLoadedStatus] = useState(false)
     const [createPostBottomSheetVisibility, popupCreatePostBottomSheet] = React.useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
-
+    const [currentUserId, setCurrentUserId] = React.useState("")
     async function loadData() {
         setRefreshing(true)
-        if (!props.route?.params?.id) {
+        let userId = ""
+        if ((!props.route?.params?.id) || rootContext.getCurrentUser().id == props.route?.params?.id) {
             setCurrentUserFlag(true)
-            setUserInfo(rootContext.getCurrentUser())
             rootContext.setHeaderString('Your profile')
-            return UserService.getPosts(rootContext.getCurrentUser().id)
-                .then(posts => {
-                    setPostList(posts)
-                })
-                .then(() => {
-                    setLoadedStatus(true)
-                })
+            setCurrentUserId(rootContext.getCurrentUser().id)
+            userId = rootContext.getCurrentUser().id
 
         }
         else if (rootContext.getCurrentUser().id != props.route?.params?.id) {
             setCurrentUserFlag(false)
-
-            return Promise.all([
-                UserService.isFollowing(rootContext.getCurrentUser().id, props.route?.params?.id)
-                    .then((data) => {
-                        setConnection(data)
-                    }),
-                UserService.findUser(props.route?.params?.id)
-                    .then(data => {
-                        setUserInfo(data)
-                        rootContext.setHeaderString(data.facebookToken.name)
-
-                        UserService.getPosts(props.route?.params?.id)
-                            .then(posts => {
-                                setPostList(posts)
-
-                            })
-                            .then(() => {
-                                setLoadedStatus(true)
-                            })
-                    })
-            ])
-
-
+            rootContext.setHeaderString(data.facebookToken.name)
+            setCurrentUserId(props.route?.params?.id)
+            userId = props.route?.params?.id
         }
-        else if (rootContext.getCurrentUser().id == props.route?.params?.id) {
-
-            setCurrentUserFlag(true)
-            setUserInfo(rootContext.getCurrentUser())
-            rootContext.setHeaderString('Your profile')
-            return UserService.getPosts(rootContext.getCurrentUser().id)
-                .then(posts => {
-                    setPostList(posts)
-
-                })
-                .then(() => {
-                    setLoadedStatus(true)
-                })
-        }
+        await Promise.all([
+            loadPosts(userId),
+            loadPersonalInfo(userId)
+        ])
+        setRefreshing(false)
+        setLoadedStatus(true)
     }
-
-
+    async function loadPersonalInfo(userId) {
+        UserService.findUser(userId)
+            .then(data => {
+                console.log(data)
+                setUserInfo(data)
+            })
+    }
+    async function loadPosts(userId) {
+        UserService.getPosts(userId)
+            .then(data => {
+                setPostList(data)
+            })
+    }
     useEffect(() => {
         if (isFocused) {
             loadData().then(() => {
                 setRefreshing(1 == 0)
             })
         }
-
-
-
     }, [isFocused])
-    function follow() {
 
-        UserService.follow(props.route?.params?.id, rootContext.getCurrentUser().id, rootContext.getCurrentUser().facebookToken.name, UserProfileInfo.expoPushToken)
-            .then(() => {
-                setConnection(true)
-            })
-    }
-    function unFollow() {
-
-        UserService.unFollow(props.route?.params?.id, rootContext.getCurrentUser().id)
-            .then(() => {
-                setConnection(false)
-            })
-    }
 
     const onRefresh = React.useCallback(() => {
         loadData()
@@ -137,15 +99,19 @@ function UserProfile(props) {
         <View style={{
             flex: 1
         }}>
-            <CreatePostBottomSheet onComlete={() => {
-                onRefresh()
+            <CreatePostBottomSheet onComplete={() => {
+                loadPosts(currentUserId)
             }}  {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
             <CoverPhotoBottomSheet onUploadComplete={(imageURL) => {
                 let newFacebookToken = {
                     ...UserProfileInfo.facebookToken,
                     coverPhotoURL: imageURL
                 }
-                setUserInfo({ ...UserProfileInfo, facebookToken: newFacebookToken })
+
+                rootContext.setCurrentUser({ ...rootContext.getCurrentUser(), facebookToken: newFacebookToken })
+                    .then((data) => {
+                        loadPersonalInfo(currentUserId)
+                    })
             }} tempImage={tempCoverPhoto} popupBottomSheet={setImageUploadBottomSheetVisibility} bottomSheetVisibility={imageUploadBottomSheet} />
             {isLoaded && <View>
                 <ScrollView
@@ -184,34 +150,30 @@ function UserProfile(props) {
 
                                 fontSize: 30
                             }}> {UserProfileInfo.facebookToken.name}</Text>
-                            <Text>
-                                {UserProfileInfo.facebookToken.email}
-                            </Text>
-                            <Text>
-                                {UserProfileInfo.facebookToken.phone}
-                            </Text>
-                            <Text>
-                                {UserProfileInfo.facebookToken.address}
-                            </Text>
-                            {!isCurrentUser && !isFollowing && <TouchableOpacity style={{
-                                padding: 5,
-                                backgroundColor: "#c4c4c4",
-                                borderRadius: 5
-                            }} onPress={() => {
-                                follow()
-                            }}>
-                                <Text>Follow</Text>
-                            </TouchableOpacity>}
 
-                            {!isCurrentUser && isFollowing && <TouchableOpacity style={{
-                                padding: 5,
-                                backgroundColor: "#c4c4c4",
-                                borderRadius: 5
-                            }} onPress={() => {
-                                unFollow()
+                            <View style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+
                             }}>
-                                <Text>Unfollow</Text>
-                            </TouchableOpacity>}
+                                <Entypo name="phone" size={24} color="black" />
+                                <Text>
+                                    {UserProfileInfo.phone}
+                                </Text>
+                            </View>
+                            <View style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center"
+                            }}>
+                                <FontAwesome name="home" size={24} color="black" />
+                                <Text>
+                                    {UserProfileInfo.locationInfoJson.district} {UserProfileInfo.locationInfoJson.city} {UserProfileInfo.locationInfoJson.subregion} {UserProfileInfo.locationInfoJson.region}
+                                </Text>
+                            </View>
+
+
                         </View>
                     </View>
 
