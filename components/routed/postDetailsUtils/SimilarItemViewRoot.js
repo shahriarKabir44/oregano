@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View, Image, FlatList } from 'react-native';
 import SearchingServices from '../../../services/SearchingServices'
 import { RootContext } from '../../contexts/GlobalContext';
-import ResultBottomSheet from '../search/ResultBottomSheet'
+import ItemDetailsBottomSheet from '../../shared/ItemDetailsBottomSheet'
 import CartServices from '../../../services/CartServices';
 function SimilarItemViewRoot(props) {
     const { getCurrentUser, getCurrentLocationGeocode } = React.useContext(RootContext)
@@ -37,7 +37,7 @@ function SimilarItemCard(props) {
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)
     const [dropDownVisibility, popupBottomSheet] = React.useState(false)
     return (<View>
-        <ResultBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
+        <ItemDetailsBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
         <TouchableOpacity style={{
             width: 200,
             borderRadius: 10,

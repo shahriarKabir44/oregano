@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid } from 'react-native';
 import { BottomSheet } from 'react-native-btr';
-import CartServices from '../../../services/CartServices'
+import CartServices from '../../services/CartServices'
 import { FontAwesome5 } from '@expo/vector-icons';
 
-function ResultBottomSheet(props) {
+function ItemDetailsBottomSheet(props) {
 
 
     return (
@@ -306,4 +306,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ResultBottomSheet;
+export default ItemDetailsBottomSheet;

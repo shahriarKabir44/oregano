@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'rea
 import { TextInput } from 'react-native-paper'
 import SearchingServices from '../../../services/SearchingServices';
 import { Ionicons } from '@expo/vector-icons';
-import ResultBottomSheet from './ResultBottomSheet';
+import ItemDetailsBottomSheet from '../../shared/ItemDetailsBottomSheet';
 import CartServices from '../../../services/CartServices';
 import LocalStorageService from '../../../services/LocalStorageService';
 import { RootContext } from '../../contexts/GlobalContext';
@@ -122,7 +122,7 @@ function SearhcItemsRoot(props) {
                     })}
                 </ScrollView>
             </View>
-            <ResultBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
+            <ItemDetailsBottomSheet {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
         </View>
     );
 }

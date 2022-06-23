@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View, Image, Button, TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native';
-import ResultBottomSheet from '../../routed/search/ResultBottomSheet';
 export default function PostCardRootProfile(props) {
 
     return (

@@ -3,7 +3,7 @@ import { Dimensions, Text, View, StyleSheet, ScrollView, TouchableOpacity, Image
 import CartServices from '../../services/CartServices'
 import { BottomSheet } from 'react-native-btr';
 
-import ResultBottomSheet from '../../components/routed/search/ResultBottomSheet'
+import ItemDetailsBottomSheet from '../../components/shared/ItemDetailsBottomSheet'
 import { RootContext } from '../contexts/GlobalContext'
 import { useIsFocused } from '@react-navigation/native';
 import OrderConfirmation from './cartViewUtils/OrderConfirmation';
@@ -125,7 +125,7 @@ function CartListView(props) {
                     <OrderConfirmation setTotalCharge={setTotalCharge} setRefreshFlag={setRefreshFlag} orderItems={groupedCartList} setBottomSheetVisibility={setBottomSheetVisibility} />
                 </View>
             </BottomSheet>
-            <ResultBottomSheet {...props} onChange={() => {
+            <ItemDetailsBottomSheet {...props} onChange={() => {
                 updateCartList()
             }} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedcartItem} setSearchResultItem={() => { }} />
 

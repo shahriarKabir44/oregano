@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, FlatList, ScrollView, Button, Dimensions
 import { useIsFocused } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import ResultBottomSheet from './search/ResultBottomSheet';
+import ItemDetailsBottomSheet from '../shared/ItemDetailsBottomSheet';
 
 import { TouchableOpacity } from 'react-native';
 import CartServices from '../../services/CartServices';
@@ -431,7 +431,7 @@ function PostDetails(props) {
 
             </View>
             }
-            <ResultBottomSheet onChange={() => {
+            <ItemDetailsBottomSheet onChange={() => {
                 updateCartInfo(post)
             }} {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
 
