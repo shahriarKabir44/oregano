@@ -317,7 +317,8 @@ export default class UserService {
     }
 
     static async updateUserInfo(userId, facebookToken) {
-        return await fetch(Global.SERVER_URL + '/user/updateFacebookToken', {
+      
+        let { data }= await fetch(Global.SERVER_URL + '/user/updateFacebookToken', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -327,7 +328,11 @@ export default class UserService {
                 facebookToken: (facebookToken)
             })
         }).then(res => res.json())
-
+            .catch((err) => {
+                console.log(err)
+            })
+         
+        return data
     }
     static async isSignedUp(facebookId) {
         let { data } = await fetch(Global.SERVER_URL + '/user/isRegistered', {

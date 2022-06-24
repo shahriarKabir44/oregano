@@ -253,7 +253,7 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                         justifyContent: 'space-between',
                     }}>
                         <TouchableOpacity onPress={() => {
-                            popupBottomSheet(false)
+                           
                             setModalVisible(true)
                             ToastAndroid.showWithGravity(
                                 "Uploading...",
@@ -266,6 +266,7 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                                     ...getCurrentUser().facebookToken,
                                     coverPhotoURL: url
                                 }
+                                console.log("done",url)
                                 UserService.updateUserInfo(getCurrentUser().id, newFacebookToken)
                                     .then(data => {
                                          
@@ -277,6 +278,7 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                                             ToastAndroid.BOTTOM
                                         )
                                         setModalVisible(false)
+                                        popupBottomSheet(false)
                                     })
 
                             })
