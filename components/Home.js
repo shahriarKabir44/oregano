@@ -30,7 +30,6 @@ function Home(props) {
     const responseListener = useRef();
     const rootContext = React.useContext(RootContext)
 
-    const [localPostList, setlocalPostList] = useState([])
     let initialPost = {
         itemName: "Loading..",
         id: -1,
@@ -58,11 +57,6 @@ function Home(props) {
             UserService.getLocalUsers(location.region, rootContext.getCurrentUser().id)
                 .then(data => {
                     setLocalUsers(data);
-                }),
-            PostService.findLocalPosts(location.city)
-                .then(data => {
-                    setIsLocalPostsLoaded(1 == 1)
-                    setlocalPostList(data)
                 }),
             SearchingServices.getTodayPostItems(location.city, rootContext.getCurrentUser().id)
                 .then(data => {

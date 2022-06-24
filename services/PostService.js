@@ -37,44 +37,7 @@ export default class PostService {
         }
         return posts
     }
-    static async findLocalPosts(city) {
 
-        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `query{
-                    findLocalPosts(city:"${city}"){
-                      itemName
-                      id
-                        images
-                        unitType
-                        unitPrice
-                        amountProduced
-                        postedOn
-                        tags
-                        owner{
-                        facebookToken
-                        id
-                        
-                      }
-                        
-                      }
-                }`
-            })
-
-        }).then(res => res.json())
-        data = data.findLocalPosts
-        for (let post of data) {
-            post.images = JSON.parse(post.images)
-            post.owner.facebookToken = JSON.parse(post.owner.facebookToken)
-            post.tags = JSON.parse(post.tags)
-        }
-        return data
-
-    }
     static async createPost(body) {
         let data = await fetch(Global.SERVER_URL + '/posts/createPost', {
             method: 'POST',
@@ -234,6 +197,18 @@ export default class PostService {
             }).then(response => response.json()))
         }
         await Promise.all(promises)
+    }
+    static async addNewAvaialableItem(userId, tagName, unitPrice, region) {
+        let { data } = await fetch(`${Global.SERVER_URL}/posts/addNewAvaialableItem`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userId, tagName: tagName, unitPrice: unitPrice, region
+            })
+        }).then(res => res.json())
+        return data
     }
     static async getAvailableItemsToday(userId) {
         let { data } = await fetch(`${Global.SERVER_URL}/posts/getTagsOfToday`, {

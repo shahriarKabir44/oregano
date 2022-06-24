@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, Image, Dimensions, Button, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid, Modal } from 'react-native';
 import { RootContext } from '../../contexts/GlobalContext';
 import { Entypo } from '@expo/vector-icons';
 import PostCardRootProfile from './PostCardRootProfile';
 import UserService from '../../../services/UserService';
 import { useIsFocused } from '@react-navigation/native';
+
 import { BottomSheet } from 'react-native-btr';
 import { Ionicons } from '@expo/vector-icons';
 import CreatePostBottomSheet from '../../shared/CreatePostBottomSheet';
 import UploadManager from '../../../services/UploadManager';
 import { FontAwesome } from '@expo/vector-icons';
-import CreateActivity from './CreateActivity';
 function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
     async function handleUpload() {
@@ -18,10 +18,7 @@ function UserProfile(props) {
         setTempCoverPhoto(tempCoverPhotoURI)
         setImageUploadBottomSheetVisibility(true)
     }
-
-
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
-    const [isCollapsed, setCollapseStatus] = React.useState(false)
     const rootContext = React.useContext(RootContext)
     const [UserProfileInfo, setUserInfo] = useState({
         "facebookToken": {
@@ -38,6 +35,7 @@ function UserProfile(props) {
         totalItemsDelivered: 0,
 
     })
+
     const [imageUploadBottomSheet, setImageUploadBottomSheetVisibility] = React.useState(false)
     const isFocused = useIsFocused()
     const [userPosts, setPostList] = useState([])
@@ -90,7 +88,6 @@ function UserProfile(props) {
         }
     }, [isFocused])
 
-
     const onRefresh = React.useCallback(() => {
         loadData()
             .then(() => {
@@ -103,6 +100,7 @@ function UserProfile(props) {
         <View style={{
             flex: 1
         }}>
+
             <CreatePostBottomSheet onComplete={() => {
                 loadPosts(currentUserId)
             }}  {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
@@ -198,7 +196,7 @@ function UserProfile(props) {
                     <View style={{
                         padding: 10
                     }}>
-                        <PostCardRootProfile isCurrentUser={isCurrentUser} {...props} postList={userPosts} />
+                        <PostCardRootProfile currentUserId={currentUserId} loadPosts={loadPosts} isCurrentUser={isCurrentUser} {...props} postList={userPosts} />
                     </View>
                 </ScrollView>
             </View>}
