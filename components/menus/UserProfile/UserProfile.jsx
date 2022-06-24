@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Dimensions, Button, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid, Modal } from 'react-native';
+import { View, Text, Image, Dimensions, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, ToastAndroid, Modal } from 'react-native';
 import { RootContext } from '../../contexts/GlobalContext';
 import { Entypo } from '@expo/vector-icons';
 import PostCardRootProfile from './PostCardRootProfile';
@@ -15,7 +15,9 @@ function UserProfile(props) {
     const [tempCoverPhoto, setTempCoverPhoto] = React.useState(null)
     async function handleUpload() {
         let tempCoverPhotoURI = await UploadManager.uploadImageFromDevice()
+        if (tempCoverPhotoURI==null) return
         setTempCoverPhoto(tempCoverPhotoURI)
+        console.log(tempCoverPhotoURI)
         setImageUploadBottomSheetVisibility(true)
     }
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
@@ -46,32 +48,41 @@ function UserProfile(props) {
     async function loadData() {
         setRefreshing(true)
         let userId = ""
+        let isMyProfile=false;
         if ((!props.route?.params?.id) || rootContext.getCurrentUser().id == props.route?.params?.id) {
             setCurrentUserFlag(true)
-            rootContext.setHeaderString('Your profile')
+            isMyProfile = true
+            rootContext.setHeaderString("Your profile")
             setCurrentUserId(rootContext.getCurrentUser().id)
             userId = rootContext.getCurrentUser().id
 
         }
         else if (rootContext.getCurrentUser().id != props.route?.params?.id) {
             setCurrentUserFlag(false)
-            rootContext.setHeaderString(data.facebookToken.name)
+            
             setCurrentUserId(props.route?.params?.id)
             userId = props.route?.params?.id
         }
         await Promise.all([
-            loadPosts(userId),
-            loadPersonalInfo(userId)
+            loadPosts(userId)  ,
+            loadPersonalInfo(userId).then(data => {
+                    if (!isMyProfile) {
+                        rootContext.setHeaderString(data.facebookToken.name)
+                    }
+
+                })
         ])
 
 
     }
+    const [isPersonalInfoLoaded, setPersonalInfoLoadingStatus] = React.useState(false)
     async function loadPersonalInfo(userId) {
-        UserService.findUser(userId)
-            .then(data => {
-                // console.log(data)
-                setUserInfo(data)
-            })
+        setPersonalInfoLoadingStatus(false)
+        setUserInfo(null)
+        let data=await UserService.findUser(userId)
+        setUserInfo(data)
+        setPersonalInfoLoadingStatus(true)
+        return data
     }
     async function loadPosts(userId) {
         UserService.getPosts(userId)
@@ -104,35 +115,40 @@ function UserProfile(props) {
             <CreatePostBottomSheet onComplete={() => {
                 loadPosts(currentUserId)
             }}  {...props} bottomSheetVisibility={createPostBottomSheetVisibility} popupBottomSheet={popupCreatePostBottomSheet} />
-            <CoverPhotoBottomSheet onUploadComplete={(imageURL) => {
-                let newFacebookToken = {
-                    ...UserProfileInfo.facebookToken,
-                    coverPhotoURL: imageURL
-                }
-
-                rootContext.setCurrentUser({ ...rootContext.getCurrentUser(), facebookToken: newFacebookToken })
-                    .then((data) => {
-                        loadPersonalInfo(currentUserId)
-                    })
+            <CoverPhotoBottomSheet onUploadComplete={( ) => {
+                 
+               loadPersonalInfo(currentUserId)
+               
             }} tempImage={tempCoverPhoto} popupBottomSheet={setImageUploadBottomSheetVisibility} bottomSheetVisibility={imageUploadBottomSheet} />
             {isLoaded && <View>
                 <ScrollView
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 
                 >
-                    <View>
+                    {isPersonalInfoLoaded && <View>
                         <View style={{
-                            height: Dimensions.get('window').width * 9 / 16 + Dimensions.get('window').width * .2
+                            height: Dimensions.get('window').width * 9 / 16 + Dimensions.get('window').width * .2,
+                            position: "relative"
                         }} >
                             <Image style={{
                                 width: '100%',
                                 aspectRatio: 16 / 9
                             }} source={{
                                 uri: UserProfileInfo.facebookToken.coverPhotoURL
-                            }} />
-                            {isCurrentUser && <Entypo name="camera" onPress={() => {
+                                }} />
+                           {isCurrentUser && <View style={{
+                                position: "absolute",
+                                top: 10,
+                                left: 10,
+                                backgroundColor: "white",
+                                padding: 5,
+                                borderRadius:5
+                            }} >
+                                 <Entypo name="camera" onPress={() => {
                                 handleUpload()
-                            }} size={24} color="black" />}
+                            }} size={24} color="black" />
+                            </View>}
+                            
                             <Image style={{
                                 width: '40%',
                                 aspectRatio: 1,
@@ -177,10 +193,10 @@ function UserProfile(props) {
 
 
                         </View>
-                    </View>
+                    </View> }
+                    
 
-
-                    <View style={[styles.horizontalAlign, {
+                    {isPersonalInfoLoaded &&   <View style={[styles.horizontalAlign, {
                         justifyContent: "flex-start",
                         alignItems: "center",
                         alignContent: "center",
@@ -192,7 +208,8 @@ function UserProfile(props) {
                         {isCurrentUser && <Ionicons onPress={() => {
                             popupCreatePostBottomSheet(1 == 1)
                         }} name="add-circle-outline" size={24} color="black" />}
-                    </View>
+                    </View> }
+                  
                     <View style={{
                         padding: 10
                     }}>
@@ -208,6 +225,7 @@ function UserProfile(props) {
 
 function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempImage, onUploadComplete }) {
     const { getCurrentUser, setCurrentUser } = React.useContext(RootContext)
+    const [modalVisible, setModalVisible] = React.useState(false)
     return (<View>
         <BottomSheet visible={bottomSheetVisibility}
             onBackButtonPress={() => {
@@ -235,7 +253,13 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                         justifyContent: 'space-between',
                     }}>
                         <TouchableOpacity onPress={() => {
-
+                            popupBottomSheet(false)
+                            setModalVisible(true)
+                            ToastAndroid.showWithGravity(
+                                "Uploading...",
+                                ToastAndroid.SHORT,
+                                ToastAndroid.BOTTOM
+                            )
                             UploadManager.manageFileUpload(tempImage, `${getCurrentUser().id}`, "coverPhotos", (url) => {
 
                                 let newFacebookToken = {
@@ -244,18 +268,15 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                                 }
                                 UserService.updateUserInfo(getCurrentUser().id, newFacebookToken)
                                     .then(data => {
-                                        const newUser = {
-                                            ...getCurrentUser(),
-                                            facebookToken: newFacebookToken
-                                        }
-                                        setCurrentUser(newUser)
-                                        popupBottomSheet(false)
-                                        onUploadComplete(newUser.facebookToken.coverPhotoURL)
+                                         
+                                        
+                                        onUploadComplete( )
                                         ToastAndroid.showWithGravity(
                                             "Image uploaded succesfully!",
                                             ToastAndroid.SHORT,
                                             ToastAndroid.BOTTOM
                                         )
+                                        setModalVisible(false)
                                     })
 
                             })
@@ -280,6 +301,21 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                 </View>}
             </View>
         </BottomSheet>
+        <Modal
+            animationType="slide"
+            transparent={1 == 1}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(!modalVisible);
+            }}
+        >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Please wait...</Text>
+
+                </View>
+            </View>
+        </Modal>
     </View>)
 }
 
@@ -297,6 +333,27 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
 
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
 })
 export default UserProfile;

@@ -100,7 +100,7 @@ export default function GlobalContext({ children }) {
         expoPushToken: ""
     })
 
-    function setCurrentUser(user) {
+    async function setCurrentUser(user) {
         LocalStorageService.store('currentUser', user)
             .then(() => {
                 setGlobalObject({ ...globalObject, currentUser: user })
