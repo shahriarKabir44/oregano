@@ -198,6 +198,18 @@ export default class PostService {
         }
         await Promise.all(promises)
     }
+    static async removeAvailableItem(userId, tagName) {
+        let { data } = await fetch(`${Global.SERVER_URL}/posts/removeAvailableItem`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userId, tagName: tagName 
+            })
+        }).then(res => res.json())
+        return data
+    }
     static async addNewAvaialableItem(userId, tagName, unitPrice, region) {
         let { data } = await fetch(`${Global.SERVER_URL}/posts/addNewAvaialableItem`, {
             method: 'POST',
