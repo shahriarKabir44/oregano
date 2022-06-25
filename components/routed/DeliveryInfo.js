@@ -6,7 +6,7 @@ import { RootContext } from '../contexts/GlobalContext';
 import OrderServices from '../../services/OrderServices';
 import DeliveyService from '../../services/DeliveryService'
 import { useIsFocused } from '@react-navigation/native';
-
+import call from 'react-native-phone-call'
 function DeliveryInfo(props) {
     const { contextObject, updateContext } = React.useContext(RootContext)
     const [isPickedUp, setPickupStatus] = React.useState(false)
@@ -97,6 +97,15 @@ function DeliveryInfo(props) {
                                 <Text style={{
                                     fontSize: 15
                                 }}>Phone:{deliveryDetails.seller.phone}</Text>
+                                <Button title="call" onPress={() => {
+
+                                    call({
+                                        number: deliveryDetails.seller.phone,  
+                                        prompt: true,   
+                                        skipCanOpen: true  
+                                    }).catch(console.error)
+
+                                }} />
                             </View>
                         </View>
                         <View>
@@ -161,6 +170,15 @@ function DeliveryInfo(props) {
                                 <Text style={{
                                     fontSize: 15
                                 }}>Phone:{deliveryDetails.buyer.phone}</Text>
+                                <Button title="call" onPress={() => {
+
+                                    call({
+                                        number: deliveryDetails.buyer.phone,
+                                        prompt: true,
+                                        skipCanOpen: true
+                                    }).catch(console.error)
+
+                                }} />
                             </View>
                         </View>
                         <View>
