@@ -3,23 +3,29 @@ import { RootContext } from '../contexts/GlobalContext'
 import DeliveyService from '../../services/DeliveryService'
 import { useIsFocused } from '@react-navigation/native';
 
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, RefreshControl, TouchableOpacity, ScrollView } from 'react-native';
 function AssignedDeliveries(props) {
     const isFocused = useIsFocused()
-
+    const [refreshing, setRefreshing] = React.useState(false);
 
     const [deliveries, setDeliveryList] = React.useState([])
     const { contextObject, updateContext } = React.useContext(RootContext)
     React.useEffect(() => {
         if (isFocused) {
             updateContext({ ...contextObject, headerString: "Assigned orders" })
-            DeliveyService.getAssignedDeliveries(contextObject.currentUser.id)
-                .then(data => {
-                    setDeliveryList(data)
-                })
+            onRefresh()
         }
 
     }, [isFocused])
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true)
+        DeliveyService.getAssignedDeliveries(contextObject.currentUser.id)
+                .then(data => {
+                    setDeliveryList(data)
+                    setRefreshing(false)
+                })
+
+    }, []);
     return (
         <View>
             {!deliveries.length && <View style={{
@@ -29,7 +35,10 @@ function AssignedDeliveries(props) {
                     fontSize: 20
                 }}>No pending deliveries</Text>
             </View>}
-            {deliveries.length > 0 && <View>
+            {deliveries.length > 0 && <ScrollView
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+
+            >
                 {deliveries.map((item, index) => <TouchableOpacity key={index} onPress={() => {
                     props.stackNav.navigate('delivery_details', item.id)
                 }} style={{
@@ -47,7 +56,7 @@ function AssignedDeliveries(props) {
                         </Text>
                     </View>
                 </TouchableOpacity>)}
-            </View>}
+            </ScrollView>}
         </View>
     );
 }

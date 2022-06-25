@@ -42,7 +42,6 @@ function Home(props) {
         }
     }
 
-    const [isLocalPostsLoaded, setIsLocalPostsLoaded] = useState(false)
     const [refreshing, setRefreshing] = React.useState(false);
     const [localUsers, setLocalUsers] = React.useState([])
     const [localItems, setLocalItems] = React.useState([])

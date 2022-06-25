@@ -38,7 +38,7 @@ function DeliveryHistory(props) {
                 }}>
                     <Text style={{
                         fontSize: 20
-                    }}>No pending deliveries</Text>
+                    }}>No previous deliveries</Text>
                 </View>}
                 {previousDeliveries.length > 0 && <View>
                     {previousDeliveries.map((item, index) => <TouchableOpacity key={index} onPress={() => {

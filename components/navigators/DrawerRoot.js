@@ -75,7 +75,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 			 
 			 
 
-			{contextObject.currentUser && <Drawer.Screen options={{
+			{contextObject.currentUser && contextObject.currentUser.isRider &&  <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Assigned Deliveries"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -84,7 +84,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}
 
-			{contextObject.currentUser && <Drawer.Screen options={{
+			{contextObject.currentUser && !contextObject.currentUser.isRider && < Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Become a rider"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -93,7 +93,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				{props => <RegisterRider drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}
 
-			{contextObject.currentUser && <Drawer.Screen options={{
+			{contextObject.currentUser && contextObject.currentUser.isRider && <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Deliveries history"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
