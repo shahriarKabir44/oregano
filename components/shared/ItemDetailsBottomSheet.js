@@ -38,7 +38,6 @@ function SearchDetails(props) {
             }).then((searchResultInfo) => {
                 CartServices.isAddedToCart(props.selectedSearchResult.vendorId, props.selectedSearchResult.itemName)
                     .then(cartData => {
-                        console.log(searchResultInfo)
                         setSearchResultItem({ ...searchResultInfo, amount: null })
                         if (cartData) {
                             setSearchResultItem({ ...searchResultInfo, amount: cartData })

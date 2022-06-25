@@ -97,6 +97,50 @@ export default class OrderServices {
         return
 
     }
+    static async getReceivedOrderInfo(orderId) {
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    getOrderInfo(id:"${orderId}"){
+                        buyer{
+                            facebookToken
+                            id
+                            personalInfo{
+                                name
+                                profileImageURL
+                                coverPhotoURL
+                            }
+                            phone
+                        }
+                            orderedItems{
+                                lowerCasedName
+                                lastPost{
+                                  images
+                                }
+                                amount
+                                status
+                                totalPrice
+                            }
+                         
+                        drop_lat
+                        drop_long
+                        status
+                        dropLocationGeocode
+                        id
+                        pickupLat
+                        pickupLong
+                        pickupLocationGeocode
+                        time
+                    }
+                }`
+            })
+        }).then(res => res.json())
+        return data.getOrderInfo
+    }
     static async getOrderInfo(orderId) {
 
         let { data } = await fetch(Global.SERVER_URL + '/graphql', {
@@ -214,6 +258,7 @@ export default class OrderServices {
                       itemName:"${orderItem.itemName}",
                       lowerCasedName:"${orderItem.lowerCasedName}",
                       amount:${orderItem.amount},
+                        totalPrice:${orderItem.amount * orderItem.unitPrice}
                     ){
                         orderId
                     }

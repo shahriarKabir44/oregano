@@ -44,7 +44,7 @@ function OrderDetails(props) {
         (async () => {
             if (isFocused) {
                 setHeaderString("Order info")
-                OrderServices.getOrderInfo(orderId)
+                OrderServices.getReceivedOrderInfo(orderId)
                     .then(orderInfoData => {
 
                         let productList = []
@@ -124,15 +124,18 @@ function OrderDetails(props) {
     return (
         <View style={{
             flex: 1,
-
+             
         }}>
+            <ScrollView style={{
+               
+            }}>
             {!isLoaded && <Text>Loading...</Text>}
             {isLoaded && <View style={{
                 flex: 1,
-                padding: 10,
+                padding: 5,
                 margin: 10,
                 borderRadius: 5,
-                backgroundColor: "white"
+                
             }}>
 
                 <Text style={{
@@ -144,7 +147,8 @@ function OrderDetails(props) {
                     flexDirection: "row",
                     alignContent: "center",
                     alignItems: "center",
-                    justifyContent: "space-around"
+                    justifyContent: "space-around",
+                    flexWrap: "wrap"
                 }}>
                     <Image style={{
                         height: 120,
@@ -153,34 +157,65 @@ function OrderDetails(props) {
                     }} source={{
                         uri: buyerInfo.facebookToken.profileImageURL
                     }} />
-                    <View>
-                        <Text style={{
-                            fontSize: 20
-                        }}>{buyerInfo.facebookToken.name}</Text>
-                        <Button title='View profile' />
-                        <Text>{(new Date(orderDetails.time)).toLocaleTimeString()},{(new Date(orderDetails.time)).toDateString()}</Text>
-                    </View>
-                </View>
-                <View style={{
-
-
-                    marginVertical: 10,
-                    alignItems: 'center',
-                }}>
-                    <TouchableOpacity onPress={() => {
-                        setMapVisibility(true)
-                    }} style={{
-                        backgroundColor: "#e1bee0",
-                        padding: 10,
-                        borderRadius: 5
+                    <View style={{
+                        position: "relative"
                     }}>
-                        <Text>View user location</Text>
-                    </TouchableOpacity>
-                </View>
+                        <Text style={{
+                            fontSize: 20,
+                            flexWrap: "wrap"
+                        }}>{buyerInfo.facebookToken.name}</Text>
+                        <Text>
+                            {orderDetails.dropLocationGeocode}
+                        </Text>
+
+                         
+
+                        <Text>{(new Date(orderDetails.time)).toLocaleTimeString()},{(new Date(orderDetails.time)).toDateString()}</Text>
+                        <Text>{orderDetails.buyer.phone } </Text>
+                    </View>
+                    </View>
+                    <View style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-around"
+                    }}>
+                        <View style={{
+
+
+                            marginVertical: 10,
+                            alignItems: 'center',
+                        }}>
+                            <TouchableOpacity onPress={() => {
+                                setMapVisibility(true)
+                            }} style={{
+                                backgroundColor: "#e1bee0",
+                                padding: 10,
+                                borderRadius: 5
+                            }}>
+                                <Text>View user location</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{
+
+
+                            marginVertical: 10,
+                            alignItems: 'center',
+                        }}>
+                            <TouchableOpacity onPress={() => {
+
+                            }} style={{
+                                backgroundColor: "#89E4EF",
+                                padding: 10,
+                                borderRadius: 5
+                            }}>
+                                <Text>View user profile</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 <Text style={{
                     fontSize: 18
                 }}>Ordered items</Text>
-                <ScrollView style={{
+                <View style={{
                     padding: 10
                 }}>
                     {productList.map((order, index) => {
@@ -189,7 +224,12 @@ function OrderDetails(props) {
                             flexDirection: 'row',
                             alignItems: 'center',
                             alignContent: "center",
-                            justifyContent: "space-around"
+                            justifyContent: "space-around",
+                            borderWidth: 1,
+                            borderColor: "black",
+                            padding: 10,
+                            borderRadius: 10,
+                            backgroundColor:"#E9F6F7"
                         }} >
                             <OrderListItem navigation={props.navigation} order={order} />
                             {!(isOrderAccepted || isOrderRejected) && <View>
@@ -197,7 +237,7 @@ function OrderDetails(props) {
                                 {isAccepted[index] == 1 && <TouchableOpacity onPress={() => {
                                     rejectAProduct(index)
                                 }} style={{
-                                    backgroundColor: "#ea0291",
+                                    backgroundColor: "#FFBAB7",
                                     padding: 10,
                                     borderRadius: 10
                                 }}>
@@ -231,18 +271,23 @@ function OrderDetails(props) {
                             </TouchableOpacity>}
                         </View>
                     })}
-                </ScrollView>
+                </View>
                 <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={{
                     latitude: orderDetails.drop_lat,
                     longitude: orderDetails.drop_long
                 }} tagnameLabel={`${buyerInfo.facebookToken.name}`} />
-                {(!isOrderAccepted && !isOrderRejected) && <View style={{
+                
+                </View>}
+
+            </ScrollView>
+{(!isOrderAccepted && !isOrderRejected) && <View style={{
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "space-between"
+                justifyContent: "space-between",
+                padding:10
                 }}>
                     <TouchableOpacity style={[styles.footer, {
-                        backgroundColor: "#11b015"
+                        backgroundColor: "#AFFFD0"
                     }]} onPress={() => {
                         rejectSome()
 
@@ -253,7 +298,7 @@ function OrderDetails(props) {
 
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.footer, {
-                        backgroundColor: "#ea0291"
+                        backgroundColor: "#FFBAB7"
                     }]} onPress={() => {
                         setAcceptance(new Array(isAccepted.length).fill(0))
                         rejectSome()
@@ -272,7 +317,7 @@ function OrderDetails(props) {
                 }]}>
                     <Text>{isOrderAccepted ? "Order has been accepted" : "Order has been rejected"}</Text>
                 </View>}
-            </View>}
+
         </View>
     );
 }

@@ -115,7 +115,7 @@ function CartListView(props) {
                 <View style={[styles.footer, {
                     backgroundColor: isListEmpty ? "#c4c4c4" : "#FFA500",
                 }]}>
-                    <Text>{isListEmpty ? "Please add items to cart" : "Confirm Location"}</Text>
+                    <Text>{isListEmpty ? "PLEASE ADD ITEMS TO THE CART" : "CONFIRM LOCATION"}</Text>
                 </View>
             </TouchableOpacity>
             <BottomSheet visible={bottomSheetVisibility}

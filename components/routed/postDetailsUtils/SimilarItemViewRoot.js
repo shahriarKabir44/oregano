@@ -42,6 +42,7 @@ function SimilarItemCard(props) {
             width: 200,
             borderRadius: 10,
             padding: 10,
+            margin:5,
             backgroundColor: "#D1E8F3"
         }} onPress={() => {
             setSearchResultItem({

@@ -10,14 +10,15 @@ function OrderListItem(props) {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            alignContent: "center"
+            alignContent: "center",
+            
         }}>
-            <TouchableOpacity style={{
+            <View style={{
                 display: "flex",
                 flexDirection: "row",
                 alignContent: "center",
                 alignItems: "center",
-                backgroundColor: "#e7ddd1",
+                
                 borderRadius: 10,
                 width: "80%",
                 justifyContent: "space-around",
@@ -37,7 +38,7 @@ function OrderListItem(props) {
                     }}>{props.order.product.lowerCasedName}</Text>
                     <Text>Amount: {props.order.amount}{props.order.product.unitType} </Text>
                 </View>
-            </TouchableOpacity>
+            </View>
 
         </View>
     );

@@ -48,9 +48,11 @@ function ReceivedOrdersRoot(props) {
 function OrderGroup(props) {
     const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(true)
     const [orderItems, setOrderItems] = React.useState([])
-
+    React.useEffect(() => {
+        getOrderItems()
+    }, [])
     async function getOrderItems() {
-        let data = await OrderServices.getOrderInfo(props.item.id)
+        let data = await OrderServices.getReceivedOrderInfo(props.item.id)
 
         setOrderItems(data.orderedItems);
     }
@@ -81,9 +83,9 @@ function OrderGroup(props) {
         borderRadius: 5,
     }} >
         <TouchableOpacity onPress={() => {
-            getOrderItems().then(() => {
+             
                 setCollapsibleVisibility(!collapsibleVisibility)
-            })
+             
 
         }} style={{
             display: "flex",
@@ -98,7 +100,7 @@ function OrderGroup(props) {
             <View>
                 <Text>From {props.item.buyer.name} </Text>
                 <Text >{(new Date(props.item.time).toLocaleTimeString())}, {(new Date(props.item.time).toLocaleDateString())}</Text>
-
+                <Text>{orderItems.length} item(s) </Text>
             </View>
             <View>
                 <Image style={{
@@ -128,8 +130,9 @@ function OrderGroup(props) {
                     uri: JSON.parse(orderedItem.lastPost.images)[0]
                 }} />
                 <View>
-                    <Text>Name: {orderedItem.lowerCasedName} </Text>
-                    <Text>Amount: {orderedItem.amount}</Text>
+                    <Text>Item name: {orderedItem.lowerCasedName} </Text>
+                    <Text>Amount: {orderedItem.amount} pc(s) </Text>
+                    <Text>Tk. {orderedItem.totalPrice } </Text>
                 </View>
             </View>)}
 

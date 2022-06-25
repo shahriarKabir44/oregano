@@ -61,7 +61,7 @@ function PostGroup(props) {
         borderRadius: 5
 
     }}>
-        <MarkUnavailableItemModal {...props} modalVisible={markUnavailabilityModalVisibility} setModalVisible={setMarkUnavailabilityModaVisibility} selectedItemToUnmark={selectedItemToMark} setSelectedItemToMark={setSelectedItemToMark}/>
+        <MarkUnavailableItemModal {...props} modalVisible={markUnavailabilityModalVisibility} setModalVisible={setMarkUnavailabilityModaVisibility} selectedItemToUnmark={selectedItemToMark} setSelectedItemToMark={setSelectedItemToMark} />
 
         <MarkAvailableItemModal {...props} modalVisible={markAvailableModalVisibility} setModalVisible={setMarkAvailableModalVisibility} selectedItemToMark={selectedItemToMark} setSelectedItemToMark={setSelectedItemToMark} />
         <View style={{
@@ -95,7 +95,7 @@ function PostGroup(props) {
                 }} onPress={() => {
                     setSelectedItemToMark(props.group.groupName)
                     setMarkUnavailabilityModaVisibility(true)
-                    }} >
+                }} >
                     <Text style={{
                         fontSize: 15
                     }}>Mark
@@ -165,8 +165,8 @@ function MarkAvailableItemModal(props) {
                     justifyContent: "space-around",
                     flexDirection: "row",
                     width: "100%",
-                    margin:10
-                    
+                    margin: 10
+
                 }} >
                     <TouchableOpacity style={{
                         padding: 15,
@@ -231,7 +231,7 @@ function MarkUnavailableItemModal(props) {
                 width: Dimensions.get('window').width * .9
             }]}>
                 <Text>Are you sure?</Text>
-                
+
 
                 <View style={{
                     display: "flex",
@@ -247,10 +247,10 @@ function MarkUnavailableItemModal(props) {
                         backgroundColor: "#CBFCDA"
                     }}
                         onPress={() => {
-                            
+
                             PostService.removeAvailableItem(props.currentUserId,
                                 props.selectedItemToUnmark,
-                                
+
                             )
                                 .then(data => {
                                     ToastAndroid.showWithGravity(

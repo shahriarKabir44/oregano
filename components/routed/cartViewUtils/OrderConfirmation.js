@@ -113,6 +113,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 backgroundColor: locationType == 0 ? "#BDF0F6" : "#FFA500"
             }]}>
                 <TouchableOpacity onPress={() => {
+                     
                     if (locationType == 0) return
                     setModalVisible(true)
 

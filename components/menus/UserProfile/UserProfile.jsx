@@ -17,7 +17,6 @@ function UserProfile(props) {
         let tempCoverPhotoURI = await UploadManager.uploadImageFromDevice()
         if (tempCoverPhotoURI==null) return
         setTempCoverPhoto(tempCoverPhotoURI)
-        console.log(tempCoverPhotoURI)
         setImageUploadBottomSheetVisibility(true)
     }
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
@@ -266,7 +265,6 @@ function CoverPhotoBottomSheet({ bottomSheetVisibility, popupBottomSheet, tempIm
                                     ...getCurrentUser().facebookToken,
                                     coverPhotoURL: url
                                 }
-                                console.log("done",url)
                                 UserService.updateUserInfo(getCurrentUser().id, newFacebookToken)
                                     .then(data => {
                                          

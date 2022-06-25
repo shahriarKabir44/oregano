@@ -79,9 +79,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				header: (prop) => {
 					return <CustomHeader name={"Assigned Deliveries"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
-				drawerItemStyle: {
-					display: contextObject.currentUser.isRider ? 'flex' : 'none'
-				}
+				drawerIcon: (props) => <MaterialIcons name="assignment-turned-in" size={24} color="black" />
 			}} name="Assigned deliveries" >
 				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}

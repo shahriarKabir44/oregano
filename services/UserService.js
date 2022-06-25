@@ -327,10 +327,7 @@ export default class UserService {
                 userId: userId,
                 facebookToken: (facebookToken)
             })
-        }).then(res => res.json())
-            .catch((err) => {
-                console.log(err)
-            })
+        }) 
          
         return data
     }
