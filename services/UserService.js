@@ -259,10 +259,6 @@ export default class UserService {
             PostService.getAvailableItemsToday(userId)
                 .then(data => {
                     availableItems = data
-                }),
-            RatingServices.getTagRatings(userId)
-                .then(data => {
-                    ratings = data
                 })
         ]
         await Promise.all(promises)
@@ -307,7 +303,7 @@ export default class UserService {
             }
             for (let ratedItem of ratings) {
                 if (ratedItem.tagName == lastGroup.groupName) {
-                    lastGroup.rating = ratedItem.avg_rating
+                    lastGroup.rating = ratedItem.rating
                     break
                 }
             }
@@ -317,8 +313,8 @@ export default class UserService {
     }
 
     static async updateUserInfo(userId, facebookToken) {
-      
-        let { data }= await fetch(Global.SERVER_URL + '/user/updateFacebookToken', {
+
+        let { data } = await fetch(Global.SERVER_URL + '/user/updateFacebookToken', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -327,8 +323,8 @@ export default class UserService {
                 userId: userId,
                 facebookToken: (facebookToken)
             })
-        }) 
-         
+        })
+
         return data
     }
     static async isSignedUp(facebookId) {

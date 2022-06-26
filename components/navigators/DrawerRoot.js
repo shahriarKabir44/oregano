@@ -2,7 +2,7 @@ import {
 	createDrawerNavigator,
 	DrawerContentScrollView,
 	DrawerItemList,
-	 
+
 } from '@react-navigation/drawer';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -30,12 +30,11 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 	return (
 		<Drawer.Navigator
 			initialRouteName='Home'
-			 
 			drawerContent={(props) => {
 				return <DrawerContentRoot {...props} setAuthorizationValue={setAuthorizationValue} />
 			}}
 		>
-			{contextObject.currentUser && <Drawer.Screen options={{
+			<Drawer.Screen options={{
 				header: (prop) => {
 					return <Header {...prop} />
 				},
@@ -43,8 +42,8 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 
 			}} name="Home">
 				{props => (<TabNavigator drawerNav={props.navigation} stackNav={stackNavigator} />)}
-			</Drawer.Screen>}
-			{contextObject.currentUser && <Drawer.Screen options={{
+			</Drawer.Screen>
+			<Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader goBackOnly={true} name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -53,11 +52,11 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 
 			}} name="Profile" >
 				{props => <UserProfile drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>}
+			</Drawer.Screen>
 
-			{contextObject.currentUser && <Drawer.Screen options={{
-				drawerItemStyle:{
-					
+			<Drawer.Screen options={{
+				drawerItemStyle: {
+
 					display: "flex",
 					justifyContent: "space-between"
 				},
@@ -65,17 +64,17 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				header: (prop) => {
 					return <CustomHeader goBackOnly={true} name={"Profile"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
-				drawerIcon: (props) =>  <MaterialCommunityIcons name="chef-hat" size={24} color="black" />
-				
-				 
+				drawerIcon: (props) => <MaterialCommunityIcons name="chef-hat" size={24} color="black" />
+
+
 			}} name="Received Orders" >
 				{props => <ReceivedOrdersRoot drawerNav={props.navigation} stackNav={stackNavigator} />}
-			</Drawer.Screen>}
+			</Drawer.Screen>
 
-			 
-			 
 
-			{contextObject.currentUser && contextObject.currentUser.isRider &&  <Drawer.Screen options={{
+
+
+			{contextObject.currentUser != null && contextObject.currentUser.isRider == 1 && <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Assigned Deliveries"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -84,7 +83,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				{props => <AssignedDeliveries drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}
 
-			{contextObject.currentUser && !contextObject.currentUser.isRider && < Drawer.Screen options={{
+			{contextObject.currentUser != null && contextObject.currentUser.isRider == 0 && < Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Become a rider"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},
@@ -93,7 +92,7 @@ export default function DrawerRoot({ navigation, setAuthorizationValue }) {
 				{props => <RegisterRider drawerNav={props.navigation} stackNav={stackNavigator} />}
 			</Drawer.Screen>}
 
-			{contextObject.currentUser && contextObject.currentUser.isRider && <Drawer.Screen options={{
+			{contextObject.currentUser != null && contextObject.currentUser.isRider == 1 && <Drawer.Screen options={{
 				header: (prop) => {
 					return <CustomHeader name={"Deliveries history"} stackNavigation={stackNavigator} drawerNavigation={prop.navigation} />
 				},

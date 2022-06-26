@@ -162,21 +162,24 @@ export default class SearchingServices {
             body: JSON.stringify({
                 query: `query{
                         getLocalItemsInfo(day:${day},region:"${region}"){
-                          itemName
-                          unitPrice
-                          getTodayPosts{
-                            images
-                            postedOn
-                            id
-                          }
-                          vendor{
-                            id
-                            personalInfo{
-                              name
-                              profileImageURL
-                              
+                            itemName
+                            unitPrice
+                            rating
+                            numPeopleRated
+                            isAvailable
+                            getTodayPosts{
+                                images
+                                postedOn
+                                id
                             }
-                          }
+                            vendor{
+                                id
+                                personalInfo{
+                                    name
+                                    profileImageURL
+                                
+                                }
+                            }
                            
                         }
                       }`
@@ -193,7 +196,10 @@ export default class SearchingServices {
                 let content = {
                     vendor: item.vendor,
                     posts: item.getTodayPosts,
-                    unitPrice: item.unitPrice
+                    unitPrice: item.unitPrice,
+                    rating: item.rating,
+                    numPeopleRated: item.numPeopleRated
+
                 }
                 uniqueItems[item.itemName].push(content)
             }
