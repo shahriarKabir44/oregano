@@ -198,9 +198,10 @@ export default class SearchingServices {
                     posts: item.getTodayPosts,
                     unitPrice: item.unitPrice,
                     rating: item.rating,
-                    numPeopleRated: item.numPeopleRated
-
+                    numPeopleRated: item.numPeopleRated,
+                    isAvailable: item.isAvailable
                 }
+
                 uniqueItems[item.itemName].push(content)
             }
         }

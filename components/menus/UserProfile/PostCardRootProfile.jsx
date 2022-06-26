@@ -73,7 +73,7 @@ function PostGroup(props) {
         }}>
             <Text style={{
                 fontSize: 25
-            }}>{props.group.groupName}</Text>
+            }}>{props.group.itemName}</Text>
         </View>
         <View style={{
             display: "flex",
@@ -82,9 +82,10 @@ function PostGroup(props) {
             justifyContent: "space-between"
         }}>
             <View>
-                {props.group.isAvailable && <Text>Tk. {props.group.unitPrice} </Text>}
-                <Text>{props.group.isAvailable ? "Available today" : "Unavailable for now"}</Text>
+                {props.group.isAvailable == 1 && <Text>Tk. {props.group.unitPrice} </Text>}
+                <Text>{props.group.isAvailable == 1 ? "Available today" : "Unavailable for now"}</Text>
                 <Text>{props.group.rating == 0 ? "Unrated" : `${props.group.rating}⭐`} </Text>
+                {props.group.numPeopleRated != 0 && <Text>{props.group.numPeopleRated} user(s) rated</Text>}
             </View>
             {props.isCurrentUser && <View>
                 {props.group.isAvailable && <TouchableOpacity style={{
@@ -120,7 +121,7 @@ function PostGroup(props) {
         <View>
             <FlatList
                 horizontal={true}
-                data={props.group.posts}
+                data={props.group.relatedPost}
                 keyExtractor={(data, index) => index}
                 renderItem={(data) => {
                     return <RelatedPostsCard {...props} data={data.item} />
@@ -296,7 +297,7 @@ function RelatedPostsCard(props) {
         paddingTop: 10
     }}>
         <Image source={{
-            uri: (props.data.images)[[0]]
+            uri: JSON.parse(props.data.images)[[0]]
         }} style={{
             width: 150,
             aspectRatio: 16 / 9

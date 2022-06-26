@@ -72,7 +72,7 @@ export default function GlobalContext({ children }) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
                         //   setCurrentUser(data)
-                        setCurrentUser(users[0])
+                        setCurrentUser(users[3])
                     })
             }
             // LocalStorageService.clearAll()

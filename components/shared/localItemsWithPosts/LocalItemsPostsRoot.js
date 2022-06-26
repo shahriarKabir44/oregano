@@ -77,7 +77,19 @@ function VendorsListRoot(props) {
             }} />
             <View>
                 <Text>From {props.data.vendor.personalInfo.name}   </Text>
-                <Text>Tk: {props.data.unitPrice}</Text>
+                {props.data.isAvailable == 1 && <Text>Tk: {props.data.unitPrice}</Text>}
+                {props.data.isAvailable == 0 && <Text>Unavailable for now</Text>}
+                {props.data.rating != 0 && <View>
+
+                    <Text>⭐ {props.data.rating}   </Text>
+                    <Text>{props.data.numPeopleRated}  user(s) rated</Text>
+
+                </View>}
+                {props.data.rating == 0 && <View>
+
+                    <Text>Unrated</Text>
+
+                </View>}
             </View>
         </View>
         <View style={{

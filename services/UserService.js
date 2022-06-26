@@ -227,88 +227,30 @@ export default class UserService {
         return postList
     }
     static async getPosts(userId) {
-        let posts;
-        let availableItems;
-        let ratings = []
-        let promises = [
-            fetch(Global.SERVER_URL + '/graphql', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `query{
+        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
                     getCreatedPosts(id:"${userId}"){
-                        images
                         itemName
-                        tags
-                        latitude
-                        longitude
+                        isAvailable
+                        rating
                         unitPrice
-                        amountProduced
-                        id
-                        unitType
-                        postedOn
-                  }
+                        region
+                        numPeopleRated
+                        relatedPost{
+                            id
+                            images
+                            postedOn
+                        }
+                    }
                 }`
-                })
-            }).then(res => res.json())
-                .then(({ data }) => {
-                    posts = data
-                }),
-            PostService.getAvailableItemsToday(userId)
-                .then(data => {
-                    availableItems = data
-                })
-        ]
-        await Promise.all(promises)
-
-
-
-
-        for (let post of posts.getCreatedPosts) {
-            post.images = JSON.parse(post.images)
-
-        }
-        posts = posts.getCreatedPosts
-        let classedByName = []
-        for (let item of posts) {
-            let isFound = false
-            let lastGroup = null;
-            for (let group of classedByName) {
-                if (isFound) break
-                if (group.groupName == item.itemName) {
-                    group.posts.push(item)
-                    lastGroup = group
-                    isFound = true
-
-                }
-            }
-            if (!isFound) {
-                let newGroup = {
-                    groupName: item.itemName,
-                    posts: [item]
-                }
-                lastGroup = newGroup
-                classedByName.push(newGroup)
-            }
-            lastGroup.isAvailable = false
-            lastGroup.rating = 0
-            for (let availableItem of availableItems) {
-                if (availableItem.tag == lastGroup.groupName) {
-                    lastGroup.isAvailable = true
-                    lastGroup.unitPrice = availableItem.unitPrice
-                    break
-                }
-            }
-            for (let ratedItem of ratings) {
-                if (ratedItem.tagName == lastGroup.groupName) {
-                    lastGroup.rating = ratedItem.rating
-                    break
-                }
-            }
-        }
-        return classedByName
+            })
+        }).then(res => res.json())
+        return data.getCreatedPosts
 
     }
 
