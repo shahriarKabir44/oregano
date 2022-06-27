@@ -84,35 +84,7 @@ export default class PostService {
 
     }
 
-    static async getOrderList(postId) {
-        let { data } = await fetch(Global.SERVER_URL + '/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `query{
-                    getOrderListOfAPost(postId:"${postId}"){
-                            amount
-                            orderDetails{
-                                buyerId
-                                time
-                                id
-                                status
-                                buyer{
-                                    personalInfo{
-                                        name
-                                        profileImageURL
-                                        
-                                    }
-                                }
-                            }
-                        }
-                    }`
-            })
-        }).then(res => res.json())
-        return data.getOrderListOfAPost
-    }
+
     static async getPosts() {
         let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',
@@ -205,7 +177,7 @@ export default class PostService {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: userId, tagName: tagName 
+                userId: userId, tagName: tagName
             })
         }).then(res => res.json())
         return data

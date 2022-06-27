@@ -88,7 +88,7 @@ function PostGroup(props) {
                 {props.group.numPeopleRated != 0 && <Text>{props.group.numPeopleRated} user(s) rated</Text>}
             </View>
             {props.isCurrentUser && <View>
-                {props.group.isAvailable && <TouchableOpacity style={{
+                {props.group.isAvailable == 1 && <TouchableOpacity style={{
                     backgroundColor: "#F7CDC3",
                     padding: 5,
                     borderRadius: 5,
@@ -102,7 +102,7 @@ function PostGroup(props) {
                     }}>Mark
                         unavailable</Text>
                 </TouchableOpacity>}
-                {!props.group.isAvailable && <TouchableOpacity style={{
+                {!props.group.isAvailable == 1 && <TouchableOpacity style={{
                     backgroundColor: "#C6F3BA",
                     padding: 5,
                     borderRadius: 5,

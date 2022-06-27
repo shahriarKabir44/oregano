@@ -60,7 +60,6 @@ function PostDetails(props) {
         })
     }
 
-    const [orderList, setOrderList] = useState([])
     const [canPopUpImageModal, setImageModalVisibility] = useState(false)
     useEffect(() => {
 
@@ -90,18 +89,13 @@ function PostDetails(props) {
                         })
                     setCurrentPost(postInfo)
                     setOwnershipStatus(postInfo.owner.id == getCurrentUser().id)
-                    if (postInfo.owner.id == getCurrentUser().id) {
-                        PostService.getOrderList(postId)
-                            .then(data => {
-                                setOrderList(data);
-                            })
-                    }
-                    else {
-                        PostService.isItemAvailable(postInfo.lowerCasedName, postInfo.postedBy)
-                            .then(data => {
-                                setItemAvailability(data)
-                            })
-                    }
+
+
+                    PostService.isItemAvailable(postInfo.lowerCasedName, postInfo.postedBy)
+                        .then(data => {
+                            setItemAvailability(data)
+                        })
+
                     setHeaderString(`${postInfo.owner.id == getCurrentUser().id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}`)
                     let images = []
                     for (let image of postInfo.images) {
@@ -297,62 +291,7 @@ function PostDetails(props) {
                     </View>}
 
 
-                    {isOwnPost && <View>
-                        <Text style={{
-                            fontSize: 15,
-                            fontWeight: 'bold',
-                            margin: 10
-                        }}>Order list</Text>
-                        {!orderList.length && <Text style={{
 
-                            margin: 10
-                        }}>No order has been placed</Text>}
-                        <ScrollView style={{
-                            flex: 1
-                        }}>
-                            {orderList.map((item, index) => {
-                                return (<View key={index} style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    padding: 10,
-                                    alignItems: 'center',
-                                    alignContent: 'center',
-                                    backgroundColor: "#c5d9ec",
-                                    borderRadius: 10,
-                                    margin: 5
-                                }}>
-                                    <View style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        alignContent: 'center',
-
-                                    }}>
-                                        <Image style={{
-                                            height: 50,
-                                            aspectRatio: 1,
-                                            borderRadius: 50,
-                                            margin: 5
-                                        }} source={{ uri: item.orderDetails.buyer.personalInfo.profileImageURL }} />
-                                        <View style={{
-                                            margin: 5
-                                        }}>
-                                            <Text>{item.orderDetails.buyer.personalInfo.name}</Text>
-                                            <Text>Amount:{item.amount}pcs</Text>
-                                            <Text>{(new Date(item.orderDetails.time)).toLocaleTimeString()}, {(new Date(item.orderDetails.time)).toDateString()} </Text>
-                                        </View>
-                                    </View>
-                                    <View>
-                                        {item.orderDetails.status == 0 && <Text>Pending</Text>}
-                                        {(item.orderDetails.status == 1 || item.orderDetails.status == 4) && <Text>Accepted</Text>}
-                                        {item.orderDetails.status == 2 && <Text>Rejected</Text>}
-                                        {item.orderDetails.status >= 5 && <Text>Rejected</Text>}
-                                    </View>
-                                </View>)
-                            })}
-                        </ScrollView>
-                    </View>}
                 </ScrollView>
 
                 {!isOwnPost && <View>
@@ -404,6 +343,19 @@ function PostDetails(props) {
                     </View>}
                 </View>}
 
+                {isOwnPost && <View>
+
+                    <TouchableOpacity style={{
+                        backgroundColor: "#FD918E",
+
+                        height: 60,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}>
+                        <Text>DELETE POST</Text>
+                    </TouchableOpacity>
+
+                </View>}
 
 
 
