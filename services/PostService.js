@@ -1,6 +1,18 @@
 import Global from "./Globals";
 
 export default class PostService {
+    static async deletePost(postId) {
+        let { data } = await fetch(`${Global.SERVER_URL}/posts/deletePost`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                postId: postId
+            })
+        }).then(res => res.json())
+        return data
+    }
     static async searchPostByTags(tagName) {
         let res = await fetch(Global.SERVER_URL + '/graphql', {
             method: 'POST',

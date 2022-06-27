@@ -94,7 +94,7 @@ function PostGroup(props) {
                     borderRadius: 5,
 
                 }} onPress={() => {
-                    setSelectedItemToMark(props.group.groupName)
+                    setSelectedItemToMark(props.group.itemName)
                     setMarkUnavailabilityModaVisibility(true)
                 }} >
                     <Text style={{
@@ -108,7 +108,7 @@ function PostGroup(props) {
                     borderRadius: 5,
 
                 }} onPress={() => {
-                    setSelectedItemToMark(props.group.groupName)
+                    setSelectedItemToMark(props.group.itemName)
                     setMarkAvailableModalVisibility(true)
                 }}>
                     <Text style={{

@@ -113,7 +113,7 @@ function PostDetails(props) {
     }, [isFocused])
 
 
-
+    const [deleteConfirmationModalVisible, setDeleteConfirmationModalVisible] = React.useState(false)
 
     return (
         <View style={{
@@ -123,6 +123,10 @@ function PostDetails(props) {
             {post && <View style={{
                 flex: 1
             }}>
+                <PostDeletionConfirmationModal {...props} modalVisible={deleteConfirmationModalVisible}
+                    setModalVisible={setDeleteConfirmationModalVisible}
+                    postId={props.route.params.postId} />
+
                 <ScrollView style={{
 
                     margin: 10,
@@ -351,6 +355,8 @@ function PostDetails(props) {
                         height: 60,
                         justifyContent: "center",
                         alignItems: "center",
+                    }} onPress={() => {
+                        setDeleteConfirmationModalVisible(true)
                     }}>
                         <Text>DELETE POST</Text>
                     </TouchableOpacity>
@@ -372,14 +378,106 @@ function PostDetails(props) {
             <ItemDetailsBottomSheet onChange={() => {
                 updateCartInfo(post)
             }} {...props} bottomSheetVisibility={dropDownVisibility} popupBottomSheet={popupBottomSheet} selectedSearchResult={selectedSearchResult} setSearchResultItem={setSearchResultItem} />
-
         </View>
+
+
     );
 }
+
+function PostDeletionConfirmationModal(props) {
+
+    return <Modal
+        animationType="slide"
+        transparent={true}
+        visible={props.modalVisible}
+        onRequestClose={() => {
+            props.setModalVisible(false);
+        }}
+
+    >
+        <View style={styles.centeredView}>
+            <View style={[styles.modalView, {
+                width: Dimensions.get('window').width * .9
+            }]}>
+                <Text>Are you sure?</Text>
+
+
+                <View style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    flexDirection: "row",
+                    width: "100%",
+                    margin: 10
+
+                }} >
+                    <TouchableOpacity style={{
+                        padding: 15,
+                        borderRadius: 10,
+                        backgroundColor: "#CBFCDA"
+                    }}
+                        onPress={() => {
+
+                            PostService.deletePost(props.postId
+
+                            )
+                                .then(data => {
+                                    ToastAndroid.showWithGravity(
+                                        `Post deleted successfully`,
+                                        ToastAndroid.SHORT,
+                                        ToastAndroid.BOTTOM
+                                    )
+                                    props.navigation.navigate("HomeView")
+                                })
+                        }} >
+                        <Text>Yes</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{
+                        padding: 15,
+                        borderRadius: 10,
+                        backgroundColor: "#FDD3B2"
+                    }}
+                        onPress={() => {
+
+                            props.setModalVisible(false);
+                        }} >
+                        <Text>No</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+            </View>
+        </View>
+
+    </Modal>
+}
+
+
+
 const styles = StyleSheet.create({
     container: {},
     heading: {},
-
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     bottomNavigationView: {
         backgroundColor: '#fff',
         width: '100%',
