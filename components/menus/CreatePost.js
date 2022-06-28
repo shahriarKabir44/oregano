@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, FlatList, StyleSheet, Image, Button, TouchableOpacity, Dimensions, ToastAndroid, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
+import { RadioButton, TextInput } from 'react-native-paper';
 import { Entypo } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { RootContext } from '../contexts/GlobalContext'
@@ -48,6 +48,7 @@ function CreatePost(props) {
 		return locationInfo
 
 	}
+	const [isMarkedAvailable, setAvailability] = React.useState(false)
 	useEffect(() => {
 		if (isFocused) {
 			setItemProperty({ ...item, postedBy: rootContext.getCurrentUser().id })
@@ -62,7 +63,7 @@ function CreatePost(props) {
 			base64: ""
 		}])
 	const [lastImageId, setLastImageId] = useState(0)
-
+	const [unitPrice, setUnitPrice] = React.useState(0)
 	async function handleUpload() {
 
 		UploadManager.uploadImageFromDevice()
@@ -183,21 +184,52 @@ function CreatePost(props) {
 						fontSize: 20
 					}}>Item name:{item.itemName}</Text>
 
+					<View style={{
+						display: "flex",
+						flexDirection: "row",
+						alignContent: "center",
+						alignItems: "center",
+					}}>
+						<RadioButton
 
+							value={isMarkedAvailable}
+							status={isMarkedAvailable ? 'checked' : 'unchecked'}
+							onPress={() => {
+								setAvailability(!isMarkedAvailable)
+							}}
+						/>
+						<Text style={{
+							fontSize: 20,
+							flexWrap: "wrap"
+						}}>Item is available today</Text>
+					</View>
 
+					{isMarkedAvailable && <TextInput
+						onChangeText={text => setUnitPrice(text)}
+						label="Price"
+						value={unitPrice.toString()}
+						keyboardType="numeric"
+					/>}
 
 				</View>
 			</ScrollView>
 
 			<TouchableOpacity onPress={() => {
 				if (!isVaidPost) return
+				ToastAndroid.showWithGravity(
+					"Uploading...",
+					ToastAndroid.SHORT,
+					ToastAndroid.BOTTOM
+				)
 				//setModalVisible(1 == 1)
 				setGeoInfo()
 					.then((locationData) => {
 						let newPost = {
 							...item,
 							...locationData,
-							postedBy: rootContext.contextObject.currentUser.id,
+							isMarkedAvailable: isMarkedAvailable,
+							unitPrice: unitPrice,
+							postedBy: rootContext.getCurrentUser().id,
 							tags: JSON.stringify(item.tags),
 							postedOn: (new Date()) * 1,
 							lowerCasedName: item.itemName.toLowerCase()
@@ -205,7 +237,7 @@ function CreatePost(props) {
 						return newPost
 					})
 					.then((newPost) => {
-						setModalVisible(true);
+						//setModalVisible(true);
 						let urls = []
 						UploadManager.uploadMany(images.filter(image => image.index != 4).map(image => image.body),
 							`post/`,
@@ -222,7 +254,7 @@ function CreatePost(props) {
 										)
 										props.popupBottomSheet(false)
 										if (props.onComplete) props.onComplete()
-										setModalVisible(false);
+										//setModalVisible(false);
 									})
 							}
 						)

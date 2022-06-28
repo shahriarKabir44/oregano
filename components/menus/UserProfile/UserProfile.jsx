@@ -76,7 +76,7 @@ function UserProfile(props) {
     }
     const [isPersonalInfoLoaded, setPersonalInfoLoadingStatus] = React.useState(false)
     async function loadPersonalInfo(userId) {
-        setPersonalInfoLoadingStatus(false)
+        //setPersonalInfoLoadingStatus(false)
         //setUserInfo(null)
         let data = await UserService.findUser(userId)
         setUserInfo(data)
