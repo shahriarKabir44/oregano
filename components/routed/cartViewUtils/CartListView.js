@@ -42,6 +42,7 @@ function CartListView(props) {
             group.totalCharge = totalCharge
         }
         setCartList(groupedList)
+
         return groupedList
     }
 

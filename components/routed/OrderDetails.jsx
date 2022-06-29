@@ -122,7 +122,7 @@ function OrderDetails(props) {
                         ToastAndroid.SHORT,
                         ToastAndroid.CENTER
                     )
-                    //props.navigation.navigate('HomeView')
+                    props.navigation.navigate('HomeView')
                 })
         }
         else {
@@ -133,7 +133,7 @@ function OrderDetails(props) {
                         ToastAndroid.SHORT,
                         ToastAndroid.CENTER
                     )
-                    //props.navigation.navigate('HomeView')
+                    props.navigation.navigate('HomeView')
                 })
         }
 

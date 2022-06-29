@@ -2,16 +2,11 @@ import React from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import SearchingServices from '../../../services/SearchingServices';
-import { Ionicons } from '@expo/vector-icons';
 import ItemDetailsBottomSheet from '../../shared/ItemDetailsBottomSheet';
-import CartServices from '../../../services/CartServices';
-import LocalStorageService from '../../../services/LocalStorageService';
 import { RootContext } from '../../contexts/GlobalContext';
 import { useIsFocused } from '@react-navigation/native';
-import Global from '../../../services/Globals';
 function SearhcItemsRoot(props) {
     const isFocused = useIsFocused()
-    const [collapsibleVisibility, setCollapsibleVisibility] = React.useState(false)
     const { getCurrentUser, getCurrentLocationGeocode } = React.useContext(RootContext)
     function limitText(text) {
         let res = ""
@@ -80,7 +75,7 @@ function SearhcItemsRoot(props) {
                                 padding: 10
                             }]}>
                                 <View>
-                                    <View style={styles.horizontalAlign}>
+                                    <View  >
                                         <Text>{result.itemName}</Text>
                                         <Text>Tk.{result.unitPrice}</Text>
                                     </View>

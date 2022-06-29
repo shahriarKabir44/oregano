@@ -142,12 +142,18 @@ function OrderGroup(props) {
                 justifyContent: 'space-around',
                 alignItems: 'center',
                 alignContent: "center",
-                padding: 10
+                padding: 10,
+
             }}>
-                <Text>{translateStatus(props.item.status)}</Text>
+                <Text style={{
+                    margin: 5,
+                }}>{translateStatus(props.item.status)}</Text>
                 {(props.item.status == 0 || props.item.status == -1) && <TouchableOpacity style={{
                     padding: 10,
-                    backgroundColor: "#DAA3EF"
+                    backgroundColor: "#DAA3EF",
+                    margin: 5,
+                    borderRadius: 5,
+                    flex: 1
                 }} onPress={() => {
                     if (props.item.status == 0) {
                         props.stackNav.navigate('order_details', props.item.id)
@@ -164,7 +170,10 @@ function OrderGroup(props) {
                 </TouchableOpacity>}
                 <TouchableOpacity style={{
                     padding: 10,
-                    backgroundColor: "#DAA3EF"
+                    backgroundColor: "#DAA3EF",
+                    margin: 5,
+                    borderRadius: 5,
+                    flex: 1
                 }} onPress={() => {
 
                     props.stackNav.navigate('order_details', props.item.id)

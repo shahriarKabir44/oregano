@@ -72,7 +72,7 @@ export default function GlobalContext({ children }) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
                         setCurrentUser(data)
-                        setCurrentUser(users[1])
+                        // setCurrentUser(users[1])
                     })
             }
             // LocalStorageService.clearAll()
@@ -93,9 +93,7 @@ export default function GlobalContext({ children }) {
                 latitude: 0,
                 longitude: 0
             },
-            currentLocationGeoCode: {
 
-            }
         },
         expoPushToken: ""
     })
@@ -149,7 +147,8 @@ export default function GlobalContext({ children }) {
             ...locationInfo,
 
             city: geoApifyLocationData.city,
-            currentLocationName: geoApifyLocationData.geocode
+            currentLocationName: geoApifyLocationData.geocode,
+            currentLocationGeoCode: geoApifyLocationData,
         }
         setGlobalObject({ ...globalObject, currentLocation: locationData })
         await fetch(Global.SERVER_URL + '/user/updateUserLocation', {

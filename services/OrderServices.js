@@ -219,7 +219,7 @@ export default class OrderServices {
 
     static async createOrder(groupInfo, orderLocationInfo, buyerName, buyerId, itemsCount, orderCity) {
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
-
+        console.log("orderService", groupInfo)
         let { geocode } = await LocationService.getGeoApifyLocationInfo({
             latitude: groupInfo.currentLatitude,
             longitude: groupInfo.currentLongitude
@@ -281,6 +281,7 @@ export default class OrderServices {
             let newOrderId = await OrderServices.createOrder({
                 "cookId": group.id,
                 "currentLongitude": group.currentLongitude,
+                currentLatitude: group.currentLatitude,
                 "region": group.region,
                 deliveryCharge: group.deliveryCharge,
                 totalCharge: group.totalCharge
