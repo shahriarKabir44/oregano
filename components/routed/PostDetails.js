@@ -70,11 +70,11 @@ function PostDetails(props) {
             PostService.findPost(postId)
                 .then(postInfo => {
 
-                    LocationService.getLocationGeocode({
+                    LocationService.getGeoApifyLocationInfo({
                         latitude: postInfo.latitude,
                         longitude: postInfo.longitude
                     }).then(data => {
-                        let locationName = `${data[0]?.city},${data[0]?.district},${data[0]?.subregion},${data[0]?.region}`
+                        let locationName = data.geocode
                         setPostLocationName(locationName)
                     })
 

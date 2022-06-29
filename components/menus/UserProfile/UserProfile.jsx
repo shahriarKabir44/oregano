@@ -186,7 +186,7 @@ function UserProfile(props) {
                             }}>
                                 <FontAwesome name="home" size={24} color="black" />
                                 <Text>
-                                    {UserProfileInfo?.locationInfoJson?.district} {UserProfileInfo?.locationInfoJson?.city} {UserProfileInfo?.locationInfoJson?.subregion} {UserProfileInfo?.locationInfoJson?.region}
+                                    {UserProfileInfo?.currentLocationName}
                                 </Text>
                             </View>
 

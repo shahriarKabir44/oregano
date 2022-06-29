@@ -112,7 +112,7 @@ function SearchResults(props) {
                             }}>{user.name}</Text>
                             <Text style={{
                                 fontSize: 10
-                            }}>{user.locationInfoJson.district},{user.locationInfoJson.city},{user.locationInfoJson.region}</Text>
+                            }}>{user.currentLocationName}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
