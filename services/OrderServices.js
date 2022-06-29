@@ -278,8 +278,6 @@ export default class OrderServices {
         for (let group of orderItems) {
             let newOrderId = await OrderServices.createOrder({
                 "cookId": group.id,
-                "locationInfoJson": group.locationInfoJson,
-                "currentLatitude": group.currentLatitude,
                 "currentLongitude": group.currentLongitude,
                 "region": group.region,
                 deliveryCharge: group.deliveryCharge,

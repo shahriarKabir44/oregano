@@ -89,12 +89,7 @@ export default class UserService {
                     currentLatitude
                     currentLongitude
                     currentCity
-                    locationInfoJson{
-                        city
-                        district
-                        subregion 
-                        region 
-                    }
+                     
                     
                 }}`
             })
@@ -316,11 +311,7 @@ export default class UserService {
                       personalInfo{
                         profileImageURL
                       }
-                      locationInfoJson{
-                        city
-                        region
-                        district
-                      }
+                       
                     }
                   }
                   `

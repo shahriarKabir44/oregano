@@ -101,11 +101,11 @@ export default function GlobalContext({ children }) {
     })
 
     async function setCurrentUser(user) {
-        LocalStorageService.store('currentUser', user)
-            .then(() => {
-                setGlobalObject({ ...globalObject, currentUser: user })
-                return user
-            })
+        // await LocalStorageService.store('currentUser', user)
+        setGlobalObject({ ...globalObject, currentUser: user })
+        return user
+
+
     }
 
     function updatePushToken(token) {
@@ -143,20 +143,15 @@ export default function GlobalContext({ children }) {
                 }
                 return locationInfo
             })
-        let geocodeData = await LocationService.getLocationGeocode(locationInfo.coords)
-        let geocode = {}
-        if (geocodeData.length) {
-            geocode = { ...geocodeData[0] }
-            //setCurrentUser({ ...globalObject.currentUser, locationInfo: JSON.stringify(geocodeData[0]) })
-        }
+
         let geoApifyLocationData = await LocationService.getGeoApifyLocationInfo(locationInfo.coords)
         let locationData = {
             ...locationInfo,
-            currentLocationGeoCode: geocode,
-            region: geocode.region,
+
+            city: geoApifyLocationData.city,
             currentLocationName: geoApifyLocationData.geocode
         }
-
+        console.log(geoApifyLocationData);
         setGlobalObject({ ...globalObject, currentLocation: locationData })
         await fetch(Global.SERVER_URL + '/user/updateUserLocation', {
             method: 'POST',
@@ -164,8 +159,7 @@ export default function GlobalContext({ children }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                region: locationData.region,
-                locationInfo: JSON.stringify(locationData.currentLocationGeoCode),
+                region: locationData.city,
                 userId: globalObject.currentUser.id,
                 currentLatitude: locationData.coords.latitude,
                 currentLongitude: locationData.coords.longitude,
@@ -173,7 +167,7 @@ export default function GlobalContext({ children }) {
             })
         }).then(res => res.json())
 
-        return locationData.currentLocationGeoCode
+        return locationData
 
 
     }

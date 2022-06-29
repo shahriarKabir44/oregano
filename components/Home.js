@@ -53,7 +53,7 @@ function Home(props) {
     }
     async function loadLocalDatas(location) {
         return Promise.all([
-            UserService.getLocalUsers(location.region, rootContext.getCurrentUser().id)
+            UserService.getLocalUsers(location.city, rootContext.getCurrentUser().id)
                 .then(data => {
                     setLocalUsers(data);
                 }),

@@ -125,13 +125,7 @@ export default class SearchingServices {
                         personalInfo{
                             profileImageURL
                           }
-                        locationInfoJson{
-                          city
-                          district
-                          street
-                          region
-                          subregion
-                        }
+                          currentLocationName
                         currentLatitude
                         currentLongitude
                       }
