@@ -16,7 +16,7 @@ function CartListView(props) {
 
     const [groupedCartList, setCartList] = useState([])
     const [totalCharge, setTotalCharge] = useState(0)
-    const [shouldRefresh, setRefreshFlag] = useState(false)
+
     const [isListEmpty, setEmptinessStatus] = useState(false)
     const [selectedcartItem, setSelectedCartItem] = useState(null)
 
@@ -25,11 +25,11 @@ function CartListView(props) {
 
 
         for (let group of groupedList) {
-            let distance = Math.floor(getDistance({
+            let distance = parseFloat(Math.floor(getDistance({
 
                 latitude: group.currentLatitude,
                 longitude: group.currentLongitude
-            }, coords, 1) / 100)
+            }, coords, 1) / 100) / 10)
             group.distance = distance
             group.deliveryCharge = Math.ceil(distance) * 5 + 30
         }
@@ -111,7 +111,7 @@ function CartListView(props) {
         else {
             setTotalCharge(0)
         }
-    }, [isFocused, shouldRefresh])
+    }, [isFocused])
     return (
         <View style={{
             flex: 1
@@ -144,11 +144,10 @@ function CartListView(props) {
                             <View>
                                 <Text>From</Text>
                                 <Text>{group.name}</Text>
-
-                            </View>
-                            <View>
                                 <Text>Distance: {group.distance} kms </Text>
+                                <Text>Delivery charge: Tk.{group.deliveryCharge} </Text>
                             </View>
+
                         </View>
                         {group.items.map((item, index1) => <TouchableOpacity key={index1} onPress={() => {
 
@@ -178,7 +177,7 @@ function CartListView(props) {
             </ScrollView>
 
 
-            <View style={{
+            {!isListEmpty && <View style={{
                 borderWidth: 1,
                 borderColor: "black",
                 borderRadius: 5,
@@ -200,10 +199,13 @@ function CartListView(props) {
 
                         {locationSelectionType == 2 && <Button title='Switch to current location' onPress={() => {
                             loadCurrentLocationInfo()
+                                .then(coords => {
+                                    setDeliveryCharge(coords, groupedCartList)
+                                })
                         }} />}
                     </View>
                 </View>
-            </View>
+            </View>}
 
             <SearchLocation visibility={customLocationSelectionBottomSheetVisibility} setVisibility={setCustomLocationSelectionBottomSheetVisibility} onSelect={(selectedLocation) => {
                 setSelectedLocationGeocode(selectedLocation.name)
@@ -211,14 +213,18 @@ function CartListView(props) {
                 setOrderCity(selectedLocation.city)
                 setCustomLocationSelectionBottomSheetVisibility(false)
                 setLocationSelectionType(2)
-
+                setDeliveryCharge(selectedLocation.coords, groupedCartList)
             }} />
 
 
             <ItemDetailsBottomSheet {...props} onChange={() => {
                 updateCartList()
             }} bottomSheetVisibility={itemDetailsBottomSheet} popupBottomSheet={popupItemDetailsBottomSheet} selectedSearchResult={selectedcartItem} setSearchResultItem={setSelectedCartItem} />
-
+            {isListEmpty && <View style={[styles.footer, {
+                backgroundColor: "#BDD6F4"
+            }]}>
+                <Text>NO ITEMS ADDED TO THE CART</Text>
+            </View>}
         </View>
 
     );
