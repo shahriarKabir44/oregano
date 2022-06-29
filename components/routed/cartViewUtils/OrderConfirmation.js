@@ -26,6 +26,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
 
                 LocationService.getLocationGeocode(coords)
                     .then(currentLocationGeoCode => {
+
                         setOrderCity(currentLocationGeoCode[0].city)
                         setCurrentLocationGeoCode(`${currentLocationGeoCode[0].name}, ${currentLocationGeoCode[0].street}, ${currentLocationGeoCode[0].postalCode}, ${currentLocationGeoCode[0].city}`)
                         setLoadingStatus(1 == 1)
@@ -113,7 +114,7 @@ function OrderConfirmation({ orderItems, setRefreshFlag, setTotalCharge, setBott
                 backgroundColor: locationType == 0 ? "#BDF0F6" : "#FFA500"
             }]}>
                 <TouchableOpacity onPress={() => {
-                     
+
                     if (locationType == 0) return
                     setModalVisible(true)
 

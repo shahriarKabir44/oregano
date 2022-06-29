@@ -2,14 +2,11 @@ import React from 'react';
 import { View, Text, Image, Button, ToastAndroid } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
-import PostService from '../../services/PostService';
 import LocationView from '../shared/LocationView';
 import OrderListItem from './OrderListItem/OrderListItem';
 import { RootContext } from '../contexts/GlobalContext';
 import { useIsFocused } from '@react-navigation/native';
 import OrderServices from '../../services/OrderServices';
-import Global from '../../services/Globals';
-
 
 function OrderDetails(props) {
     const [mapVisibility, setMapVisibility] = React.useState(false)
@@ -124,55 +121,55 @@ function OrderDetails(props) {
     return (
         <View style={{
             flex: 1,
-             
+
         }}>
             <ScrollView style={{
-               
-            }}>
-            {!isLoaded && <Text>Loading...</Text>}
-            {isLoaded && <View style={{
-                flex: 1,
-                padding: 5,
-                margin: 10,
-                borderRadius: 5,
-                
-            }}>
 
-                <Text style={{
-                    fontSize: 18
-                }}>Ordered by</Text>
-                <View style={{
-                    marginVertical: 5,
-                    display: "flex",
-                    flexDirection: "row",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                    flexWrap: "wrap"
+            }}>
+                {!isLoaded && <Text>Loading...</Text>}
+                {isLoaded && <View style={{
+                    flex: 1,
+                    padding: 5,
+                    margin: 10,
+                    borderRadius: 5,
+
                 }}>
-                    <Image style={{
-                        height: 120,
-                        aspectRatio: 1,
-                        borderRadius: 90
-                    }} source={{
-                        uri: buyerInfo.facebookToken.profileImageURL
-                    }} />
+
+                    <Text style={{
+                        fontSize: 18
+                    }}>Ordered by</Text>
                     <View style={{
-                        position: "relative"
+                        marginVertical: 5,
+                        display: "flex",
+                        flexDirection: "row",
+                        alignContent: "center",
+                        alignItems: "center",
+                        justifyContent: "space-around",
+                        flexWrap: "wrap"
                     }}>
-                        <Text style={{
-                            fontSize: 20,
-                            flexWrap: "wrap"
-                        }}>{buyerInfo.facebookToken.name}</Text>
-                        <Text>
-                            {orderDetails.dropLocationGeocode}
-                        </Text>
+                        <Image style={{
+                            height: 120,
+                            aspectRatio: 1,
+                            borderRadius: 90
+                        }} source={{
+                            uri: buyerInfo.facebookToken.profileImageURL
+                        }} />
+                        <View style={{
+                            position: "relative"
+                        }}>
+                            <Text style={{
+                                fontSize: 20,
+                                flexWrap: "wrap"
+                            }}>{buyerInfo.facebookToken.name}</Text>
+                            <Text>
+                                {orderDetails.dropLocationGeocode}
+                            </Text>
 
-                         
 
-                        <Text>{(new Date(orderDetails.time)).toLocaleTimeString()},{(new Date(orderDetails.time)).toDateString()}</Text>
-                        <Text>{orderDetails.buyer.phone } </Text>
-                    </View>
+
+                            <Text>{(new Date(orderDetails.time)).toLocaleTimeString()},{(new Date(orderDetails.time)).toDateString()}</Text>
+                            <Text>{orderDetails.buyer.phone} </Text>
+                        </View>
                     </View>
                     <View style={{
                         display: "flex",
@@ -212,111 +209,111 @@ function OrderDetails(props) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                <Text style={{
-                    fontSize: 18
-                }}>Ordered items</Text>
-                <View style={{
-                    padding: 10
-                }}>
-                    {productList.map((order, index) => {
-                        return <View key={index} style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignContent: "center",
-                            justifyContent: "space-around",
-                            borderWidth: 1,
-                            borderColor: "black",
-                            padding: 10,
-                            borderRadius: 10,
-                            backgroundColor:"#E9F6F7"
-                        }} >
-                            <OrderListItem navigation={props.navigation} order={order} />
-                            {!(isOrderAccepted || isOrderRejected) && <View>
-
-                                {isAccepted[index] == 1 && <TouchableOpacity onPress={() => {
-                                    rejectAProduct(index)
-                                }} style={{
-                                    backgroundColor: "#FFBAB7",
-                                    padding: 10,
-                                    borderRadius: 10
-                                }}>
-                                    <Text>Reject</Text>
-                                </TouchableOpacity>}
-                                {isAccepted[index] == 0 && <TouchableOpacity onPress={() => {
-                                    acceptAProduct(index)
-                                }} style={{
-                                    backgroundColor: "#11b015",
-                                    padding: 10,
-                                    borderRadius: 10
-                                }}>
-                                    <Text>Accept</Text>
-                                </TouchableOpacity>}
-                            </View>}
-
-                            {isOrderAccepted && <TouchableOpacity style={{
-                                backgroundColor: "#c4c4c4",
-                                padding: 10,
-                                borderRadius: 10
-                            }}>
-                                <Text>{isAccepted[index] == 0 ? "Rejected" : "Accepted"}</Text>
-                            </TouchableOpacity>}
-                            {isOrderRejected && <TouchableOpacity style={{
-                                backgroundColor: "#c4c4c4",
+                    <Text style={{
+                        fontSize: 18
+                    }}>Ordered items</Text>
+                    <View style={{
+                        padding: 10
+                    }}>
+                        {productList.map((order, index) => {
+                            return <View key={index} style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                alignContent: "center",
+                                justifyContent: "space-around",
+                                borderWidth: 1,
+                                borderColor: "black",
                                 padding: 10,
                                 borderRadius: 10,
+                                backgroundColor: "#E9F6F7"
+                            }} >
+                                <OrderListItem navigation={props.navigation} order={order} />
+                                {!(isOrderAccepted || isOrderRejected) && <View>
 
-                            }}>
-                                <Text>Rejected</Text>
-                            </TouchableOpacity>}
-                        </View>
-                    })}
-                </View>
-                <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={{
-                    latitude: orderDetails.drop_lat,
-                    longitude: orderDetails.drop_long
-                }} tagnameLabel={`${buyerInfo.facebookToken.name}`} />
-                
+                                    {isAccepted[index] == 1 && <TouchableOpacity onPress={() => {
+                                        rejectAProduct(index)
+                                    }} style={{
+                                        backgroundColor: "#FFBAB7",
+                                        padding: 10,
+                                        borderRadius: 10
+                                    }}>
+                                        <Text>Reject</Text>
+                                    </TouchableOpacity>}
+                                    {isAccepted[index] == 0 && <TouchableOpacity onPress={() => {
+                                        acceptAProduct(index)
+                                    }} style={{
+                                        backgroundColor: "#11b015",
+                                        padding: 10,
+                                        borderRadius: 10
+                                    }}>
+                                        <Text>Accept</Text>
+                                    </TouchableOpacity>}
+                                </View>}
+
+                                {isOrderAccepted && <TouchableOpacity style={{
+                                    backgroundColor: "#c4c4c4",
+                                    padding: 10,
+                                    borderRadius: 10
+                                }}>
+                                    <Text>{isAccepted[index] == 0 ? "Rejected" : "Accepted"}</Text>
+                                </TouchableOpacity>}
+                                {isOrderRejected && <TouchableOpacity style={{
+                                    backgroundColor: "#c4c4c4",
+                                    padding: 10,
+                                    borderRadius: 10,
+
+                                }}>
+                                    <Text>Rejected</Text>
+                                </TouchableOpacity>}
+                            </View>
+                        })}
+                    </View>
+                    <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={{
+                        latitude: orderDetails.drop_lat,
+                        longitude: orderDetails.drop_long
+                    }} tagnameLabel={`${buyerInfo.facebookToken.name}`} />
+
                 </View>}
 
             </ScrollView>
-{(!isOrderAccepted && !isOrderRejected) && <View style={{
-                    display: "flex",
-                    flexDirection: "row",
+            {(!isOrderAccepted && !isOrderRejected) && <View style={{
+                display: "flex",
+                flexDirection: "row",
                 justifyContent: "space-between",
-                padding:10
+                padding: 10
+            }}>
+                <TouchableOpacity style={[styles.footer, {
+                    backgroundColor: "#AFFFD0"
+                }]} onPress={() => {
+                    rejectSome()
+
                 }}>
-                    <TouchableOpacity style={[styles.footer, {
-                        backgroundColor: "#AFFFD0"
-                    }]} onPress={() => {
-                        rejectSome()
+                    <Text style={{
+                        fontSize: 15
+                    }}>Done</Text>
 
-                    }}>
-                        <Text style={{
-                            fontSize: 15
-                        }}>Done</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.footer, {
+                    backgroundColor: "#FFBAB7"
+                }]} onPress={() => {
+                    setAcceptance(new Array(isAccepted.length).fill(0))
+                    rejectSome()
 
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.footer, {
-                        backgroundColor: "#FFBAB7"
-                    }]} onPress={() => {
-                        setAcceptance(new Array(isAccepted.length).fill(0))
-                        rejectSome()
+                }}>
+                    <Text style={{
+                        fontSize: 15
+                    }}>Reject all</Text>
 
-                    }}>
-                        <Text style={{
-                            fontSize: 15
-                        }}>Reject all</Text>
-
-                    </TouchableOpacity>
-                </View>}
+                </TouchableOpacity>
+            </View>}
 
 
-                {(isOrderAccepted || isOrderRejected) && <View style={[styles.footer, {
-                    backgroundColor: "#c4c4c4"
-                }]}>
-                    <Text>{isOrderAccepted ? "Order has been accepted" : "Order has been rejected"}</Text>
-                </View>}
+            {(isOrderAccepted || isOrderRejected) && <View style={[styles.footer, {
+                backgroundColor: "#c4c4c4"
+            }]}>
+                <Text>{isOrderAccepted ? "Order has been accepted" : "Order has been rejected"}</Text>
+            </View>}
 
         </View>
     );

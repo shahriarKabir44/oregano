@@ -91,7 +91,7 @@ function SearchLocation(props) {
                         {searchResulsts.map((item, index) => {
                             return <TouchableOpacity onPress={() => {
                                 if (item.notSelectable) return
-                                let productLocation = props.orderItems[0].region
+
                                 props.setVisibility(false);
                                 props.onSelect(item)
                                 // LocationService.getLocationGeocode(item.coords)
