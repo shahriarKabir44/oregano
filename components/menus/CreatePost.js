@@ -39,14 +39,9 @@ function CreatePost(props) {
 
 	const [tagSelectionModal, setTagSelectionModalVisibility] = React.useState(false)
 	async function setGeoInfo() {
-		let coords = await LocationService.getCurrentLocation()
-		let geocode = await LocationService.getLocationGeocode(coords)
-		let locationInfo = {
-			...coords,
-			district: geocode[0].district ? geocode[0].district : "California", city: geocode[0].city, country: geocode[0].country
-		}
-		return locationInfo
 
+		let { city } = await LocationService.getCurrentLocationInfoGeoApify()
+		return city
 	}
 	const [isMarkedAvailable, setAvailability] = React.useState(false)
 	useEffect(() => {
@@ -68,11 +63,14 @@ function CreatePost(props) {
 
 		UploadManager.uploadImageFromDevice()
 			.then(newImageURI => {
+				if (newImageURI == null) return null
 				setImagesList([...images, {
 					index: lastImageId,
 					body: newImageURI
 				}])
-			}).then(() => {
+				return newImageURI
+			}).then((newImageURI) => {
+				if (newImageURI == null) return
 				if (lastImageId == 3) setLastImageId(5)
 				else setLastImageId(lastImageId + 1)
 				setImagesCount(imagesCount + 1)
@@ -224,9 +222,10 @@ function CreatePost(props) {
 				//setModalVisible(1 == 1)
 				setGeoInfo()
 					.then((locationData) => {
+						console.log(locationData)
 						let newPost = {
 							...item,
-							...locationData,
+							region: locationData,
 							isMarkedAvailable: isMarkedAvailable,
 							unitPrice: unitPrice,
 							postedBy: rootContext.getCurrentUser().id,

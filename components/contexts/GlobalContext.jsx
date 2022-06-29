@@ -71,7 +71,7 @@ export default function GlobalContext({ children }) {
             if (status) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
-                        //   setCurrentUser(data)
+                        setCurrentUser(data)
                         setCurrentUser(users[1])
                     })
             }
@@ -101,7 +101,7 @@ export default function GlobalContext({ children }) {
     })
 
     async function setCurrentUser(user) {
-        // await LocalStorageService.store('currentUser', user)
+        await LocalStorageService.store('currentUser', user)
         setGlobalObject({ ...globalObject, currentUser: user })
         return user
 
