@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, ToastAndroid, Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Button } from 'react-native';
-import CartServices from '../../services/CartServices'
+import CartServices from '../../../services/CartServices'
 
-import LocationService from '../../services/LocationService';
-import ItemDetailsBottomSheet from '../../components/shared/ItemDetailsBottomSheet'
-import { RootContext } from '../contexts/GlobalContext'
+import LocationService from '../../../services/LocationService';
+import ItemDetailsBottomSheet from '../../shared/ItemDetailsBottomSheet'
+import { RootContext } from '../../contexts/GlobalContext'
 import { useIsFocused } from '@react-navigation/native';
-import OrderServices from '../../services/OrderServices'
+import OrderServices from '../../../services/OrderServices'
 import getDistance from 'geolib/es/getDistance';
-import SearchLocation from './cartViewUtils/SearchLocation';
+import SearchLocation from './SearchLocation';
 
 function CartListView(props) {
     const [itemDetailsBottomSheet, popupItemDetailsBottomSheet] = React.useState(false)
@@ -131,7 +131,7 @@ function CartListView(props) {
                             justifyContent: "space-around"
                         }}>
                             <Image style={{
-                                height: 50,
+                                height: 70,
                                 aspectRatio: 1,
                                 borderRadius: 50,
                             }} source={{ uri: group.personalInfo.profileImageURL }} />
@@ -198,12 +198,23 @@ function CartListView(props) {
                             setCustomLocationSelectionBottomSheetVisibility(true)
                         }} />}
 
-                        {locationSelectionType == 2 && <Button title='Switch to current location' onPress={() => {
-                            loadCurrentLocationInfo()
-                                .then(coords => {
-                                    setDeliveryCharge(coords, groupedCartList)
-                                })
-                        }} />}
+                        {locationSelectionType == 2 && <View style={{
+                            margin: 10
+                        }}>
+                            <Button title='Change' onPress={() => {
+                                setCustomLocationSelectionBottomSheetVisibility(true)
+                            }} />
+                        </View>}
+                        {locationSelectionType == 2 && <View style={{
+                            margin: 10
+                        }}>
+                            <Button title='Switch to current location' onPress={() => {
+                                loadCurrentLocationInfo()
+                                    .then(coords => {
+                                        setDeliveryCharge(coords, groupedCartList)
+                                    })
+                            }} />
+                        </View>}
                     </View>
                 </View>
             </View>}

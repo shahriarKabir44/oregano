@@ -4,6 +4,7 @@ import { BottomSheet } from 'react-native-btr';
 import CartServices from '../../services/CartServices'
 import { FontAwesome5 } from '@expo/vector-icons';
 import SearchingServices from '../../services/SearchingServices';
+import LocationService from '../../services/LocationService';
 
 function ItemDetailsBottomSheet(props) {
     return (
@@ -30,10 +31,22 @@ function ItemDetailsBottomSheet(props) {
 function SearchDetails(props) {
     const [selectedSearchResult, setSearchResultItem] = React.useState(null)
     const [isLoaded, setIsLoaded] = React.useState(false)
+    const [itemLocationName, setItemLocationName] = React.useState("Loading...")
+
+    let updateItemLocationName = function (coords) {
+        LocationService.getGeoApifyLocationInfo(coords)
+            .then(data => {
+                setItemLocationName(data.geocode)
+            })
+    }
     React.useEffect(() => {
         SearchingServices.getDetails(props.selectedSearchResult.vendorId, props.selectedSearchResult.itemName)
             .then((searchResultInfo) => {
                 setSearchResultItem(searchResultInfo)
+                updateItemLocationName({
+                    latitude: searchResultInfo.vendor.currentLatitude,
+                    longitude: searchResultInfo.vendor.currentLongitude
+                })
                 return searchResultInfo
             }).then((searchResultInfo) => {
                 CartServices.isAddedToCart(props.selectedSearchResult.vendorId, props.selectedSearchResult.itemName)
@@ -129,7 +142,7 @@ function SearchDetails(props) {
                 <View style={styles.footer}>
                     <Text style={{
                         fontSize: 12
-                    }}>Location:{selectedSearchResult.vendor.locationInfoJson.street},{selectedSearchResult.vendor.locationInfoJson.district},{selectedSearchResult.vendor.locationInfoJson.city}</Text>
+                    }}>Location: {itemLocationName}</Text>
 
                     <View style={[styles.alighnHorizontal, {
                         padding: 20,

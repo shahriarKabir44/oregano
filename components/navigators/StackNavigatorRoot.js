@@ -5,7 +5,7 @@ import CreatePost from '../menus/CreatePost';
 import Addtags from '../menus/Addtags';
 import { createStackNavigator } from '@react-navigation/stack'
 import { View } from 'react-native';
-import CartListView from '../routed/CartListView'
+import CartListView from '../routed/cartViewUtils/CartListView'
 import PostDetails from '../routed/PostDetails'
 import UserProfile from '../menus/UserProfile/UserProfile';
 const Stack = createStackNavigator()

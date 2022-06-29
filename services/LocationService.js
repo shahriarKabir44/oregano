@@ -23,9 +23,9 @@ export default class LocationService {
 
 
     static async getGeoApifyLocationInfo(location) {
+
         let { results } = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${location.latitude}&lon=${location.longitude}&format=json&apiKey=${Environment.geoapifyAPIkey}`)
             .then(res => res.json())
-
         return {
             city: results[0].city ? results[0].city : results[0].county,
             geocode: results[0].formatted,

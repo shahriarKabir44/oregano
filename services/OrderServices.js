@@ -1,6 +1,7 @@
 import RatingServices from './RatingServices'
 import UserService from './UserService'
 import Global from "./Globals";
+import LocationService from './LocationService';
 
 export default class OrderServices {
 
@@ -216,6 +217,12 @@ export default class OrderServices {
 
     static async createOrder(groupInfo, orderLocationInfo, buyerName, buyerId, itemsCount, orderCity) {
         let notificationMessage = `${buyerName} has ordered some of your products. Please check.`
+
+        let { geocode } = await LocationService.getGeoApifyLocationInfo({
+            latitude: groupInfo.currentLatitude,
+            longitude: groupInfo.currentLongitude
+        })
+
         let orderInfo = await fetch(Global.SERVER_URL + '/orders/createNewOrder', {
             method: 'POST',
             headers: {
@@ -234,7 +241,7 @@ export default class OrderServices {
                 time: (new Date()) * 1,
                 pickupLat: groupInfo.currentLatitude,
                 pickupLong: groupInfo.currentLongitude,
-                pickupLocationGeocode: `${groupInfo.locationInfoJson.city} , ${groupInfo.locationInfoJson.district} , ${groupInfo.locationInfoJson.subregion} , ${groupInfo.locationInfoJson.region}`,
+                pickupLocationGeocode: geocode,
                 notificationMessage: notificationMessage,
                 itemsCount: itemsCount,
                 deliveryCharge: groupInfo.deliveryCharge,
