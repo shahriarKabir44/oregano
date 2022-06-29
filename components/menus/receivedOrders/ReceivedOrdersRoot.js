@@ -83,9 +83,9 @@ function OrderGroup(props) {
         borderRadius: 5,
     }} >
         <TouchableOpacity onPress={() => {
-             
-                setCollapsibleVisibility(!collapsibleVisibility)
-             
+
+            setCollapsibleVisibility(!collapsibleVisibility)
+
 
         }} style={{
             display: "flex",
@@ -132,7 +132,7 @@ function OrderGroup(props) {
                 <View>
                     <Text>Item name: {orderedItem.lowerCasedName} </Text>
                     <Text>Amount: {orderedItem.amount} pc(s) </Text>
-                    <Text>Tk. {orderedItem.totalPrice } </Text>
+                    <Text>Tk. {orderedItem.totalPrice} </Text>
                 </View>
             </View>)}
 
@@ -162,6 +162,17 @@ function OrderGroup(props) {
                     {props.item.status == 0 && <Text>View Details</Text>}
                     {props.item.status == -1 && <Text>Request for a rider</Text>}
                 </TouchableOpacity>}
+                <TouchableOpacity style={{
+                    padding: 10,
+                    backgroundColor: "#DAA3EF"
+                }} onPress={() => {
+
+                    props.stackNav.navigate('order_details', props.item.id)
+                }}>
+                    <Text>View Details</Text>
+
+                </TouchableOpacity>
+
             </View>
         </Collapsible>
 

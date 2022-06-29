@@ -8,7 +8,7 @@ import DeliveyService from '../../services/DeliveryService'
 import { useIsFocused } from '@react-navigation/native';
 import call from 'react-native-phone-call'
 function DeliveryInfo(props) {
-    const { contextObject, updateContext } = React.useContext(RootContext)
+    const { setHeaderString } = React.useContext(RootContext)
     const [isPickedUp, setPickupStatus] = React.useState(false)
     const [deliveryDetails, setDeliveryDetails] = React.useState({})
     const [isLoaded, setLoadedStatus] = React.useState(false)
@@ -17,7 +17,7 @@ function DeliveryInfo(props) {
 
     React.useEffect(() => {
         if (isFocused) {
-            updateContext({ ...contextObject, headerString: "Delivery Info" })
+            setHeaderString("Delivery Info")
             OrderServices.getOrderInfo(props.route.params)
                 .then(data => {
                     setDeliveryDetails(data)
@@ -100,9 +100,9 @@ function DeliveryInfo(props) {
                                 <Button title="call" onPress={() => {
 
                                     call({
-                                        number: deliveryDetails.seller.phone,  
-                                        prompt: true,   
-                                        skipCanOpen: true  
+                                        number: deliveryDetails.seller.phone,
+                                        prompt: true,
+                                        skipCanOpen: true
                                     }).catch(console.error)
 
                                 }} />
@@ -215,6 +215,38 @@ function DeliveryInfo(props) {
                 </View>}
             </ScrollView>
 
+            <View style={{
+                padding: 5,
+                borderColor: "black",
+                borderWidth: 1,
+                margin: 5,
+                borderRadius: 5
+            }}>
+                <View style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row"
+                }}>
+                    <Text style={{
+                        fontSize: 17
+                    }}>Delivery charge:</Text>
+                    <Text style={{
+                        fontSize: 17
+                    }}>Tk.{deliveryDetails.deliveryCharge}</Text>
+                </View>
+                <View style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row"
+                }}>
+                    <Text style={{
+                        fontSize: 17
+                    }}>Total charge:</Text>
+                    <Text style={{
+                        fontSize: 17
+                    }}>Tk.{deliveryDetails.totalCharge}</Text>
+                </View>
+            </View>
 
             <View style={[styles.footer, {
                 backgroundColor: ((!isPickedUp) || (!isDelivered)) ? "#FFA500" : "#c4c4c4"

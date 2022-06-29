@@ -25,7 +25,26 @@ function OrderDetails(props) {
             profileImageURL: "aa"
         }
     })
+    function translateStatus(status) {
+        switch (status) {
+            case 0:
+                return 'Pending'
+            case -1:
+                return "Pending rider"
+            case -2:
+                return "Searching for rider"
+            case 2:
+                return "Rejected"
+            case 3:
+                return "Pending pickup"
+            case 4:
+                return "Awaiting delivery"
+            default:
+                return "Delivered"
+        }
+    }
     const [productList, setProductList] = React.useState([])
+    const [orderStatus, setOrderStatus] = React.useState(0)
     function rejectAProduct(index) {
         let temp = [...isAccepted]
         temp[index] = 0
@@ -43,6 +62,7 @@ function OrderDetails(props) {
                 setHeaderString("Order info")
                 OrderServices.getReceivedOrderInfo(orderId)
                     .then(orderInfoData => {
+                        setOrderStatus(orderInfoData.status)
 
                         let productList = []
                         if (orderInfoData.status == 2) {
@@ -102,7 +122,7 @@ function OrderDetails(props) {
                         ToastAndroid.SHORT,
                         ToastAndroid.CENTER
                     )
-                    props.navigation.navigate('HomeView')
+                    //props.navigation.navigate('HomeView')
                 })
         }
         else {
@@ -113,7 +133,7 @@ function OrderDetails(props) {
                         ToastAndroid.SHORT,
                         ToastAndroid.CENTER
                     )
-                    props.navigation.navigate('HomeView')
+                    //props.navigation.navigate('HomeView')
                 })
         }
 
@@ -277,37 +297,44 @@ function OrderDetails(props) {
                 </View>}
 
             </ScrollView>
-            {(!isOrderAccepted && !isOrderRejected) && <View style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 10
-            }}>
-                <TouchableOpacity style={[styles.footer, {
-                    backgroundColor: "#AFFFD0"
-                }]} onPress={() => {
-                    rejectSome()
-
+            {orderStatus == 0 && <View>
+                {(!isOrderAccepted && !isOrderRejected) && <View style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    padding: 10
                 }}>
-                    <Text style={{
-                        fontSize: 15
-                    }}>Done</Text>
+                    <TouchableOpacity style={[styles.footer, {
+                        backgroundColor: "#AFFFD0"
+                    }]} onPress={() => {
+                        rejectSome()
 
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.footer, {
-                    backgroundColor: "#FFBAB7"
-                }]} onPress={() => {
-                    setAcceptance(new Array(isAccepted.length).fill(0))
-                    rejectSome()
+                    }}>
+                        <Text style={{
+                            fontSize: 15
+                        }}>Done</Text>
 
-                }}>
-                    <Text style={{
-                        fontSize: 15
-                    }}>Reject all</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.footer, {
+                        backgroundColor: "#FFBAB7"
+                    }]} onPress={() => {
+                        setAcceptance(new Array(isAccepted.length).fill(0))
+                        rejectSome()
 
-                </TouchableOpacity>
+                    }}>
+                        <Text style={{
+                            fontSize: 15
+                        }}>Reject all</Text>
+
+                    </TouchableOpacity>
+                </View>}
             </View>}
 
+            {orderStatus != 0 && <View style={[styles.footer, {
+                backgroundColor: "#BDD6F4"
+            }]}>
+                <Text>{translateStatus(orderStatus).toUpperCase()} </Text>
+            </View>}
 
             {(isOrderAccepted || isOrderRejected) && <View style={[styles.footer, {
                 backgroundColor: "#c4c4c4"
@@ -327,7 +354,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 10,
 
-    }
+    },
+
 })
 
 export default OrderDetails;

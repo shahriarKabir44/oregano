@@ -72,7 +72,7 @@ export default function GlobalContext({ children }) {
                 LocalStorageService.get('currentUser')
                     .then(data => {
                         //   setCurrentUser(data)
-                        setCurrentUser(users[3])
+                        setCurrentUser(users[1])
                     })
             }
             // LocalStorageService.clearAll()
@@ -151,7 +151,6 @@ export default function GlobalContext({ children }) {
             city: geoApifyLocationData.city,
             currentLocationName: geoApifyLocationData.geocode
         }
-        console.log(geoApifyLocationData);
         setGlobalObject({ ...globalObject, currentLocation: locationData })
         await fetch(Global.SERVER_URL + '/user/updateUserLocation', {
             method: 'POST',
