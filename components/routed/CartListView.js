@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Button } from 'react-native';
+import { Dimensions, ToastAndroid, Text, View, StyleSheet, ScrollView, TouchableOpacity, Image, Button } from 'react-native';
 import CartServices from '../../services/CartServices'
-import { BottomSheet } from 'react-native-btr';
+
 import LocationService from '../../services/LocationService';
 import ItemDetailsBottomSheet from '../../components/shared/ItemDetailsBottomSheet'
 import { RootContext } from '../contexts/GlobalContext'
 import { useIsFocused } from '@react-navigation/native';
-import OrderConfirmation from './cartViewUtils/OrderConfirmation';
+import OrderServices from '../../services/OrderServices'
 import getDistance from 'geolib/es/getDistance';
 import SearchLocation from './cartViewUtils/SearchLocation';
 
@@ -15,16 +15,19 @@ function CartListView(props) {
     const rootContext = React.useContext(RootContext)
 
     const [groupedCartList, setCartList] = useState([])
-    const [totalCharge, setTotalCharge] = useState(0)
-
+    const [isCurrentLocationInfoLoaded, setCurrentLocationInfoLoadingStatus] = React.useState(false)
     const [isListEmpty, setEmptinessStatus] = useState(false)
     const [selectedcartItem, setSelectedCartItem] = useState(null)
-
+    const isFocused = useIsFocused()
+    const [selectedLocationCoords, setSelectedLocationCoords] = React.useState(null)
+    const [locationSelectionType, setLocationSelectionType] = React.useState(1)
+    const [orderCity, setOrderCity] = React.useState("")
+    const [selectedLocationGeocode, setSelectedLocationGeocode] = React.useState("Loading..")
+    const [customLocationSelectionBottomSheetVisibility, setCustomLocationSelectionBottomSheetVisibility] = React.useState(false)
     function setDeliveryCharge(coords, cartList) {
         let groupedList = JSON.parse(JSON.stringify(cartList))
-
-
         for (let group of groupedList) {
+
             let distance = parseFloat(Math.floor(getDistance({
 
                 latitude: group.currentLatitude,
@@ -32,6 +35,11 @@ function CartListView(props) {
             }, coords, 1) / 100) / 10)
             group.distance = distance
             group.deliveryCharge = Math.ceil(distance) * 5 + 30
+            let totalCharge = Math.ceil(distance) * 5 + 30
+            for (let item of group.items) {
+                totalCharge += item.amount * item.unitPrice
+            }
+            group.totalCharge = totalCharge
         }
         setCartList(groupedList)
         return groupedList
@@ -43,8 +51,8 @@ function CartListView(props) {
         if (!items.length) setEmptinessStatus(true)
         for (let cook of cooks) {
             cook.items = []
-            cook.distance = "Loading.."
-            cook.deliveryCharge = "Loading.."
+            cook.distance = "..."
+            cook.deliveryCharge = "..."
             for (let item of items) {
                 if (item.vendorId == cook.id) {
 
@@ -58,30 +66,22 @@ function CartListView(props) {
 
     }
 
-    const isFocused = useIsFocused()
-    const [selectedLocationCoords, setSelectedLocationCoords] = React.useState(null)
-    const [isCurrentLocationLoaded, setCurrentLocationLoadingStatus] = React.useState(false)
-    const [locationSelectionType, setLocationSelectionType] = React.useState(1)
-    const [orderCity, setOrderCity] = React.useState("")
-    const [selectedLocationGeocode, setSelectedLocationGeocode] = React.useState("Loading..")
+
 
     async function loadCurrentLocationInfo() {
-        setCurrentLocationLoadingStatus(false)
         setSelectedLocationGeocode("Loading..")
         let coords = await LocationService.getCurrentLocation()
-
+        setCurrentLocationInfoLoadingStatus(false)
         setSelectedLocationCoords({
             latitude: coords.latitude,
             longitude: coords.longitude
         })
         LocationService.getGeoApifyLocationInfo(coords)
             .then(currentLocationGeoCode => {
-
                 setOrderCity(currentLocationGeoCode.city)
                 setSelectedLocationGeocode(currentLocationGeoCode.geocode)
-
-                setCurrentLocationLoadingStatus(true)
                 setLocationSelectionType(1)
+                setCurrentLocationInfoLoadingStatus(true)
             })
         return coords
     }
@@ -99,17 +99,11 @@ function CartListView(props) {
         setDeliveryCharge(currentCoords, cartLIst)
     }
 
-    const [customLocationSelectionBottomSheetVisibility, setCustomLocationSelectionBottomSheetVisibility] = React.useState(false)
 
     useEffect(() => {
         if (isFocused) {
             rootContext.setHeaderString("Cart")
             loadInformation()
-
-        }
-
-        else {
-            setTotalCharge(0)
         }
     }, [isFocused])
     return (
@@ -145,7 +139,14 @@ function CartListView(props) {
                                 <Text>From</Text>
                                 <Text>{group.name}</Text>
                                 <Text>Distance: {group.distance} kms </Text>
-                                <Text>Delivery charge: Tk.{group.deliveryCharge} </Text>
+                                <Text style={{
+                                    fontSize: 15,
+                                    fontWeight: "bold"
+                                }}>Delivery charge: Tk.{group.deliveryCharge} </Text>
+                                <Text style={{
+                                    fontSize: 15,
+                                    fontWeight: "bold"
+                                }}>Total: Tk. {group.totalCharge}</Text>
                             </View>
 
                         </View>
@@ -207,6 +208,39 @@ function CartListView(props) {
                 </View>
             </View>}
 
+            {!isListEmpty && <View style={[styles.footer, {
+                backgroundColor: "#FFA500"
+            }]}>
+                <TouchableOpacity onPress={() => {
+                    if (!isCurrentLocationInfoLoaded) return
+                    OrderServices.placeOrders(groupedCartList, {
+                        ...selectedLocationCoords,
+                        dropLocationGeocode: selectedLocationGeocode
+                    }, rootContext.getCurrentUser().facebookToken.name, rootContext.getCurrentUser().id, orderCity)
+                        .then(() => {
+                            CartServices.clearAll()
+
+                                .then(() => {
+
+                                    ToastAndroid.showWithGravity(
+                                        "Order placed succesfully!",
+                                        ToastAndroid.SHORT,
+                                        ToastAndroid.CENTER
+                                    );
+                                    updateCartList()
+                                })
+                        })
+
+
+                }}>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: "sans-serif"
+                    }}> CONFIRM ORDER </Text>
+
+                </TouchableOpacity>
+
+            </View>}
             <SearchLocation visibility={customLocationSelectionBottomSheetVisibility} setVisibility={setCustomLocationSelectionBottomSheetVisibility} onSelect={(selectedLocation) => {
                 setSelectedLocationGeocode(selectedLocation.name)
                 setSelectedLocationCoords(selectedLocation.coords)
