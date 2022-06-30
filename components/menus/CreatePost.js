@@ -39,9 +39,12 @@ function CreatePost(props) {
 
 	const [tagSelectionModal, setTagSelectionModalVisibility] = React.useState(false)
 	async function setGeoInfo() {
-
+		let currentCoords = await LocationService.getCurrentLocation()
 		let { city } = await LocationService.getCurrentLocationInfoGeoApify()
-		return city
+		return {
+			...currentCoords,
+			region: city
+		}
 	}
 	const [isMarkedAvailable, setAvailability] = React.useState(false)
 	useEffect(() => {
@@ -225,7 +228,7 @@ function CreatePost(props) {
 						console.log(locationData)
 						let newPost = {
 							...item,
-							region: locationData,
+							...locationData,
 							isMarkedAvailable: isMarkedAvailable,
 							unitPrice: unitPrice,
 							postedBy: rootContext.getCurrentUser().id,
@@ -237,6 +240,7 @@ function CreatePost(props) {
 					})
 					.then((newPost) => {
 						//setModalVisible(true);
+						props.popupBottomSheet(false)
 						let urls = []
 						UploadManager.uploadMany(images.filter(image => image.index != 4).map(image => image.body),
 							`post/`,
@@ -251,7 +255,7 @@ function CreatePost(props) {
 											ToastAndroid.SHORT,
 											ToastAndroid.BOTTOM
 										)
-										props.popupBottomSheet(false)
+
 										if (props.onComplete) props.onComplete()
 										//setModalVisible(false);
 									})

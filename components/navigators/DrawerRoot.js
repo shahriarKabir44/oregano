@@ -284,8 +284,9 @@ const styles = StyleSheet.create({
 	sideMenuProfileIcon: {
 		resizeMode: 'center',
 		width: 50,
-		height: 50,
-		borderRadius: 100 / 2
+
+		borderRadius: 50,
+		aspectRatio: 1
 	},
 	centeredView: {
 		flex: 1,
