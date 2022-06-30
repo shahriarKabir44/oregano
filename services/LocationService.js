@@ -35,7 +35,6 @@ export default class LocationService {
 
     static async getCurrentLocationInfoGeoApify() {
         let currentCoords = await LocationService.getCurrentLocation()
-        console.log(currentCoords)
         return await LocationService.getGeoApifyLocationInfo(currentCoords)
     }
 

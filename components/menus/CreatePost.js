@@ -222,10 +222,10 @@ function CreatePost(props) {
 					ToastAndroid.SHORT,
 					ToastAndroid.BOTTOM
 				)
+				props.popupBottomSheet(false)
 				//setModalVisible(1 == 1)
 				setGeoInfo()
 					.then((locationData) => {
-						console.log(locationData)
 						let newPost = {
 							...item,
 							...locationData,
@@ -240,7 +240,7 @@ function CreatePost(props) {
 					})
 					.then((newPost) => {
 						//setModalVisible(true);
-						props.popupBottomSheet(false)
+
 						let urls = []
 						UploadManager.uploadMany(images.filter(image => image.index != 4).map(image => image.body),
 							`post/`,

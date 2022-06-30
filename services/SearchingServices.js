@@ -125,7 +125,7 @@ export default class SearchingServices {
                         personalInfo{
                             profileImageURL
                           }
-                          currentLocationName
+                        currentLocationName
                         currentLatitude
                         currentLongitude
                       }
@@ -137,7 +137,7 @@ export default class SearchingServices {
                       rating
                       ratedBy
                       unitPrice
-                      getRatings
+                       
                     }
                        
                   }`})

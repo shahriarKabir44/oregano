@@ -45,6 +45,10 @@ function OrderDetails(props) {
     }
     const [productList, setProductList] = React.useState([])
     const [orderStatus, setOrderStatus] = React.useState(0)
+    const [orderCharges, setOrderCharges] = React.useState({
+        totalCharge: 0,
+        deliveryCharge: 0
+    })
     function rejectAProduct(index) {
         let temp = [...isAccepted]
         temp[index] = 0
@@ -63,7 +67,10 @@ function OrderDetails(props) {
                 OrderServices.getReceivedOrderInfo(orderId)
                     .then(orderInfoData => {
                         setOrderStatus(orderInfoData.status)
-
+                        setOrderCharges({
+                            totalCharge: orderInfoData.totalCharge,
+                            deliveryCharge: orderInfoData.deliveryCharge
+                        })
                         let productList = []
                         if (orderInfoData.status == 2) {
                             setOrderRejectance(true)
@@ -232,6 +239,7 @@ function OrderDetails(props) {
                     <Text style={{
                         fontSize: 18
                     }}>Ordered items</Text>
+
                     <View style={{
                         padding: 10
                     }}>
@@ -297,6 +305,31 @@ function OrderDetails(props) {
                 </View>}
 
             </ScrollView>
+            <View style={{
+                padding: 10,
+                margin: 5,
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: "black"
+            }}>
+                <View style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                }}>
+                    <Text>Total Charge:</Text>
+                    <Text>Tk.{orderCharges.totalCharge}</Text>
+                </View>
+                <View style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                }}>
+                    <Text>Delivery Charge:</Text>
+                    <Text>Tk.{orderCharges.deliveryCharge}</Text>
+                </View>
+            </View>
+
             {orderStatus == 0 && <View>
                 {(!isOrderAccepted && !isOrderRejected) && <View style={{
                     display: "flex",
@@ -312,7 +345,7 @@ function OrderDetails(props) {
                     }}>
                         <Text style={{
                             fontSize: 15
-                        }}>Done</Text>
+                        }}>ACCEPT</Text>
 
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.footer, {
@@ -324,7 +357,7 @@ function OrderDetails(props) {
                     }}>
                         <Text style={{
                             fontSize: 15
-                        }}>Reject all</Text>
+                        }}>REJECT ALL</Text>
 
                     </TouchableOpacity>
                 </View>}

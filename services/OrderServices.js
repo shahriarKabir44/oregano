@@ -136,6 +136,8 @@ export default class OrderServices {
                         pickupLong
                         pickupLocationGeocode
                         time
+                        deliveryCharge
+                        totalCharge
                     }
                 }`
             })
