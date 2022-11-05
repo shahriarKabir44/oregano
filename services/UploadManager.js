@@ -1,5 +1,4 @@
 import * as ImagePicker from "expo-image-picker";
-import firebase from "firebase";
 export default class UploadManager {
     static async getBlobFromUri(uri) {
         const blob = await new Promise((resolve, reject) => {
@@ -17,19 +16,7 @@ export default class UploadManager {
         return blob;
     }
     static async manageFileUpload(imgURI, fileName, folderName, onComplete) {
-        UploadManager.getBlobFromUri(imgURI).then(fileBlob => {
-            let storageRef = firebase.storage().ref(`${folderName}`).child(fileName);
-            const metadata = {
-                contentType: "image/jpeg",
-            };
-            let task = storageRef.put(fileBlob, metadata)
-            task.on("state_changed", (snapshot) => { }, (err) => { }, () => {
-                task.snapshot.ref.getDownloadURL()
-                    .then(url => {
-                        onComplete(url)
-                    })
-            })
-        })
+
     }
     /**
      * 

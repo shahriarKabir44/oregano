@@ -10,6 +10,28 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
     const { setCurrentUser, setLoginStatus } = React.useContext(RootContext)
     const [modalVisible, setModalVisible] = React.useState(false)
     const [accountExists, setExistense] = React.useState(false)
+    // async function logIn() {
+
+    //     try {
+
+    //         await Facebook.initializeAsync({
+    //             appId: Environment.facebookToken,
+    //         });
+    //         const { type, token, expirationDate, permissions, declinedPermissions } =
+    //             await Facebook.logInWithReadPermissionsAsync({
+    //                 permissions: ['public_profile'],
+    //             });
+    //         if (type === 'success') {
+    //             // Get the user's name using Facebook's Graph API
+    //             const response = await fetch(`https://graph.facebook.com/v15.0/me?fields=id%2Cname%2Cpicture&access_token=${token}`);
+    //             Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+    //         } else {
+    //             // type === 'cancel'
+    //         }
+    //     } catch ({ message }) {
+    //         console.log(`Facebook Login Error: ${message}`);
+    //     }
+    // }
     async function logIn() {
         try {
             await Facebook.initializeAsync({
@@ -20,12 +42,14 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
                     permissions: ['public_profile', 'email'],
                 });
             if (type === 'success') {
-                const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-                let res = await response.json()
+                const res = await fetch(`https://graph.facebook.com/v15.0/me?fields=id%2Cname%2Cpicture&access_token=${token}`)
+                    .then(resp => resp.json())
+                console.log(res)
+                res.profilePicture = res.picture.data.url
                 LocalStorageService.store('tempUser', res)
                 UserService.isSignedUp(res.id)
                     .then(data => {
-
+                        console.log(data)
                         setModalVisible(true)
                         if (data) {
                             data.facebookToken = JSON.parse(data.facebookToken)

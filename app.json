@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "oregano",
-    "slug": "snack-1eeed9c4-e873-4f52-a0fc-7a2fd8fe5ead",
+    "name": "fb-auth",
+    "slug": "fb-auth",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,12 +24,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "softwareKeyboardLayoutMode": "pan"
+      "package": "com.shahriarkabir.fbauth"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "description": "",
-    "githubUrl": "https://github.com/shahriarKabir44/oregano"
+    }
   }
 }

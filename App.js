@@ -1,21 +1,15 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Text, View, Button, Platform, StyleSheet, LogBox } from 'react-native';
+import { Text, View, Button, Platform, StyleSheet, LogBox, Image } from 'react-native';
 import StackNavigatorRoot from './components/navigators/StackNavigatorRoot';
 import GlobalContext, { RootContext } from './components/contexts/GlobalContext';
 import RegistrationPhase0 from './components/unauthorized/RegistrationPhase0';
 import PhoneVerification from './components/unauthorized/PhoneVerification';
 import LocalStorageService from './services/LocalStorageService';
 
-import Environment from './Environment';
-import firebase from 'firebase'
-if (!firebase.apps.length) {
-	firebase.initializeApp(Environment.firebaseConfig)
-}
 export default function App() {
-
+	const [fbImage, setFbImage] = React.useState("abcd")
 	LogBox.ignoreAllLogs(true)
 	const [isAuthorized, setAuthorization] = React.useState(false)
 	const [registrationStep, setRegistrationStep] = React.useState(0)
@@ -50,11 +44,14 @@ export default function App() {
 	);
 }
 
-
 function WhiteScreen(props) {
 	return (<View></View>)
 }
-
 const styles = StyleSheet.create({
-
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 });

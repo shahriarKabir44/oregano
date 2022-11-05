@@ -9,14 +9,14 @@ import users from './users';
 export default function GlobalContext({ children }) {
     React.useEffect(() => {
         (isLoggedIn()).then(status => {
-            if (status) {
-                LocalStorageService.get('currentUser')
-                    .then(data => {
-                        //setCurrentUser(data)
-                        setCurrentUser(users.data[1])
-                    })
-            }
-            // LocalStorageService.clearAll()
+            // if (status) {
+            LocalStorageService.get('currentUser')
+                .then(data => {
+                    setCurrentUser(data)
+                    //setCurrentUser(users.data[1])
+                })
+            // }
+            //LocalStorageService.clearAll()
         })
 
 
@@ -40,7 +40,9 @@ export default function GlobalContext({ children }) {
     })
 
     async function setCurrentUser(user) {
-        //await LocalStorageService.store('currentUser', user)
+        await LocalStorageService.store('currentUser', user)
+        await LocalStorageService.store('isLoggedIn', true)
+
         setGlobalObject({ ...globalObject, currentUser: user })
         return user
 

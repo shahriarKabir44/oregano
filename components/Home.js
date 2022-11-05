@@ -164,6 +164,7 @@ function Home(props) {
 
 async function registerForPushNotificationsAsync() {
     let token;
+
     if (Device.isDevice) {
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;

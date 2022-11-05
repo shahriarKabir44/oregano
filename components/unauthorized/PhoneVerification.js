@@ -22,7 +22,7 @@ function PhoneVerification({ setAuthorization }) {
     React.useEffect(() => {
         LocalStorageService.get('tempUser')
             .then(data => {
-                setTempUser({ ...data, profilePicture: (`https://graph.facebook.com/${data.id}/picture?type=large`) })
+                setTempUser({ ...data })
             })
     }, [])
     const rootContext = React.useContext(RootContext)
