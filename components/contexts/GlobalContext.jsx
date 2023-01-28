@@ -12,11 +12,12 @@ export default function GlobalContext({ children }) {
             // if (status) {
             LocalStorageService.get('currentUser')
                 .then(data => {
-                    setCurrentUser(data)
-                    //setCurrentUser(users.data[1])
+                    //console.log(data)
+                    // setCurrentUser(data)
+                    setCurrentUser(users.data[0])
                 })
             // }
-            //LocalStorageService.clearAll()
+            // LocalStorageService.clearAll()
         })
 
 
@@ -40,8 +41,12 @@ export default function GlobalContext({ children }) {
     })
 
     async function setCurrentUser(user) {
-        await LocalStorageService.store('currentUser', user)
-        await LocalStorageService.store('isLoggedIn', true)
+        // console.log(user)
+        await Promise.all([
+            await LocalStorageService.store('currentUser', user),
+            await LocalStorageService.store('isLoggedIn', user != null)
+        ])
+
 
         setGlobalObject({ ...globalObject, currentUser: user })
         return user

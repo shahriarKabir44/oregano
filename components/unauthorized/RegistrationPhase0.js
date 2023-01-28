@@ -10,6 +10,7 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
     const { setCurrentUser, setLoginStatus } = React.useContext(RootContext)
     const [modalVisible, setModalVisible] = React.useState(false)
     const [accountExists, setExistense] = React.useState(false)
+    const [tempImageURL, setTempImageURL] = React.useState("abc")
     // async function logIn() {
 
     //     try {
@@ -46,10 +47,11 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
                     .then(resp => resp.json())
                 console.log(res)
                 res.profilePicture = res.picture.data.url
+                setTempImageURL(res.picture.data.url)
                 LocalStorageService.store('tempUser', res)
                 UserService.isSignedUp(res.id)
                     .then(data => {
-                        console.log(data)
+                        // console.log(data)
                         setModalVisible(true)
                         if (data) {
                             data.facebookToken = JSON.parse(data.facebookToken)
@@ -87,6 +89,7 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
                 {accountExists && <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Account already exists</Text>
+
                         <TouchableOpacity style={{
                             backgroundColor: "#D2F9D4",
                             padding: 10,

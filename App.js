@@ -19,7 +19,7 @@ export default function App() {
 			setWhiteScreen(false);
 			setAuthorization(status == true);
 			if (!(status == true)) {
-				LocalStorageService.clearAll()
+				//LocalStorageService.clearAll()
 
 			}
 		}, 100)
@@ -27,7 +27,6 @@ export default function App() {
 	React.useEffect(() => {
 		LocalStorageService.get('isLoggedIn')
 			.then(status => {
-
 				setAuthorizationValue(status)
 			})
 	}, [])

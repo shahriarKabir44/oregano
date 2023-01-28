@@ -241,26 +241,23 @@ function CreatePost(props) {
 					.then((newPost) => {
 						//setModalVisible(true);
 
-						let urls = []
 						UploadManager.uploadMany(images.filter(image => image.index != 4).map(image => image.body),
-							`post/`,
-							`${rootContext.getCurrentUser().id}/${item.itemName}/${(new Date()) * 1}/image-`
-							, 0, urls,
-							(urls) => {
-								PostService.createPost({ ...newPost, images: JSON.stringify(urls) })
-									.then(() => {
+							`post/${rootContext.getCurrentUser().id}/${item.itemName}/${(new Date()) * 1}/`,
+							'/posts/uploadImage'
+						).then(urls => {
+							PostService.createPost({ ...newPost, images: JSON.stringify(urls) })
+								.then(() => {
 
-										ToastAndroid.showWithGravity(
-											"Post created succesfully!",
-											ToastAndroid.SHORT,
-											ToastAndroid.BOTTOM
-										)
+									ToastAndroid.showWithGravity(
+										"Post created succesfully!",
+										ToastAndroid.SHORT,
+										ToastAndroid.BOTTOM
+									)
 
-										if (props.onComplete) props.onComplete()
-										//setModalVisible(false);
-									})
-							}
-						)
+									if (props.onComplete) props.onComplete()
+									//setModalVisible(false);
+								})
+						})
 
 
 					})

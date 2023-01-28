@@ -147,7 +147,6 @@ export default class SearchingServices {
 
     static async getTodayPostItems(region, userId) {
         let day = Math.floor(((new Date()) * 1) / (24 * 3600 * 1000))
-
         let { data } = await fetch(`${Global.searchServerURL}/graphql`, {
             method: 'POST',
             headers: {

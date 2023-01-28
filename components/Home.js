@@ -60,7 +60,8 @@ function Home(props) {
             SearchingServices.getTodayPostItems(location.city, rootContext.getCurrentUser().id)
                 .then(data => {
                     setTodayPOstItems(data)
-                })
+                }),
+            loadLocalItems(rootContext.getCurrentUser().id, location.city)
         ])
     }
 
@@ -69,7 +70,7 @@ function Home(props) {
 
         rootContext.updateCurrentLocationInfo()
             .then((data) => {
-                return Promise.all([loadLocalItems(rootContext.getCurrentUser().id, data.city), loadLocalDatas(data)])
+                return Promise.all([loadLocalDatas(data)])
             })
             .then(() => {
                 setRefreshing(false)
