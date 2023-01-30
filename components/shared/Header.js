@@ -40,7 +40,7 @@ function Header(props) {
                 }}>
                     <Image style={styles.profilePicture}
                         source={{
-                            uri: contextObject.currentUser.facebookToken.profileImageURL
+                            uri: contextObject.currentUser.profileImageURL
                         }}
                     />
                 </TouchableOpacity>}

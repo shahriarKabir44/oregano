@@ -100,10 +100,8 @@ function AddTocart({ post, togglePopup, addToCart, unitPrice }) {
                         vendor: {
                             name: post.owner.name,
                             Id: post.owner.id,
-                            facebookToken: {
-                                profileImageURL: post.owner.facebookToken.profileImageURL
+                            profileImageURL: post.owner.profileImageURL,
 
-                            },
                             expoPushToken: "ExponentPushToken[7VU08nDS7lMz5Dy2s30Qwv]",
 
                         },

@@ -108,13 +108,10 @@ export default class OrderServices {
                 query: `query{
                     getOrderInfo(id:"${orderId}"){
                         buyer{
-                            facebookToken
-                            id
-                            personalInfo{
-                                name
-                                profileImageURL
-                                coverPhotoURL
-                            }
+                             id
+                            name
+                            profileImageURL
+                            coverPhotoURL
                             phone
                         }
                             orderedItems{
@@ -155,23 +152,17 @@ export default class OrderServices {
                 query: `query{
                     getOrderInfo(id:"${orderId}"){
                         buyer{
-                            facebookToken
                             id
-                            personalInfo{
-                                name
-                                profileImageURL
-                                coverPhotoURL
-                            }
+                            name
+                            profileImageURL
+                            coverPhotoURL
                             phone
                         }
                         seller{
-                            facebookToken
                             id
-                            personalInfo{
-                                name
-                                profileImageURL
-                                coverPhotoURL
-                            }
+                            name
+                            profileImageURL
+                            coverPhotoURL
                             phone
                         }
                         

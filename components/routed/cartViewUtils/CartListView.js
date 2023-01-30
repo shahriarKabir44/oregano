@@ -228,7 +228,7 @@ function CartListView(props) {
                     OrderServices.placeOrders(groupedCartList, {
                         ...selectedLocationCoords,
                         dropLocationGeocode: selectedLocationGeocode
-                    }, rootContext.getCurrentUser().facebookToken.name, rootContext.getCurrentUser().id, orderCity)
+                    }, rootContext.getCurrentUser().name, rootContext.getCurrentUser().id, orderCity)
                         .then(() => {
                             CartServices.clearAll()
 

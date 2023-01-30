@@ -19,7 +19,7 @@ function PostCard({ post, drawerNav, stackNav }) {
             if (post.id == -1) return;
             stackNav.push('Post details', {
                 postId: post.id,
-                headerString: `${post?.owner?.facebookToken?.name}'s post`
+                headerString: `${post?.owner?.name}'s post`
             })
         }}>
             <View>
@@ -41,11 +41,11 @@ function PostCard({ post, drawerNav, stackNav }) {
                         <View>
                             <Image style={styles.cookImg} source={{
                                 height: "100%",
-                                uri: post?.owner?.facebookToken?.profileImageURL
+                                uri: post?.owner?.profileImageURL
                             }} />
                         </View>
                         <View style={styles.cookName}>
-                            <Text> {post?.owner?.facebookToken?.name} </Text>
+                            <Text> {post?.owner?.name} </Text>
                         </View>
                     </View>
 

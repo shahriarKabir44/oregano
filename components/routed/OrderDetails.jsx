@@ -20,10 +20,8 @@ function OrderDetails(props) {
     const isFocused = useIsFocused()
     const [buyerInfo, setBuyerInfo] = React.useState({
         id: 0,
-        facebookToken: {
-            name: "",
-            profileImageURL: "aa"
-        }
+        name: "",
+        profileImageURL: "aa"
     })
     function translateStatus(status) {
         switch (status) {
@@ -80,7 +78,7 @@ function OrderDetails(props) {
                         }
                         setBuyerInfo({
                             id: orderInfoData.buyer.id,
-                            facebookToken: JSON.parse(orderInfoData.buyer.facebookToken)
+                            ...orderInfoData.buyer
                         })
                         let statuses = []
                         for (let item of orderInfoData.orderedItems) {
@@ -122,7 +120,7 @@ function OrderDetails(props) {
         }
 
         if (!acceptedItems.length) {
-            OrderServices.rejectOrder(orderDetails.id, rejectedItems, contextObject.currentUser.facebookToken.name, buyerInfo.id)
+            OrderServices.rejectOrder(orderDetails.id, rejectedItems, contextObject.currentUser.name, buyerInfo.id)
                 .then(() => {
                     ToastAndroid.showWithGravity(
                         "Order has been rejected!",
@@ -133,7 +131,7 @@ function OrderDetails(props) {
                 })
         }
         else {
-            OrderServices.acceptOrders(orderDetails.id, rejectedItems, contextObject.currentUser.facebookToken.name, buyerInfo.id)
+            OrderServices.acceptOrders(orderDetails.id, rejectedItems, contextObject.currentUser.name, buyerInfo.id)
                 .then(() => {
                     ToastAndroid.showWithGravity(
                         "Order is now moved to pending list",
@@ -179,7 +177,7 @@ function OrderDetails(props) {
                             aspectRatio: 1,
                             borderRadius: 90
                         }} source={{
-                            uri: buyerInfo.facebookToken.profileImageURL
+                            uri: buyerInfo.profileImageURL
                         }} />
                         <View style={{
                             position: "relative"
@@ -187,7 +185,7 @@ function OrderDetails(props) {
                             <Text style={{
                                 fontSize: 20,
                                 flexWrap: "wrap"
-                            }}>{buyerInfo.facebookToken.name}</Text>
+                            }}>{buyerInfo.name}</Text>
                             <Text>
                                 {orderDetails.dropLocationGeocode}
                             </Text>
@@ -300,7 +298,7 @@ function OrderDetails(props) {
                     <LocationView mapVisibility={mapVisibility} setMapVisibility={setMapVisibility} target={{
                         latitude: orderDetails.drop_lat,
                         longitude: orderDetails.drop_long
-                    }} tagnameLabel={`${buyerInfo.facebookToken.name}`} />
+                    }} tagnameLabel={`${buyerInfo.name}`} />
 
                 </View>}
 

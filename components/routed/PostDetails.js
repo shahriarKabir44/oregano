@@ -96,7 +96,7 @@ function PostDetails(props) {
                             setItemAvailability(data)
                         })
 
-                    setHeaderString(`${postInfo.owner.id == getCurrentUser().id ? "Your post" : postInfo.owner.facebookToken.name + "'s post"}`)
+                    setHeaderString(`${postInfo.owner.id == getCurrentUser().id ? "Your post" : postInfo.owner.name + "'s post"}`)
                     let images = []
                     for (let image of postInfo.images) {
                         images.push({
@@ -184,12 +184,12 @@ function PostDetails(props) {
                                         aspectRatio: 1,
                                         borderRadius: 50
                                     }} source={{
-                                        uri: post.owner.facebookToken.profileImageURL
+                                        uri: post.owner.profileImageURL
                                     }} />
                                     <Text style={{
                                         fontSize: 20,
                                         fontWeight: "bold"
-                                    }}> {post.owner.facebookToken.name} </Text>
+                                    }}> {post.owner.name} </Text>
                                 </View>
                             </TouchableOpacity>
 

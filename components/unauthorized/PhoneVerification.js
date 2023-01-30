@@ -59,7 +59,6 @@ function PhoneVerification({ setAuthorization }) {
                     </View>)
                 }
                 else {
-                    data.facebookToken = JSON.parse(data.facebookToken)
                     data.isRider = 0
 
                     LocalStorageService.store('currentUser', (data))

@@ -236,13 +236,13 @@ function DrawerContentRoot(props) {
 				paddingHorizontal: 10
 			}} >
 				{getCurrentUser() && <Image style={styles.sideMenuProfileIcon} source={{
-					uri: getCurrentUser().facebookToken.profileImageURL
+					uri: getCurrentUser().profileImageURL
 				}} />}
 				{getCurrentUser() && <Text
 					style={{
 						paddingVertical: 15
 					}}
-				> {getCurrentUser().facebookToken.name} </Text>}
+				> {getCurrentUser().name} </Text>}
 			</View>
 			<DrawerContentScrollView>
 				<DrawerItemList {...props} />

@@ -22,19 +22,10 @@ function UserProfile(props) {
     const [isCurrentUser, setCurrentUserFlag] = useState(false)
     const rootContext = React.useContext(RootContext)
     const [UserProfileInfo, setUserInfo] = useState({
-        "facebookToken": {
-            "name": "",
-            "profileImageURL": "rgreg",
-            coverPhotoURL: "eerger",
-            email: "",
-            phone: "",
-            address: ""
-        },
+        "name": "",
+        "profileImageURL": "rgreg",
+        coverPhotoURL: "eerger",
         "id": "",
-        followers: 0,
-        rating: 0,
-        totalItemsDelivered: 0,
-
     })
 
     const [imageUploadBottomSheet, setImageUploadBottomSheetVisibility] = React.useState(false)
@@ -66,7 +57,7 @@ function UserProfile(props) {
             loadPosts(userId),
             loadPersonalInfo(userId).then(data => {
                 if (!isMyProfile) {
-                    rootContext.setHeaderString(data.facebookToken.name)
+                    rootContext.setHeaderString(data.name)
                 }
 
             })
@@ -133,7 +124,7 @@ function UserProfile(props) {
                                 width: '100%',
                                 aspectRatio: 16 / 9
                             }} source={{
-                                uri: UserProfileInfo?.facebookToken.coverPhotoURL
+                                uri: UserProfileInfo?.coverPhotoURL
                             }} />
                             {isCurrentUser && <View style={{
                                 position: "absolute",
@@ -156,7 +147,7 @@ function UserProfile(props) {
                                 top: Dimensions.get('window').width * 9 / 16 - Dimensions.get('window').width * .2,
                                 alignSelf: "center"
                             }} source={{
-                                uri: UserProfileInfo?.facebookToken.profileImageURL
+                                uri: UserProfileInfo?.profileImageURL
                             }} />
                         </View>
                         <View style={{
@@ -166,7 +157,7 @@ function UserProfile(props) {
                             <Text style={{
 
                                 fontSize: 30
-                            }}> {UserProfileInfo?.facebookToken.name}</Text>
+                            }}> {UserProfileInfo?.name}</Text>
 
                             <View style={{
                                 display: "flex",
@@ -203,7 +194,7 @@ function UserProfile(props) {
                         <Text style={{
                             fontSize: 20,
                             padding: 10
-                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo?.facebookToken.name}'s`} Posts and activities </Text>
+                        }}> {isCurrentUser ? 'Your' : `${UserProfileInfo?.name}'s`} Posts and activities </Text>
                         {isCurrentUser && <Ionicons onPress={() => {
                             popupCreatePostBottomSheet(1 == 1)
                         }} name="add-circle-outline" size={24} color="black" />}

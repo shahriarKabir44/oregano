@@ -54,7 +54,6 @@ function RegistrationPhase0({ setAuthorization, setRegistrationStep }) {
                         // console.log(data)
                         setModalVisible(true)
                         if (data) {
-                            data.facebookToken = JSON.parse(data.facebookToken)
                             data.id = (data._id)
                             LocalStorageService.store('currentUser', (data))
                             setCurrentUser(data)

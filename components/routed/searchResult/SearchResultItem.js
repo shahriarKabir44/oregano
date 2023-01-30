@@ -13,7 +13,7 @@ function SearchResultItem(props) {
         <TouchableOpacity style={{
             margin: 2,
         }} onPress={() => {
-            let headerString = `${props.item.owner.facebookToken.name}'s post`
+            let headerString = `${props.item.owner.name}'s post`
             let postId = props.item.id
             rootContext.updateContext({ ...rootContext.contextObject, headerString: headerString })
             props.navigation.push('Post details', {
@@ -66,9 +66,9 @@ function SearchResultItem(props) {
                                 borderRadius: 90,
                                 aspectRatio: 1
                             }} source={{
-                                uri: props.item.owner.facebookToken.profileImageURL
+                                uri: props.item.owner.profileImageURL
                             }} />
-                            <Text> {props.item.owner.facebookToken.name} </Text>
+                            <Text> {props.item.owner.name} </Text>
                         </View>
                     </View>
                 </View>

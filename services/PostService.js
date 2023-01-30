@@ -28,7 +28,8 @@ export default class PostService {
                             itemName
                             unitPrice
                             owner{
-                                facebookToken
+                                name
+                                profileImageURL
                                 id
                             }
                             images
@@ -44,7 +45,6 @@ export default class PostService {
         for (let post of data) {
             let postData = post.findPost
             postData.images = JSON.parse(postData.images)
-            postData.owner.facebookToken = JSON.parse(postData.owner.facebookToken)
             posts.push(postData)
         }
         return posts
@@ -72,12 +72,10 @@ export default class PostService {
                     lowerCasedName
                     itemName
                     id
-                    owner{
-                      facebookToken
                       id
                       name
-                    }
-                    postedBy
+                      profileImageURL
+                     postedBy
                     tags
                     unitPrice
                     amountProduced
@@ -90,7 +88,6 @@ export default class PostService {
         }).then(res => res.json())
         res.data.findPost.images = JSON.parse(res.data.findPost.images)
         res.data.findPost.tags = JSON.parse(res.data.findPost.tags)
-        res.data.findPost.owner.facebookToken = JSON.parse(res.data.findPost.owner.facebookToken)
 
         return res.data.findPost
 
@@ -111,9 +108,9 @@ export default class PostService {
                         images
                         unitType
                         owner{
-                          facebookToken
-                          id
+                           id
                           name
+                          profileImageURL
                         }
                         id
                         amountProduced

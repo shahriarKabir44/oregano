@@ -96,7 +96,7 @@ function SearhcItemsRoot(props) {
                                             aspectRatio: 1,
                                             borderRadius: 30,
                                             marginRight: 20
-                                        }} source={{ uri: JSON.parse(result.vendor.facebookToken).profileImageURL }} />
+                                        }} source={{ uri: (result.vendor).profileImageURL }} />
                                         <Text>{limitText(result.vendor.name)}</Text>
                                     </View>
                                 </View>

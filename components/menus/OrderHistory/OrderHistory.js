@@ -163,7 +163,7 @@ function OrderHistory(props) {
                                     const userId = contextObject.currentUser.id
                                     const rating = currentlyFocusedProduct.rating
                                     const ownerId = currentlyFocusedProduct?.product.lastPost.postedBy
-                                    const buyerName = contextObject.currentUser.facebookToken.name
+                                    const buyerName = contextObject.currentUser.name
 
                                     RatingServices.rateItem(lowerCasedName, userId, rating, ownerId, buyerName)
                                         .then(() => {
